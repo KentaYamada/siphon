@@ -51,8 +51,7 @@ var Sales = function() {
     var self = this;
     self.deposit = ko.observable(0);
     self.discount = ko.observable(0);
-    //self.mode = ko.observable('price');
-    self.mode = 'rate';
+    self.mode = 'price';
     self.items = ko.observableArray();
 
     self.total = ko.computed(function() {
@@ -182,15 +181,20 @@ var RegisterViewModel = function() {
     }
 
     //
-    // Switch discount mode event.
+    // Switch discount price mode event.
     //
-    self.onSwitchDiscount = function() {
-        if(self.sales.mode == 'price') {
-            self.sales.mode = 'rate';
+    self.onSwitchDiscountPrice = function() {
+        if(self.sales().mode == 'rate') {
+            self.sales().mode = 'price';
         }
+    }
 
-        if(self.sales.mode == 'rate') {
-            self.sales.mode = 'price';
+    //
+    // Switch discount rate mode event.
+    //
+    self.onSwitchDiscountRate = function() {
+        if(self.sales().mode == 'price') {
+            self.sales().mode = 'rate';
         }
     }
 }

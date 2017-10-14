@@ -108,6 +108,17 @@
                 </tbody>
               </table>
             </div> <!-- panel-body -->
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <fieldset class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-primary">預</button>
+                <button type="button" class="btn btn-lg btn-default" data-bind="click: onSwitchDiscountPrice">¥割</button>
+                <button type="button" class="btn btn-lg btn-default" data-bind="click: onSwitchDiscountRate">%割</button>
+                <button type="button" class="btn btn-lg btn-danger" data-bind="click: $root.onResetAll">AC</button>
+              </fieldset>
+            </div>
+          </div> <!-- panel -->
         </div> <!-- col-md-7 -->
       </div> <!-- row -->
     </div> <!-- container -->
