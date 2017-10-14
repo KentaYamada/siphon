@@ -8,6 +8,73 @@
     <div class="container">
       <div class="row">
         <!-- お会計パネル -->
+        <div class="col-xs-5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">お会計</h4>
+            </div>
+            <div class="panel-body" data-bind="with: sales">
+              <form class="form-horizontal">
+                <table class="table table-responsive table-striped">
+                  <thead>
+                    <tr>
+                      <th class="text-center">商品</th>
+                      <th class="text-center">単価</th>
+                      <th class="text-center">数量</th>
+                      <th class="text-center">小計</th>
+                      <th>&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody data-bind="foreach: items">
+                    <tr>
+                      <td colspan="5" data-bind="text: product_name"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-right" colspan="2" data-bind="text: price"></td>
+                      <td class="text-right" data-bind="text: quantity"></td>
+                      <td class="text-right" data-bind="text: subtotal"></td>
+                      <td>
+                        <button type="button" class="btn btn-default" data-bind="click: $root.onReduce">
+                          <span class="glyphicon glyphicon-minus-sign text-danger" aria-hidden="true"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table> <!-- table -->
+                <table class="table table-responsive table-striped">
+                  <tbody>
+                    <tr>
+                      <td><label class="control-label">値引</label></td>
+                      <td>
+                        <input type="number" class="form-control text-right" data-bind="value: discount" min=0 />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label class="control-label">合計</label></td>
+                      <td class="text-right">
+                        <span class="form-control-static" data-bind="text: total"></span>
+                        <span class="form-control-static">円</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label class="control-label">お預かり</label></td>
+                      <td>
+                        <input type="number" class="form-control text-right" min=0 data-bind="value: deposit" />
+                        <span class="form-control-static">円</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label class="control-label">おつり</label></td>
+                      <td class="text-right">
+                        <p class="form-control-static" data-bind="text: change"></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div> <!-- panel-body -->
+          </div> <!-- panel -->
+        </div> <!-- col-xs-5 -->
         <!-- 商品選択パネル  -->
         <div class="col-md-7">
           <div class="panel panel-default">
@@ -20,7 +87,7 @@
                 <tbody data-bind="foreach: categories">
                   <tr data-bind="foreach: $data">
                     <td>
-                      <button class="btn btn-default" data-bind="text: name"></button>
+                      <button class="btn btn-default" data-bind="text: name, click: $root.onSwitchProducts"></button>
                     </td>
                   </tr>
                 </tbody>
@@ -32,7 +99,7 @@
                 <tbody data-bind="foreach: products">
                   <tr data-bind="foreach: $data">
                     <td>
-                      <button class="btn btn-default">
+                      <button class="btn btn-default" data-bind="click: $root.onAdd">
                         <span data-bind="text: name">
                         <span data-bind="text: price">
                       </button>
