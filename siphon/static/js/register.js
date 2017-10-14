@@ -114,6 +114,7 @@ var Sales = function() {
     }
 
     self.save = function() {
+        console.log(ko.toJSON(self));
     }
 }
 
