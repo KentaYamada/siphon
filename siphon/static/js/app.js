@@ -6,7 +6,7 @@
 //   url string: URL
 //   method string: request method(GET, POST etc...)
 //   data object: request parameter.
-// @return 
+// @return
 //
 function requestApi(url, method, data) {
     return jQuery.ajax({
