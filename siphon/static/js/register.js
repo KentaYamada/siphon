@@ -51,7 +51,7 @@ var Sales = function() {
     var self = this;
     self.deposit = ko.observable(0);
     self.discount = ko.observable(0);
-    self.mode = 'price';
+    self.mode = ko.observable('price');
     self.items = ko.observableArray();
 
     self.total = ko.computed(function() {
@@ -60,11 +60,11 @@ var Sales = function() {
             val += item.subtotal();
         });
 
-        if(self.mode == 'price') {
+        if(self.mode() == 'price') {
             val -= self.discount();
         }
 
-        if(self.mode == 'rate') {
+        if(self.mode() == 'rate') {
             val *= (1 - (self.discount() / 100));
         }
 
@@ -109,7 +109,7 @@ var Sales = function() {
     self.resetAll = function() {
         self.deposit(0);
         self.discount(0);
-        self.mode = 'price';
+        self.mode('price');
         self.items.removeAll();
     }
 
@@ -140,6 +140,10 @@ var RegisterViewModel = function() {
 
     // set dummy
     var dummy = getDummyData();
+    //var dummy = [];
+    //requestApi('http://localhost:5000/api/sales', 'GET').done(function(res) {
+    //    dummy = res.categories;
+    //});
     self.categories(dummy);
     self.products(self.categories()[0][0].products);
 
@@ -185,8 +189,8 @@ var RegisterViewModel = function() {
     // Switch discount price mode event.
     //
     self.onSwitchDiscountPrice = function() {
-        if(self.sales().mode == 'rate') {
-            self.sales().mode = 'price';
+        if(self.sales().mode() == 'rate') {
+            self.sales().mode('price');
         }
     }
 
@@ -194,8 +198,8 @@ var RegisterViewModel = function() {
     // Switch discount rate mode event.
     //
     self.onSwitchDiscountRate = function() {
-        if(self.sales().mode == 'price') {
-            self.sales().mode = 'rate';
+        if(self.sales().mode() == 'price') {
+            self.sales().mode('rate');
         }
     }
 }
