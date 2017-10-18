@@ -39,8 +39,40 @@ def get_dummy():
     res = toDimentionArray(res, 2, 5)
     return res
 
+def dummy_products(category_id):
+    products = []
+    product_id = 1
+    for i in range(1, 11):
+        for j in range(1, 31):
+            product = {
+                'id': product_id,
+                'category_id': i,
+                'name': 'Product{0}'.format(product_id),
+                'price': j * 100
+            }
+            products.append(product)
+            product_id += 1
+    return [row for row in products if row['category_id'] == category_id]
 
-@app.route("/api/sales", methods=["GET"])
+
+@app.route("/api/sales/init", methods=["GET"])
 def init():
     # ToDo: If create database, get data from database.
     return jsonify({"categories": get_dummy()})
+
+
+@app.route("/api/categories/find/all")
+def find_all_categories():
+    categories = [{'id': x, 'name': 'Category{0}'.format(x)} for x in range(1, 11)]
+    return jsonify({"categories": categories})
+
+
+@app.route("/api/products/find/<int:category_id>")
+def find_by_products(category_id=1):
+    products = dummy_products(category_id)
+    return jsonify({"products": products})
+
+
+@app.route("/api/tax/find")
+def find_tax():
+    return jsonify({'tax': {'rate': 8, 'tax_type': 'out'}})
