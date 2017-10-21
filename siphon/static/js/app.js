@@ -8,8 +8,8 @@
 //   data object: request parameter.
 // @return
 //
-function requestApi(url, method, data) {
-    return jQuery.ajax({
+function requestApi(url, method, data={}) {
+    var options = {
         accepts: 'application/json',
         cache: false,
         contentType: 'application/json',
@@ -17,5 +17,7 @@ function requestApi(url, method, data) {
         dataType: 'json',
         type: method,
         url: url
-    });
+    };
+
+    return $.ajax(options);
 }

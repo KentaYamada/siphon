@@ -139,12 +139,17 @@ var RegisterViewModel = function() {
     self.items = ko.observableArray(self.sales().items());
 
     // set dummy
-    var dummy = getDummyData();
-    //var dummy = [];
-    //requestApi('http://localhost:5000/api/sales', 'GET').done(function(res) {
-    //    dummy = res.categories;
+    //var dummy = getDummyData();
+    //requestApi('/api/sales/init', 'GET').done(function(data) {
     //});
-    self.categories(dummy);
+
+    $.getJSON('/api/sales/init', function(data) {
+        self.categories(data.categories);
+    });
+
+
+    //self.categories(dummy);
+    console.log(ko.toJSON(self.categories()));
     self.products(self.categories()[0][0].products);
 
     //
