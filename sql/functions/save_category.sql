@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS save_category(integer, text);
+
 CREATE OR REPLACE FUNCTION save_category(p_id integer, p_name text)
 RETURNS void
 LANGUAGE plpgsql
