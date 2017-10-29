@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS tax;
@@ -13,7 +12,6 @@ CREATE TABLE sales (
     ,external_tax   integer   NOT NULL
     ,deposit        integer   NOT NULL
     ,PRIMARY KEY(no)
-    ,UNIQUE(sale_date)
 );
 
 CREATE TABLE sales_items (
@@ -26,10 +24,10 @@ CREATE TABLE sales_items (
    ,PRIMARY KEY(no, item_no)
 );
 
-CREATE TABLE montyly_sales (
-    ,sales_date date NOT NULL
-    ,amount integer NOT NULL
-    ,PRIMARY KEY(sales_date)
+CREATE TABLE monthly_sales (
+    sales_date date    NOT NULL
+   ,amount     integer NOT NULL
+   ,PRIMARY KEY(sales_date)
 );
 
 CREATE TABLE monthly_sales_items (
