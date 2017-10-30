@@ -3,6 +3,7 @@
 
 from flask import jsonify
 from siphon import app
+from siphon.models.monthly_item import MonthlyItem
 from siphon.models.category import Category
 from siphon.models.product import Product
 from siphon.models.tax import Tax
@@ -47,6 +48,11 @@ def get_dummy():
 def init():
     # ToDo: If create database, get data from database.
     return jsonify({"categories": get_dummy()})
+
+
+@app.route("/api/sales/items/monthly/<string:month>", methods=["GET"])
+def find_monthly_items(month):
+    return jsonify({"items": MonthlyItem.find_by()})
 
 
 @app.route("/api/categories/find/all")
