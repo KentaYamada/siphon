@@ -3,6 +3,12 @@
   <head>
     <meta chatset="utf-8">
     <title></title>
+  <style>
+    .text-day {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  </style>
   </head>
   <body>
     <div class="container">
@@ -23,20 +29,20 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th class="text-center">日</th>
-                <th class="text-center">月</th>
-                <th class="text-center">火</th>
-                <th class="text-center">水</th>
-                <th class="text-center">木</th>
-                <th class="text-center">金</th>
-                <th class="text-center">土</th>
+                <th class="text-center danger text-danger">日</th>
+                <th class="text-center active">月</th>
+                <th class="text-center active">火</th>
+                <th class="text-center active">水</th>
+                <th class="text-center active">木</th>
+                <th class="text-center active">金</th>
+                <th class="text-center info text-info">土</th>
               </tr>
             </thead>
             <tbody data-bind="foreach: calendar">
               <tr data-bind="foreach: $data">
                   <td class="text-center">
                     <!-- ko if: day -->
-                      <div data-bind="text: day"></div>
+                      <div class="text-day" data-bind="text: day"></div>
                       <a href="#" data-bind="text: amount"></a>
                     <!-- /ko -->
                   </td>
