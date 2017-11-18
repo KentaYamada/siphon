@@ -17,18 +17,23 @@ var CategoryViewModel = function() {
         return self.mode() == 'add' ? true : false;
     }, self);
 
-    // set dummy
-    self.categories = ko.observableArray([
-        {"id": 1, "name": "Hoge"},
-        {"id": 2, "name": "Fuga"}
-    ]);
+    self.categories = ko.observableArray([]);
+    requestApi('/api/categories', 'GET').done(function(data) {
+        self.categories(data.categories);
+    });
 
     self.onAdd = function() {
-        console.log(ko.toJSON(self.category()));
+        requestApi('/api/categories', 'POST', ko.toJSON(self.category))
+        .done(function(data) {
+            console.log(data);
+        });
     }
 
     self.onEdit = function() {
-        console.log(ko.toJSON(self.category()));
+        requestApi('/api/categories', 'PUT', ko.toJSON(self.category))
+        .done(function(data) {
+            console.log(data);
+        });
     }
 
     self.onRemove = function(category) {
