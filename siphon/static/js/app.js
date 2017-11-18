@@ -1,7 +1,7 @@
 "use strict";
 
 //
-// Call API.
+// Request API using ajax.
 // @params
 //   url string: URL
 //   method string: request method(GET, POST etc...)
