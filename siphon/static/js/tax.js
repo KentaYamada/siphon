@@ -10,13 +10,15 @@ var Tax = function(rate=1, tax_type='out') {
 
 var TaxViewModel = function() {
     var self = this;
-    self.tax = ko.observable(new Tax());
-
-    self.onFind = function() {
-    }
+    self.tax = ko.observable();
+    requestApi('/api/tax', 'GET').done(function(data) {
+        self.tax(new Tax(data.tax.rate, data.tax.tax_type));
+    });
 
     self.onSave = function() {
-        console.log(ko.toJSON(self.tax()));
+        requestApi('/api/tax', 'POST', ko.toJSON(self.tax())).done(function(data) {
+            console.log('succeed.');
+        });
     }
 }
 
