@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from flask import jsonify
+from flask import jsonify, request
 from siphon import app
 from siphon.models.monthly_item import MonthlyItem
 from siphon.models.category import Category
@@ -44,30 +44,59 @@ def get_dummy():
     return res
 
 
-@app.route("/api/sales/init", methods=["GET"])
+@app.route("/api/sales", methods=["GET"])
 def init():
-    # ToDo: If create database, get data from database.
     return jsonify({"categories": get_dummy()})
 
 
-@app.route("/api/sales/items/monthly/<string:month>", methods=["GET"])
+@app.route("/api/sales", methods=["POST"])
+def save_sales():
+    print(request.json)
+    return jsonify({'result': True, 'message': '登録しました。'})
+
+
+@app.route("/api/sales/<string:month>/monthly", methods=["GET"])
 def find_monthly_items(month):
     return jsonify({"items": MonthlyItem.find_by()})
 
 
-@app.route("/api/categories/find/all")
+@app.route("/api/categories", methods=["GET"])
 def find_all_categories():
     categories = Category.find_all_categories()
     return jsonify({"categories": categories})
 
 
-@app.route("/api/products/find/<int:category_id>")
+@app.route("/api/categories", methods=["POST"])
+def save_category():
+    print(request.json)
+    return jsonify({'result': True, 'message': '登録しました。'})
+
+
+@app.route("/api/categories", methods=["PUT"])
+def update_category():
+    print(request.json)
+    return jsonify({'result': True, 'message': '更新しました。'})
+
+
+@app.route("/api/categories/<int:id>", methods=["DELETE"])
+def delete_category(id):
+    print(request.json)
+    return jsonify({'result': True, 'message': '更新しました。'})
+
+
+@app.route("/api/products/<int:category_id>")
 def find_by_products(category_id=1):
     products = Product.find_by_products(category_id)
     return jsonify({"products": products})
 
 
-@app.route("/api/tax/find")
+@app.route("/api/tax", methods=["GET"])
 def find_tax():
     tax = Tax.find_tax()
     return jsonify({'tax': {'rate': tax.rate, 'tax_type': tax.tax_type}})
+
+
+@app.route("/api/tax", methods=["POST"])
+def save_tax():
+    print(request.json)
+    return jsonify({'result': True, 'message': ''})
