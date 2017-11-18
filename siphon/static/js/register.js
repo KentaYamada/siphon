@@ -92,7 +92,7 @@ var RegisterViewModel = function() {
     self.sales = ko.observable(new Sales());
     self.items = ko.observableArray(self.sales().items());
 
-    requestApi('/api/sales/init', 'GET').done(function(data) {
+    requestApi('/api/sales', 'GET').done(function(data) {
         self.categories(data.categories);
         self.products(self.categories()[0][0].products);
     });
