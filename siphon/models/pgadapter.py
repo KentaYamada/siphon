@@ -2,12 +2,13 @@
 
 import psycopg2
 import psycopg2.extras
+from siphon.config import DEVELOP_DB
 
 
 class PgAdapter():
     def __init__(self, dsn):
         self.__con = None
-        self.__dsn = dsn
+        self.__dsn = dsn if dsn is None else DEVELOP_DB
 
     def __build_find_command(self, query):
         return "SELECT * FROM {0};".format(query)
