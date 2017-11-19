@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
+from siphon.models.pgadapter import PgAdapter
 
-class Category():
+class Category(PgAdapter):
     def __init__(self, id=None, name='', *args, **kwargs):
-        self.__id = id
-        self.__name = name
-        self.__products = None
-
-    @property
-    def id(self):
-        return self.__id
-
-    @property
-    def name(self):
-        return self.__name
+        self.id = id
+        self.name = name
 
     def save(self):
-        return True
+        saved = True
+        try:
+            saved = super().save("save_category(%s, %s)", (self.id, self.name))
+            if saved:
+                super().commit()
+            else:
+                super().rollback()
+        except:
+            super().rollback()
+        return saved
 
     @classmethod
     def find_all_categories(cls):
