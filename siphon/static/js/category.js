@@ -1,11 +1,31 @@
 "use strict";
 
 
-var Category = function(id=null, name='', products=[]) {
+var Category = function(id, name, products) {
     var self = this;
+    self.END_POINT = "/api/categories";
     self.id = ko.observable(id);
     self.name = ko.observable(name);
     self.products = ko.observableArray();
+
+    self.add = function() {
+        requestApi(self.END_POINT, "POST", ko.toJSON(self))
+            .done(function(data) {
+                console.log(data);
+            })
+            .fail(function() {
+            });
+    }
+
+    self.edit = function() {
+        var url = self.END_POINT + '/' + self.id();
+        requestApi(url, "PUT", ko.toJSON(self))
+            .done(function(data) {
+                console.log(data);
+            })
+            .fail(function() {
+            });
+    }
 }
 
 
@@ -19,21 +39,22 @@ var CategoryViewModel = function() {
 
     self.categories = ko.observableArray([]);
     requestApi('/api/categories', 'GET').done(function(data) {
-        self.categories(data.categories);
+        $.map(data.categories, function(row, i) {
+            self.categories.push(new Category(row.id, row.name));
+        });
+        //self.categories(data.categories);
     });
 
     self.onAdd = function() {
-        requestApi('/api/categories', 'POST', ko.toJSON(self.category))
-        .done(function(data) {
-            console.log(data);
-        });
+        self.category().add();
     }
 
     self.onEdit = function() {
-        requestApi('/api/categories', 'PUT', ko.toJSON(self.category))
-        .done(function(data) {
-            console.log(data);
-        });
+        self.category().edit();
+        //requestApi('/api/categories', 'PUT', ko.toJSON(self.category))
+        //.done(function(data) {
+        //    console.log(data);
+        //});
     }
 
     self.onRemove = function(category) {
