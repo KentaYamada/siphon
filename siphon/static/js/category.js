@@ -37,6 +37,14 @@ var Category = function(id, name, products) {
                 console.error("Failed api request.");
             });
     }
+
+    self.findAll = function(list) {
+        requestApi(self.END_POINT, 'GET').done(function(data) {
+            $.each(data.categories, function(i, row) {
+                list.push(new Category(row.id, row.name));
+            });
+        });
+    }
 }
 
 
@@ -44,17 +52,11 @@ var CategoryViewModel = function() {
     var self = this;
     self.category = ko.observable(new Category());
     self.mode = ko.observable('add');
+    self.categories = ko.observableArray([]);
+    self.category().findAll(self.categories);
     self.isAdd = ko.computed(function() {
         return self.mode() == 'add' ? true : false;
     }, self);
-
-    self.categories = ko.observableArray([]);
-    requestApi('/api/categories', 'GET').done(function(data) {
-        $.map(data.categories, function(row, i) {
-            self.categories.push(new Category(row.id, row.name));
-        });
-        //self.categories(data.categories);
-    });
 
     self.onAdd = function() {
         self.category().add();
