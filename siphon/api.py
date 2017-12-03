@@ -72,8 +72,8 @@ def save_category():
     return jsonify({'result': True, 'message': '登録しました。'})
 
 
-@app.route("/api/categories", methods=["PUT"])
-def update_category():
+@app.route("/api/categories/<int:category_id>", methods=["PUT"])
+def update_category(category_id):
     print(request.json)
     return jsonify({'result': True, 'message': '更新しました。'})
 
