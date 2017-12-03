@@ -46,6 +46,7 @@ CREATE TABLE categories (
 CREATE TABLE products (
     id           serial  NOT NULL
     ,category_id integer NOT NULL
+    ,order_no    integer NOT NULL
     ,name        text    NOT NULL
     ,price       integer NOT NULL
     ,PRIMARY KEY(id)
