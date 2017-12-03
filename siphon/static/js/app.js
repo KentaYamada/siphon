@@ -8,7 +8,7 @@
 //   data object: request parameter.
 // @return
 //
-function requestApi(url, method, data={}) {
+function requestApi(url, method, data) {
     var options = {
         accepts: 'application/json',
         cache: false,
