@@ -26,6 +26,17 @@ var Category = function(id, name, products) {
             .fail(function() {
             });
     }
+
+    self.remove = function() {
+        var url = self.END_POINT + '/' + self.id();
+        requestApi(url, "DELETE")
+            .done(function(data) {
+                console.log(data);
+            })
+            .fail(function() {
+                console.error("Failed api request.");
+            });
+    }
 }
 
 
@@ -51,16 +62,10 @@ var CategoryViewModel = function() {
 
     self.onEdit = function() {
         self.category().edit();
-        //requestApi('/api/categories', 'PUT', ko.toJSON(self.category))
-        //.done(function(data) {
-        //    console.log(data);
-        //});
     }
 
-    self.onRemove = function(category) {
-        self.category(category);
-        console.log(self.category());
-        jQuery('#removeAlert').modal('show');
+    self.onRemove = function() {
+        self.category().remove();
     }
 
     self.onShowAddForm = function() {
