@@ -3,6 +3,7 @@
 
 var Sales = function() {
     var self = this;
+    self.END_POINT = "/api/sales";
     self.deposit = ko.observable(0);
     self.discount = ko.observable(0);
     self.mode = ko.observable('price');
@@ -68,7 +69,10 @@ var Sales = function() {
     }
 
     self.save = function() {
-        console.log(ko.toJSON(self));
+        requestApi(self.END_POINT, 'POST', ko.toJSON(self))
+        .done(function(data) {
+            console.log(data);
+        });
     }
 }
 
@@ -85,8 +89,6 @@ var SalesItem = function(product_name, price, quantity) {
 
 var RegisterViewModel = function() {
     var self = this;
-
-    // Properties
     self.categories = ko.observableArray([]);
     self.products = ko.observableArray();
     self.sales = ko.observable(new Sales());
