@@ -15,11 +15,13 @@
                       data-bind="options: categories,
                                  optionsText: 'name',
                                  optionsValue: 'id',
-                                 value: selectedCatgory">
+                                 value: selectedCatgory
+                                 event: { change: onChangeCategory }">
               </select>
             </div>
             <button type="button" class="btn btn-default" data-bind="click: onChangeCategory">
               <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              検索
             </button>
           </div>
         </form>
@@ -31,17 +33,17 @@
           <table class="table table-striped table-bordered">
             <thead>
               <tr>
-                <th colspan="3">
-                  <h5 class="pull-left">商品リスト</h5>
-                    <button class="btn btn-success pull-right" data-bind="click: onShowAddForm">
-                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                      新規
-                    </button>
+                <th colspan="4">
+                  <button class="btn btn-success pull-right" data-bind="click: onShowAddForm">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    新規
+                  </button>
                 </th>
               </tr>
               <tr>
                 <th class="text-center">名前</th>
                 <th class="text-center">単価</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -61,6 +63,14 @@
                   <button type="button" class="btn btn-danger" data-bind="click: $root.onShowRemoveAlert">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     削除
+                  </button>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-default" data-bind="click: $root.onShowEditForm">
+                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                  </button>
+                  <button type="button" class="btn btn-default" data-bind="click: $root.onShowRemoveAlert">
+                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
                   </button>
                 </td>
               </tr>
@@ -133,13 +143,13 @@
             </form>
           </div> <!-- modal-body -->
           <div class="modal-footer">
-            <!-- ko if: isAdd -->
+            <!-- ko ifnot: product().id -->
             <button type="button" class="btn btn-primary" data-bind="click: $root.onAdd">
               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
               登録
             </button>
             <!-- /ko -->
-            <!-- ko ifnot: isAdd -->
+            <!-- ko if: product().id -->
             <button type="button" class="btn btn-primary" data-bind="click: $root.onEdit">
               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
               編集

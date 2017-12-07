@@ -51,12 +51,8 @@ var Category = function(id, name, products) {
 var CategoryViewModel = function() {
     var self = this;
     self.category = ko.observable(new Category());
-    self.mode = ko.observable('add');
     self.categories = ko.observableArray([]);
     self.category().findAll(self.categories);
-    self.isAdd = ko.computed(function() {
-        return self.mode() == 'add' ? true : false;
-    }, self);
 
     self.onAdd = function() {
         self.category().add();
@@ -72,19 +68,16 @@ var CategoryViewModel = function() {
 
     self.onShowAddForm = function() {
         self.category(new Category());
-        self.mode('add');
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowEditForm = function(category) {
         self.category(category);
-        self.mode('edit');
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowRemoveAlert = function(category) {
         self.category(category);
-        console.log(self.category());
         jQuery('#removeAlert').modal('show');
     }
 }

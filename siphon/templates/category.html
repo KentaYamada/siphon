@@ -93,13 +93,13 @@
               </form>
             </div> <!-- modal-body -->
             <div class="modal-footer">
-              <!-- ko if: $root.isAdd -->
+              <!-- ko ifnot: category().id -->
                 <button type="button" class="btn btn-primary" data-bind="click: $root.onAdd">
                   <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                   保存
                 </button>
               <!-- /ko -->
-              <!-- ko ifnot: $root.isAdd  -->
+              <!-- ko if: category().id  -->
                 <button type="button" class="btn btn-primary" data-bind="click: $root.onEdit">
                   <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                   編集
