@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import calendar
 from flask import jsonify, request
 from siphon import app
 from siphon.models.monthly_item import MonthlyItem
@@ -55,6 +55,20 @@ def save_sales():
     return jsonify({'result': True, 'message': '登録しました。'})
 
 
+@app.route("/api/sales/monthly/<int:year>/<int:month>", methods=["GET"])
+def find_monthly_sales(year, month):
+    # デフォルトを日曜に
+    calendar.setfirstweekday(calendar.SUNDAY)
+    current = calendar.monthcalendar(year, month)
+    res = []
+    for days in current:
+        week = []
+        for day in days:
+            week.append({'sales_date': day, 'amount': 1000})
+        res.append(week)
+    return jsonify({'data': res})
+
+
 @app.route("/api/sales/<string:month>/monthly", methods=["GET"])
 def find_monthly_items(month):
     return jsonify({"items": MonthlyItem.find_by()})
@@ -78,8 +92,8 @@ def update_category(category_id):
     return jsonify({'result': True, 'message': '更新しました。'})
 
 
-@app.route("/api/categories/<int:id>", methods=["DELETE"])
-def delete_category(id):
+@app.route("/api/categories/<int:category_id>", methods=["DELETE"])
+def delete_category(category_id):
     print(request.json)
     return jsonify({'result': True, 'message': '更新しました。'})
 
