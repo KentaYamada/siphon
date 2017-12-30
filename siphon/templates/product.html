@@ -1,11 +1,6 @@
+{% extends 'layout.html' %}
+{% block body %}
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta chatset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <div class="row center-block">
       <div class="col-xs-8 col-md-8 col-xs-offset-1 col-md-offset-1">
         <h3>商品設定</h3>
         <form class="form-horizontal">
@@ -80,28 +75,7 @@
       </div> <!-- col-xs-10 -->
     </div>
     <!-- Delete comfirm dialog -->
-    <div id="removeAlert" class="modal fade" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header alert alert-danger">
-            <button type="button" class="close" data-dismiss="modal">
-              <span>x</span>
-            </button>
-            <h4>
-              <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-              データ削除
-            </h4>
-          </div>
-          <div class="modal-body">
-            <p>選択したデータを削除します。よろしいですか？</p>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-danger">はい</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">いいえ</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% include 'delete_confirm.html' %}
 
     <!-- Entry form -->
     <div id="entryForm" class="modal fade" tabindex="-1">
@@ -163,17 +137,9 @@
         </div> <!-- modal-content -->
       </div> <!-- modal-dialog -->
     </div> <!-- entryForm -->
-  </body>
-</html>
+{% endblock %}
 
-<!-- Bootstrap.css -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<!-- My app stylesheet -->
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-<!-- Bootstrap.js -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<!-- Knockout.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+{% block static %}
 <script src="../static/js/app.js"></script>
 <script src="../static/js/product.js"></script>
+{% endblock %}
