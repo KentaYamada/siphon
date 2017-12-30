@@ -8,12 +8,17 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/category", methods=["GET"])
+@app.route("/sales/monthly", methods=["GET"])
+def monthly_sales():
+    return render_template("monthly_sales.html")
+
+
+@app.route("/categories", methods=["GET"])
 def category():
     return render_template("category.html")
 
 
-@app.route("/product", methods=["GET"])
+@app.route("/products", methods=["GET"])
 def product():
     return render_template("product.html")
 
@@ -26,3 +31,8 @@ def tax():
 @app.route("/login", methods=["GET"])
 def login():
     return render_template("login.html")
+
+
+@app.route("/users", methods=["GET"])
+def user():
+    return render_template("user.html")
