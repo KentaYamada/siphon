@@ -40,7 +40,8 @@ var Product = function(id, category_id, name, price) {
 
 var ProductViewModel = function() {
     var self = this;
-    self.product = ko.observable(new Product());
+    self.TITLE = '商品登録';
+    self.model = ko.observable(new Product());
     self.products = ko.observableArray([
         {"id": 1, "category_id": 1, "name": "A", "price": 100},
         {"id": 2, "category_id": 2, "name": "B", "price": 200},
@@ -54,7 +55,7 @@ var ProductViewModel = function() {
 
 
     self.onAdd = function() {
-        self.product().add();
+        self.model().add();
     }
 
     self.onChangeCategory = function() {
@@ -67,25 +68,25 @@ var ProductViewModel = function() {
     }
 
     self.onEdit = function() {
-        self.product().edit();
+        self.model().edit();
     }
 
     self.onRemove = function() {
-        self.product().remove();
+        self.model().remove();
     }
 
     self.onShowAddForm = function() {
-        self.product(new Product());
+        self.model(new Product());
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowEditForm = function(product) {
-        self.product(product);
+        self.model(product);
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowRemoveAlert = function(product) {
-        self.product(product);
+        self.model(product);
         jQuery('#removeAlert').modal('show');
     }
 }

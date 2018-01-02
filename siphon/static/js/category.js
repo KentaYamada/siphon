@@ -6,7 +6,6 @@ var Category = function(id, name, products) {
     self.END_POINT = "/api/categories";
     self.id = ko.observable(id);
     self.name = ko.observable(name);
-    self.products = ko.observableArray();
 
     self.add = function() {
         requestApi(self.END_POINT, "POST", ko.toJSON(self))
@@ -50,34 +49,35 @@ var Category = function(id, name, products) {
 
 var CategoryViewModel = function() {
     var self = this;
-    self.category = ko.observable(new Category());
+    self.TITLE = '商品カテゴリ登録';
+    self.model = ko.observable(new Category());
     self.categories = ko.observableArray([]);
-    self.category().findAll(self.categories);
+    self.model().findAll(self.categories);
 
     self.onAdd = function() {
-        self.category().add();
+        self.model().add();
     }
 
     self.onEdit = function() {
-        self.category().edit();
+        self.model().edit();
     }
 
     self.onRemove = function() {
-        self.category().remove();
+        self.model().remove();
     }
 
     self.onShowAddForm = function() {
-        self.category(new Category());
+        self.model(new Category());
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowEditForm = function(category) {
-        self.category(category);
+        self.model(category);
         jQuery('#entryForm').modal('show');
     }
 
     self.onShowRemoveAlert = function(category) {
-        self.category(category);
+        self.model(category);
         jQuery('#removeAlert').modal('show');
     }
 }

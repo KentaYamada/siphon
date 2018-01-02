@@ -1,0 +1,37 @@
+<div id="entryForm" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header alert alert-info">
+        <button type="button" class="close" data-dismiss="modal">
+          <span>x</span>
+        </button>
+        <h4 data-bind="text: $root.TITLE">
+          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" type="post" data-bind="with: model">
+          {% block content %} {% endblock %}
+        </form>
+      </div> <!-- modal-body -->
+      <div class="modal-footer">
+        <!-- ko ifnot: model().id -->
+          <button type="button" class="btn btn-primary" data-bind="click: $root.onAdd">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            保存
+          </button>
+        <!-- /ko -->
+        <!-- ko if: model().id  -->
+          <button type="button" class="btn btn-primary" data-bind="click: $root.onEdit">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            編集
+          </button>
+        <!-- /ko -->
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          閉じる
+        </button>
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- entryForm -->
