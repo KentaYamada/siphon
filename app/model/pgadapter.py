@@ -2,7 +2,7 @@
 
 import psycopg2
 import psycopg2.extras
-from siphon.config import DEVELOP_DB
+from app.config import DEVELOP_DB
 
 
 class PgAdapter():

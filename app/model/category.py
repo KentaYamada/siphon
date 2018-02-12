@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+from app.model.pgadapter import PgAdapter
 
-from siphon.models.pgadapter import PgAdapter
 
 class Category(PgAdapter):
     def __init__(self, id=None, name='', *args, **kwargs):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import psycopg2
-from siphon.models.pgadapter import PgAdapter
+from app.model.pgadapter import PgAdapter
 
 class Tax(PgAdapter):
     def __init__(self, rate=1, tax_type='out', *args, **kwargs):
@@ -27,4 +27,5 @@ class Tax(PgAdapter):
 
     @classmethod
     def find_tax(cls):
-        return Tax().find('find_tax()')
+        # return Tax().find('find_tax()')
+        return {'rate': 8, 'tax_type': 'include'}
