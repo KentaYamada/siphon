@@ -7,7 +7,19 @@ class Category(PgAdapter):
         self.id = id
         self.name = name
 
+    @property
+    def error(self):
+        return self.__error
+
+    def __validate(self):
+        if not self.name:
+            return False
+        return True
+
     def save(self):
+        if not self.__validate():
+            return False
+
         saved = True
         try:
             saved = super().save("save_category(%s, %s)", (self.id, self.name))

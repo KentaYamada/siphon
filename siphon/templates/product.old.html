@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+{% block body %}
+<!DOCTYPE html>
+      <div class="col-xs-8 col-md-8 col-xs-offset-1 col-md-offset-1">
+        <h3>商品設定</h3>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <div class="col-xs-3">
+              <select class="form-control"
+                      data-bind="options: categories,
+                                 optionsText: 'name',
+                                 optionsValue: 'id',
+                                 value: selectedCatgory
+                                 event: { change: onChangeCategory }">
+              </select>
+            </div>
+            <button type="button" class="btn btn-default" data-bind="click: onChangeCategory">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              検索
+            </button>
+          </div>
+        </form>
+      </div> <!-- col-xs-8 -->
+    </div>
+    <div class="row center-block">
+      <div class="col-xs-10 col-md-10 col-xs-offset-1 col-md-offset-1">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th colspan="4">
+                  <button class="btn btn-success pull-right" data-bind="click: onShowAddForm">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    新規
+                  </button>
+                </th>
+              </tr>
+              <tr>
+                <th class="text-center">名前</th>
+                <th class="text-center">単価</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: products">
+              <tr>
+                <td>
+                  <p class="form-control-static" data-bind="text: name"></p>
+                </td>
+                <td>
+                  <p class="form-control-static text-right" data-bind="text: price"></p>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-primary" data-bind="click: $root.onShowEditForm">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    編集
+                  </button>
+                  <button type="button" class="btn btn-danger" data-bind="click: $root.onShowRemoveAlert">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    削除
+                  </button>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-default" data-bind="click: $root.onShowEditForm">
+                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                  </button>
+                  <button type="button" class="btn btn-default" data-bind="click: $root.onShowRemoveAlert">
+                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div> <!-- table-responsive -->
+      </div> <!-- col-xs-10 -->
+    </div>
+    <!-- Delete comfirm dialog -->
+    {% include 'delete_confirm.html' %}
+
+    <!-- Entry form -->
+    <div id="entryForm" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header alert alert-info">
+            <button type="button" class="close" data-dismiss="modal">
+              <span>x</span>
+            </button>
+            <h4>
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              商品登録
+            </h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" data-bind="with: product">
+              <div class="form-group">
+                <label class="col-xs-3 control-label">商品名:</label>
+                <div class="col-xs-5">
+                  <input type="text" class="form-control" data-bind="value: name" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-3 control-label">単価:</label>
+                <div class="col-xs-5">
+                  <input type="number" class="form-control" data-bind="value: price" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-3 control-label">カテゴリ:</label>
+                <div class="col-xs-5">
+                  <select class="form-control"
+                          data-bind="options: $root.categories,
+                                     optionsText: 'name',
+                                     optionsValue: 'id',
+                                     value: $root.selectedCatgory">
+                  </select>
+              </div>
+            </form>
+          </div> <!-- modal-body -->
+          <div class="modal-footer">
+            <!-- ko ifnot: product().id -->
+            <button type="button" class="btn btn-primary" data-bind="click: $root.onAdd">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              登録
+            </button>
+            <!-- /ko -->
+            <!-- ko if: product().id -->
+            <button type="button" class="btn btn-primary" data-bind="click: $root.onEdit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              編集
+            </button>
+            <!-- /ko -->
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              閉じる
+            </button>
+          </div>
+        </div> <!-- modal-content -->
+      </div> <!-- modal-dialog -->
+    </div> <!-- entryForm -->
+{% endblock %}
+
+{% block static %}
+<script src="../static/js/app.js"></script>
+<script src="../static/js/product.js"></script>
+{% endblock %}

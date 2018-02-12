@@ -1,51 +1,37 @@
 "use strict";
 
 
-var Category = function(id, name, products) {
-    var self = this;
-    self.END_POINT = "/api/categories";
-    self.id = ko.observable(id);
-    self.name = ko.observable(name);
-
-    self.add = function() {
-        requestApi(self.END_POINT, "POST", ko.toJSON(self))
-            .done(function(data) {
-                console.log(data);
-            })
-            .fail(function() {
-            });
+class Category extends ModelBase {
+    constructor(id, name) {
+        super();
+        this.endpoint = '/api/categories';
+        this.id(id);
+        this.name = ko.observable(name);
     }
 
-    self.edit = function() {
-        var url = self.END_POINT + '/' + self.id();
-        requestApi(url, "PUT", ko.toJSON(self))
-            .done(function(data) {
-                console.log(data);
-            })
-            .fail(function() {
-            });
-    }
-
-    self.remove = function() {
-        var url = self.END_POINT + '/' + self.id();
-        requestApi(url, "DELETE")
-            .done(function(data) {
-                console.log(data);
-            })
-            .fail(function() {
-                console.error("Failed api request.");
-            });
-    }
-
-    self.findAll = function(list) {
-        requestApi(self.END_POINT, 'GET').done(function(data) {
-            $.each(data.categories, function(i, row) {
-                list.push(new Category(row.id, row.name));
+    // Todo: static methodにする
+    findAll(list) {
+        super.find(null, (res) => {
+            $.each(res.categories, (i, category) => {
+                list.push(new Category(category.id, category.name));
             });
         });
     }
 }
 
+
+/*class CategoryViewModel extends ViewModelBase {
+    constructor() {
+        super();
+        this.title = '商品カテゴリ設定';
+        this.model(new Category());
+    }
+
+    onShowAddForm() {
+        this.model(new Category());
+        super.onShowAddForm();
+    }
+}*/
 
 var CategoryViewModel = function() {
     var self = this;

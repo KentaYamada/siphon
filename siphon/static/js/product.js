@@ -1,7 +1,7 @@
 "use strict";
 
 
-var Product = function(id, category_id, name, price) {
+/*var Product = function(id, category_id, name, price) {
     var self = this;
     self.END_POINT = "/api/products";
     self.id = ko.observable(id);
@@ -35,8 +35,21 @@ var Product = function(id, category_id, name, price) {
             });
         });
     }
-}
+}*/
 
+class Product extends ModelBase {
+    constructor(id, categoryId, name, price) {
+        this.endpoint = '/api/products';
+        this.id(id);
+        this.categoryId = ko.observable(categoryId);
+        this.name = ko.observable(name);
+        this.price = ko.observable(price);
+    }
+
+    findBy(categoryId, list) {
+
+    }
+}
 
 var ProductViewModel = function() {
     var self = this;

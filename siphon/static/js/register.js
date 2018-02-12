@@ -1,6 +1,85 @@
 "use strict";
 
 
+class Sales extends ModelBase {
+    constructor() {
+        super();
+        this.deposit = ko.observable(0);
+        this.discount = ko.observable(0);
+        this.mode = ko.observable('price');
+        this.items = ko.observableArray();
+
+        this.total = ko.computed(() => {
+            let total = 0;
+            ko.utils.arrayForeach(this.items(), (item) => {
+                total += item.subtotal();
+            });
+
+            if (this.mode() === 'price') {
+                total -= this.discount();
+            }
+
+            if (this.mode() === 'rate') {
+                total *= (1 - (this.discount() / 100));
+            }
+
+            return total;
+        });
+
+        this.change = ko.computed(() => {
+            return this.deposit() > 0 ? this.deposit() - this.total() : 0;
+        });
+    }
+
+    //
+    // Add item or Update quantity.
+    //
+    addItem(product) {
+        let item = ko.utils.arrayFirst(this.items(), (data) => {
+            return data.product_name == product.name;
+        });
+
+        if(item === null) {
+            this.items.push(new SalesItem(product.name, product.price, 1));
+        } else {
+            item.quantity(item.quantity() + 1);
+        }
+    }
+
+    //
+    // Reduce quantity or remove item.
+    //
+    reduceItem(item) {
+        item.quantity(item.quantity() -1);
+
+        if(item.quantity() < 1) {
+            this.items.remove(item);
+        }
+    }
+
+    //
+    // Reset sales data.
+    //
+    resetAll() {
+        this.deposit(0);
+        this.discount(0);
+        this.mode('price');
+        this.items.removeAll();
+    }
+}
+
+class SalesItem extends ModelBase {
+    constructor(product_name, price, quantity) {
+        this.product_name = product_name;
+        this.price = price;
+        this.quantity = ko.observable(quantity);
+        this.subtotal = ko.computed(function() {
+            return this.price * this.quantity();
+        });
+    }
+}
+
+
 var Sales = function() {
     var self = this;
     self.END_POINT = "/api/sales";

@@ -21,11 +21,11 @@
               <p class="form-control-static" data-bind="text: name"></p>
             </td>
             <td class="text-center">
-              <button type="button" class="btn btn-primary" data-bind="click: $root.onShowEditForm">
+              <button type="button" class="btn btn-primary" data-bind="click:$parent. onShowEditForm">
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 編集
               </button>
-              <button type="button" class="btn btn-danger" data-bind="click: $root.onShowRemoveAlert">
+              <button type="button" class="btn btn-danger" data-bind="click: $parent.onShowRemoveAlert">
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 削除
               </button>
