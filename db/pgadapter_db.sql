@@ -71,10 +71,10 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        id,
-        name
-    FROM car_makers
-    WHERE name = like '%' || p_name || '%';
+        c.id,
+        c.name
+    FROM car_makers AS c
+    WHERE c.name like '%' || p_name || '%';
 END $$;
 
 
