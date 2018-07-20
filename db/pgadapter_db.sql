@@ -61,6 +61,21 @@ BEGIN
     DELETE FROM car_makers WHERE id = p_id;
 END $$;
 
+
+CREATE OR REPLACE FUNCTION find_car_makers()
+RETURNS TABLE (id integer, name text)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.id,
+        c.name
+    FROM car_makers AS c;
+END $$;
+
+
 CREATE OR REPLACE FUNCTION find_car_makers_by (
     p_name text
 )
@@ -113,6 +128,21 @@ SECURITY DEFINER
 AS $$
 BEGIN
     DELETE FROM cars where id = p_id;
+END $$;
+
+
+CREATE OR REPLACE FUNCTION find_cars ()
+RETURNS TABLE (maker_name text, car_name text)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        m.name,
+        c.name
+    FROM car_makers AS m
+    INNER JOIN cars AS c on m.id = c.maker_id;
 END $$;
 
 
