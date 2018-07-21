@@ -21,7 +21,8 @@ class PgAdapter():
             raise ValueError()
         if self.__con is None or self.__con.closed:
             self.__con = psycopg2.connect(**self.__config)
-        self.__cur = self.__con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        if self.__cur is None or self.__cur.closed:
+            self.__cur = self.__con.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 
     def save(self, command, data):
@@ -107,7 +108,6 @@ class PgAdapter():
             self.__con.commit()
             self.__cur.close()
             self.__con.close()
-            self.__con = None
 
     def rollback(self):
         """
@@ -117,4 +117,3 @@ class PgAdapter():
             self.__con.rollback()
             self.__cur.close()
             self.__con.close()
-            self.__con = None
