@@ -11,3 +11,13 @@ CREATE TABLE items (
     unit_price integer NOT NULL,
     PRIMARY KEY(id)
 );
+
+CREATE TABLE users (
+    id serial NOT NULL,
+    name text NOT NULL,
+    nickname text NULL,
+    email text NOT NULL,
+    password text NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(password)
+);
