@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Siphon</a>
+        </div>
+        <ul class="nav navbar-nav">
+            {% for m in menu %}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon {{ m['icon'] }}" aria-hidden="true"></span>
+                    <span>{{ m['name'] }}</span>
+                    <span class="caret"></span>
+                    <ul class="dropdown-menu">
+                        {% for s in m['submenu'] %}
+                        <li>
+                            <a href="{{ s['url'] }}">
+                                <span class="glyphicon {{ s['icon'] }}" aria-hidden="true"></span>
+                                <span>{{ s['name'] }}<span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Siphonさん こんにちは</a></li>
+            <li>
+                <a href="/logout">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
