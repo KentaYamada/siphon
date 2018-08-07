@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row center-block">
+    <div class="col-md-10 col-md-offset-1">
+        <h4>今月の売上</h4>
+        <form class="form-inline search-form">
+            <div class="input-group">
+                <input type="month" class="form-control" />
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center alert-danger">Sun</th>
+                    <th class="text-center">Mon</th>
+                    <th class="text-center">Tue</th>
+                    <th class="text-center">Wed</th>
+                    <th class="text-center">Thu</th>
+                    <th class="text-center">Fri</th>
+                    <th class="text-center alert-info">Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center bg-danger">
+                        <div>1</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>2</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>3</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>4</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>5</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>6</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>7</div>
+                        <a href="#">100,000</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-danger">
+                        <div>1</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>2</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>3</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>4</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>5</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>6</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>7</div>
+                        <a href="#">100,000</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-danger">
+                        <div>1</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>2</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>3</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>4</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>5</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>6</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>7</div>
+                        <a href="#">100,000</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-danger">
+                        <div>1</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>2</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>3</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>4</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>5</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>6</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>7</div>
+                        <a href="#">100,000</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-danger">
+                        <div>1</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>2</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>3</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>4</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>5</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>6</div>
+                        <a href="#">100,000</a>
+                    </td>
+                    <td class="text-center">
+                        <div>7</div>
+                        <a href="#">100,000</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/monthly_sales.css') }}">
+{% endblock %}
