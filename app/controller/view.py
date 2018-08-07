@@ -50,6 +50,11 @@ NAVIGATION_MENUS = [
 bp = Blueprint('view', __name__, template_folder='templates')
 
 
+@bp.route('/sales/monthly', methods=['GET'])
+def monthly_sales():
+    return render_template('monthly_sales.html', menu=NAVIGATION_MENUS)
+
+
 @bp.route('/categories', methods=['GET'])
 def categories():
     return render_template('category_list.html', menu=NAVIGATION_MENUS)
