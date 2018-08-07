@@ -1,0 +1,38 @@
+{% extends "modal.html" %}
+{% block modal_content %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span>x</span>
+    </button>
+    <h4 class="modal-title">
+        <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+        商品カテゴリ設定
+    </h4>
+</div>
+<div class="modal-body">
+    <p class="text-right">
+        <small>
+            <span class="text-danger">*</span>…必須項目</span>
+        </small>
+    </p>
+    <form>
+        <div class="form-group">
+            <label class="form-control-label">
+                <span class="text-danger">*</span>
+                カテゴリ名
+            </label>
+            <input type="text" class="form-control" name="username" />
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+        <span>閉じる</span>
+    </button>
+    <button type="submit" class="btn btn-success" data-dismiss="modal">
+        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+        <span>保存</span>
+    </button>
+</div>
+{% endblock %}
