@@ -9,6 +9,11 @@ def categories():
     return render_template('category_list.html')
 
 
+@bp.route('/items', methods=['GET'])
+def items():
+    return render_template('item_list.html')
+
+
 @bp.route('/users', methods=['GET'])
 def users():
     return render_template('user_list.html')
