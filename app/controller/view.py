@@ -60,6 +60,11 @@ def items():
     return render_template('item_list.html', menu=NAVIGATION_MENUS)
 
 
+@bp.route('/login', methods=['GET'])
+def login():
+    return render_template('login.html')
+
+
 @bp.route('/users', methods=['GET'])
 def users():
     return render_template('user_list.html', menu=NAVIGATION_MENUS)

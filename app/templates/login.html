@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row center-block">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title text-center">
+                    Siphon<br />
+                    <small>~ Cafe de GAMOYON ~<small>
+                </h5>
+            </div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">メールアドレス</label>
+                        <input type="text" class="form-control" placeholder="example@email.com" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">パスワード</label>
+                        <input type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary pull-right">
+                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                            <span>ログイン</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
