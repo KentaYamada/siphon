@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+body {
+    background-image: url("../resources/bg_f02.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.main-title {
+    font-family: cursive;
+    font-size: 22px;
+}
+
+.sub-title {
+    font-family: georgia;
+    font-size: 18px;
+}
+
