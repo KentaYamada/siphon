@@ -11,16 +11,16 @@ NAVIGATION_MENUS = [
                 'url': 'view.sales',
                 'icon': 'glyphicon-shopping-cart'
             },
-            {
-                'name': '今日の売上',
-                'url': 'sales/daily',
-                'icon': 'glyphicon-list'
-            },
             # {
-            #     'name': '今月の売上',
-            #     'url': 'view.monthly_sales',
-            #     'icon': 'glyphicon-calendar'
-            # }
+            #     'name': '今日の売上',
+            #     'url': 'sales/daily',
+            #     'icon': 'glyphicon-list'
+            # },
+            {
+                'name': '今月の売上',
+                'url': 'view.monthly_sales',
+                'icon': 'glyphicon-calendar'
+            }
         ]
     },
     {
