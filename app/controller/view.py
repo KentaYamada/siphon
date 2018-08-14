@@ -8,7 +8,7 @@ NAVIGATION_MENUS = [
         'submenu': [
             {
                 'name': 'お会計',
-                'url': 'view.sales',
+                'url': 'view.cashier',
                 'icon': 'glyphicon-shopping-cart'
             },
             # {
@@ -50,9 +50,9 @@ NAVIGATION_MENUS = [
 bp = Blueprint('view', __name__, template_folder='templates')
 
 
-@bp.route('/sales', methods=['GET'])
-def sales():
-    return render_template('sales_register.html', menu=NAVIGATION_MENUS)
+@bp.route('/cashier', methods=['GET'])
+def cashier():
+    return render_template('cashier.html', menu=NAVIGATION_MENUS)
 
 
 @bp.route('/sales/monthly', methods=['GET'])
