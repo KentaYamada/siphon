@@ -6,21 +6,21 @@ NAVIGATION_MENUS = [
         'name': '売上',
         'icon': 'glyphicon-usd',
         'submenu': [
-            # {
-            #     'name': '売上登録',
-            #     'url': 'sales',
-            #     'icon': 'glyphicon-shopping-cart'
-            # },
-            # {
-            #     'name': '今日の売上',
-            #     'url': 'sales/daily',
-            #     'icon': 'glyphicon-list'
-            # },
             {
-                'name': '今月の売上',
-                'url': 'view.monthly_sales',
-                'icon': 'glyphicon-calendar'
-            }
+                'name': 'お会計',
+                'url': 'view.sales',
+                'icon': 'glyphicon-shopping-cart'
+            },
+            {
+                'name': '今日の売上',
+                'url': 'sales/daily',
+                'icon': 'glyphicon-list'
+            },
+            # {
+            #     'name': '今月の売上',
+            #     'url': 'view.monthly_sales',
+            #     'icon': 'glyphicon-calendar'
+            # }
         ]
     },
     {
@@ -48,6 +48,11 @@ NAVIGATION_MENUS = [
 
 
 bp = Blueprint('view', __name__, template_folder='templates')
+
+
+@bp.route('/sales', methods=['GET'])
+def sales():
+    return render_template('sales_register.html', menu=NAVIGATION_MENUS)
 
 
 @bp.route('/sales/monthly', methods=['GET'])
