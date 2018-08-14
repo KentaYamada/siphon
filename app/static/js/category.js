@@ -12,6 +12,7 @@ class CategoryViewModel {
             { id: 2, name: 'Lunch' },
             { id: 3, name: 'Dinner' }
         ]);
+        this.items = ko.observableArray([]);
 
         // bind this
         this.onShowEditDialog = this.onShowEditDialog.bind(this);
