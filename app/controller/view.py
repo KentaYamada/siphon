@@ -6,19 +6,19 @@ NAVIGATION_MENUS = [
         'name': '売上',
         'icon': 'glyphicon-usd',
         'submenu': [
-            {
-                'name': '売上登録',
-                'url': 'sales',
-                'icon': 'glyphicon-shopping-cart'
-            },
-            {
-                'name': '今日の売上',
-                'url': 'sales/daily',
-                'icon': 'glyphicon-list'
-            },
+            # {
+            #     'name': '売上登録',
+            #     'url': 'sales',
+            #     'icon': 'glyphicon-shopping-cart'
+            # },
+            # {
+            #     'name': '今日の売上',
+            #     'url': 'sales/daily',
+            #     'icon': 'glyphicon-list'
+            # },
             {
                 'name': '今月の売上',
-                'url': 'sales/monthly',
+                'url': 'view.monthly_sales',
                 'icon': 'glyphicon-calendar'
             }
         ]
@@ -29,17 +29,17 @@ NAVIGATION_MENUS = [
         'submenu': [
             {
                 'name': '商品カテゴリ',
-                'url': 'categories',
+                'url': 'view.categories',
                 'icon': 'glyphicon-shopping-cart'
             },
             {
                 'name': '商品',
-                'url': 'items',
+                'url': 'view.items',
                 'icon': 'glyphicon-barcode'
             },
             {
                 'name': 'ユーザー',
-                'url': 'users',
+                'url': 'view.users',
                 'icon': 'glyphicon-user'
             }
         ]

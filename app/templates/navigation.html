@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu">
                         {% for s in m['submenu'] %}
                         <li>
-                            <a href="{{ s['url'] }}">
+                            <a href="{{ url_for( s['url'] ) }}">
                                 <span class="glyphicon {{ s['icon'] }}" aria-hidden="true"></span>
                                 <span class="ml5">{{ s['name'] }}<span>
                             </a>
