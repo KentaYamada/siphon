@@ -23,15 +23,4 @@ def edit(id):
 
 @bp.route('/<int:id>', methods=['DELETE'])
 def delete(id):
-    res = {
-        'status': None,
-        'message': '',
-        'errors': []
-    }
-    if id is None:
-        res['status'] = 404
-        res['message'] = 'id is empty'
-    else:
-        res['status'] = 204
-        res['message'] = 'deleted'
-    return jsonify(res)
+    pass
