@@ -50,6 +50,11 @@ NAVIGATION_MENUS = [
 bp = Blueprint('view', __name__, template_folder='templates')
 
 
+@bp.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+
 @bp.route('/cashier', methods=['GET'])
 def cashier():
     return render_template('cashier.html', menu=NAVIGATION_MENUS)
