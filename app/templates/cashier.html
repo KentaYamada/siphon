@@ -1,0 +1,149 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row center-block">
+    <div class="col-md-5">
+        <div class="panel panel-default" data-bind="with: sales">
+            <div class="panel-heading">
+                <h5 class="panel-title text-center">お会計</h5>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">商品</th>
+                        <th class="text-center">数量</th>
+                        <th class="text-center">小計</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: items">
+                    <tr>
+                        <td>
+                            <div data-bind="text: item_name">Morning set</div>
+                            <div class="text-right" data-bind="text: unit_price">1,000</div>
+                        </td>
+                        <td class="text-right" data-bind="text: quantity"></td>
+                        <td class="text-right" data-bind="text: subtotal"></td>
+                        <td>
+                            <!-- href ?? -->
+                            <button type="button"
+                                    class="btn btn-default"
+                                    data-bind="click: $root.onDecreaseItem">
+                                <span class="glyphicon glyphicon-minus-sign text-danger" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                </tbody>
+            </table>
+            <form class="form-horizontal">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <label class="col-md-3 control-label" data-bind="text: $parent.discount_label"></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control text-right" data-bind="" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default">
+                                    <span class="glyphicon glyphicon-remove-sign text-danger"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <label class="form-label">合計</label>
+                        <span class="pull-right" data-bind="text: total_price"></span>
+                    </li>
+                    <li class="list-group-item">
+                        <label class="col-md-3 control-label">お預り</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control text-right" data-bind="value: deposit" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" data-bind="click: $parent.onResetDeposit">
+                                    <span class="glyphicon glyphicon-remove-sign text-danger"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <label class="form-label">おつり</label>
+                        <span class="pull-right" 
+                              data-bind="text: change, css: { 'text-danger': change() < 0 }"></span>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <!-- item selection panel -->
+    <div class="col-md-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title text-center">商品選択</h5>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item" data-bind="foreach: categories">
+                    <div class="btn-toolbar" data-bind="foreach: $data">
+                        <button type="button"
+                                class="btn btn-default"
+                                data-bind="text: name, click: $root.onChangeItems">
+                        </button>
+                    </div>
+                </li>
+                <li class="list-group-item" data-bind="foreach: items">
+                    <div class="btn-group btn-group-justified" data-bind="foreach: $data">
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-default btn-lg"
+                                    data-bind="text: name, click: $root.onAddItem">
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-primary btn-lg"
+                                    data-bind="click: onSwitchDiscountPrice">¥割
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-primary btn-lg"
+                                    data-bind="click: onSwitchDiscountRate">%割
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-danger btn-lg"
+                                    data-bind="click: onReset">AC
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-warning btn-lg"
+                                    data-bind="click: onAddThousand" >+1000
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-warning btn-lg"
+                                    data-bind="click: onAddTenThousand">+10000
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="btn btn-success btn-lg"
+                                    data-bind="enable: can_cashing, click: onSave">決済
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/model/sales.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/model/sales_item.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/cashier.js') }}"></script>
+{% endblock %}

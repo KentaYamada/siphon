@@ -1,13 +1,16 @@
 from flask import Flask
-from app.controller import view, monthly_sales
+from app.controller import cashier
+from app.controller import monthly_sales
+from app.controller import view
 
 
 def startup_app():
     app = Flask(__name__)
 
     blueprints = [
-        view.bp,
-        monthly_sales.bp
+        cashier.bp,
+        monthly_sales.bp,
+        view.bp
     ]
 
     for bp in blueprints:

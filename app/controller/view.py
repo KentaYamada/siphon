@@ -6,11 +6,11 @@ NAVIGATION_MENUS = [
         'name': '売上',
         'icon': 'glyphicon-usd',
         'submenu': [
-            # {
-            #     'name': '売上登録',
-            #     'url': 'sales',
-            #     'icon': 'glyphicon-shopping-cart'
-            # },
+            {
+                'name': 'お会計',
+                'url': 'view.cashier',
+                'icon': 'glyphicon-shopping-cart'
+            },
             # {
             #     'name': '今日の売上',
             #     'url': 'sales/daily',
@@ -48,6 +48,11 @@ NAVIGATION_MENUS = [
 
 
 bp = Blueprint('view', __name__, template_folder='templates')
+
+
+@bp.route('/cashier', methods=['GET'])
+def cashier():
+    return render_template('cashier.html', menu=NAVIGATION_MENUS)
 
 
 @bp.route('/sales/monthly', methods=['GET'])
