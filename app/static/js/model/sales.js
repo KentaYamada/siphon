@@ -9,9 +9,9 @@ class Sales {
         this.deposit = ko.observable(0);
 
         // computed attributes
-        this.total_price = ko.computed(() => {
-            let total = 0;
-            ko.utils.arrayForEach(this.items(), (item) => {
+        this.total_price = ko.computed(function() {
+            var total = 0;
+            ko.utils.arrayForEach(this.items(), function(item) {
                 total += item.subtotal();
             });
 
@@ -25,8 +25,9 @@ class Sales {
             return total;
         }, this);
 
-        this.change = ko.computed(() => {
-            return this.total_price() - this.deposit();
+        this.change = ko.computed(function() {
+            var change = this.deposit() - this.total_price();
+            return change < 0 ? 0 : change;
         }, this);
     }
 
@@ -34,16 +35,19 @@ class Sales {
      * increase item
      * @param {Item} selected item
      */
-    increaseItem(item) {
-        const item = ko.utils.arrayFirst(this.items(), (item) => {
-            return item.item_name === item_name;
+    increaseItem(selected_item) {
+        var item = ko.utils.arrayFirst(this.items(), function(item) {
+            return selected_item.name === item.item_name();
         });
 
         if (item === null) {
             this.items.push(new SalesItem(
+                selected_item.name,
+                selected_item.unit_price,
+                1
             ));
         } else {
-            this.items.quantity(this.quantity() + 1);
+            item.quantity(item.quantity() + 1);
         }
     }
 
@@ -52,10 +56,10 @@ class Sales {
      * @param {SalesItem} selected item
      */
     decreaseItem(item) {
-        if (--this.items().length < 1) {
+        if ((item.quantity() - 1) < 1) {
             this.items.remove(item);
         } else {
-            item.quantity(quantity() -1);
+            item.quantity(item.quantity() -1);
         }
     }
 
@@ -73,7 +77,7 @@ class Sales {
      * save data
      */
     save() {
-        console.log(ko.toJSON(this);
+        console.log(ko.toJSON(this));
     }
 }
 

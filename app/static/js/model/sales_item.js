@@ -6,7 +6,7 @@ class SalesItem {
         this.item_name = ko.observable(item_name);
         this.unit_price = ko.observable(unit_price);
         this.quantity = ko.observable(quantity);
-        this.subtotal = ko.computed(() => {
+        this.subtotal = ko.computed(function() {
             return this.unit_price() * this.quantity();
         }, this);
     }
