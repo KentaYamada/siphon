@@ -35,7 +35,8 @@ def generatePanel():
             item_id += 1
         category['items'] = to_dimention_array(category['items'], 10, 3)
         data['categories'].append(category)
-    return to_dimention_array(data['categories'], 2, 5)
+    data['categories'] = to_dimention_array(data['categories'], 2, 5)
+    return data
 
 
 @bp.route('/', methods=['GET'])
