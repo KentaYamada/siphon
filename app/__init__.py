@@ -1,11 +1,16 @@
 from flask import Flask
-from app.controller import view
+from app.controller import view, monthly_sales
+
 
 def startup_app():
     app = Flask(__name__)
 
-    # todo: register blueprints
-    app.register_blueprint(view.bp)
+    blueprints = [
+        view.bp,
+        monthly_sales.bp
+    ]
 
+    for bp in blueprints:
+        app.register_blueprint(bp)
 
     return app

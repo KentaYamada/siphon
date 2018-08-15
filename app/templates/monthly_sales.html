@@ -5,9 +5,9 @@
         <h4>今月の売上</h4>
         <form class="form-inline search-form">
             <div class="input-group">
-                <input type="month" class="form-control" />
+                <input type="month" class="form-control" data-bind="value: sales_month" />
                 <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default">
+                    <button type="submit" class="btn btn-default" data-bind="click: onSearchMonthSales">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -25,161 +25,31 @@
                     <th class="text-center alert-info">Sat</th>
                 </tr>
             </thead>
+            <!-- ko if: noitem -->
             <tbody>
                 <tr>
-                    <td class="text-center bg-danger">
-                        <div>1</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>2</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>3</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>4</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>5</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>6</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>7</div>
-                        <a href="#">100,000</a>
-                    </td>
+                    <td class="text-center" colspan="7">表示するデータがありません。</td>
                 </tr>
-                <tr>
-                    <td class="text-center bg-danger">
-                        <div>1</div>
-                        <a href="#">100,000</a>
-                    </td>
+            </tbody>
+            <!-- /ko -->
+            <!-- ko ifnot: noitem -->
+            <tbody data-bind="foreach: monthly_sales">
+                <tr data-bind="foreach: $data">
                     <td class="text-center">
-                        <div>2</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>3</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>4</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>5</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>6</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>7</div>
-                        <a href="#">100,000</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center bg-danger">
-                        <div>1</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>2</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>3</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>4</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>5</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>6</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>7</div>
-                        <a href="#">100,000</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center bg-danger">
-                        <div>1</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>2</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>3</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>4</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>5</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>6</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>7</div>
-                        <a href="#">100,000</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center bg-danger">
-                        <div>1</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>2</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>3</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>4</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>5</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>6</div>
-                        <a href="#">100,000</a>
-                    </td>
-                    <td class="text-center">
-                        <div>7</div>
-                        <a href="#">100,000</a>
+                        <!-- ko if: sales_date -->
+                        <div data-bind="text: sales_date"></div>
+                        <a href="#" data-bind="text: amount"></a>
+                        <!-- /ko -->
                     </td>
                 </tr>
             </tbody>
+            <!-- /ko -->
         </table>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/monthly_sales.js') }}"}></script>
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/monthly_sales.css') }}">
