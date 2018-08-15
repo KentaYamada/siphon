@@ -21,6 +21,14 @@
                         <th></th>
                     </tr>
                 </thead>
+                <!-- ko if: noitem -->
+                <tbody>
+                    <tr>
+                        <td class="text-center" colspan="2">表示するデータがありません。</td>
+                    </tr>
+                </tbody>
+                <!-- /ko -->
+                <!-- ko ifnot: noitem -->
                 <tbody data-bind="foreach: categories">
                     <tr>
                         <td data-bind="text: name"></td>
@@ -36,6 +44,7 @@
                         </td>
                     </tr>
                 </tbody>
+                <!-- /ko -->
             </table>
         </div>
     </div>
@@ -44,6 +53,6 @@
 {% include "category_edit_modal.html" %}
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/model.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/model/category.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/category.js') }}"></script>
 {% endblock %}
