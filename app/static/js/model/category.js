@@ -19,6 +19,11 @@ class Category {
         return requestApi(url, method, ko.toJSON(this));
     }
 
+    delete() {
+        var url = `/api/categories/${this.id()}`;
+        return requestApi(url,'DELETE');
+    }
+
     static findAll() {
         return requestApi('/api/categories', 'GET');
     }
