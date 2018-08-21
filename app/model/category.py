@@ -7,3 +7,6 @@ class Category():
 
     def find_all(self):
         return [{'id': i, 'name': 'Test{}'.format(i)} for i in range(1, 11)]
+
+    def save(self):
+        return True
