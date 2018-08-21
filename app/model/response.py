@@ -20,65 +20,87 @@ class ResponseBodyCreator():
             'status_code': None
         }
 
-    @property
-    def response_body(self):
+    def __get_success_response(self, data, status_code, message):
+        self.__response['message'] = message
+        self.__response['status_code'] = status_code
+        if data is not None:
+            self.__response.update(data)
         return self.__response
 
-    def added(self, data, message=''):
+    def __get_failed_response(self, errors, status_code, message):
+        if errors is None:
+            raise ValueError()
+        self.__response['errors'] = errors
+        self.__response['message'] = message
+        self.__response['status_code'] = status_code
+        return self.__response
+
+    def added(self, data, status_code=CREATED, message=''):
         """ get response body if added """
-        self.__response['status_code'] = CREATED
-        self.__response['message'] = message if not message else '登録しました。'
-        self.__response['errors'] = []
-        self.__response.update(data)
-        return self.__response
+        if not message:
+            message = '登録しました。'
+        return self.__get_success_response(data, status_code, message)
 
-    def add_failed(self, errors, message=''):
+    def add_failed(self, errors, status_code=BAD_REQUEST, message=''):
         """ get response body if add failed """
-        self.__response['status_code'] = BAD_REQUEST
-        self.__response['message'] = message if not message else '登録に失敗しました。'
-        self.__response['errors'] = errors
-        return self.__response
+        if not message:
+            message = '登録に失敗しました'
+        return self.__get_failed_response(errors, status_code, message)
 
-    def edited(self, data, message=''):
+    def edited(self, data, status_code=OK, message=''):
         """ get response body if updated """
-        self.__response['status_code'] = CREATED
-        self.__response['message'] = message if not message else '変更しました。'
-        self.__response['errors'] = []
-        self.__response.update(data)
-        return self.__response
+        if not message:
+            message = '変更しました'
+        return self.__get_success_response(data, status_code, message)
 
-    def edit_failed(self, errors, message=''):
+    def edit_failed(self, errors, status_code=CONFLICT, message=''):
         """ get response body if update failed """
-        self.__response['status_code'] = CONFLICT
-        self.__response['message'] = message if not message else '変更に失敗しました。'
-        self.__response['errors'] = errors
-        return self.__response
+        if not message:
+            message = '変更に失敗しました'
+        return self.__get_failed_response(errors, status_code, message)
 
-    def set_delete_success(self, message=''):
+    def deleted(self, status_code=NO_CONTENT, message=''):
         """ get response body if deleted """
-        self.__response['status_code'] = NO_CONTENT
-        self.__response['message'] = message if not message else '削除しました。'
-        self.__response['errors'] = []
-        return self.__response
+        if not message:
+            message = '削除しました'
+        return self.__get_success_response(None, status_code, message)
 
-    def set_delete_failed(self, data, message=''):
+    def delete_failed(self, errors, status_code=CONFLICT, message=''):
         """ get response body if delete failed """
-        pass
+        if not message:
+            message = '削除に失敗しました'
+        return self.__get_failed_response(errors, status_code, message)
 
-    def fetch_success(self, data, message=''):
+    def fetch_success(self, data, status_code=OK, message=''):
         """ get response body if fetched """
-        self.__response['status_code'] = OK
-        self.__response['message'] = message if not message else 'データ取得成功'
-        self.__response['error'] = []
-        return self.__response
+        if not message:
+            message = 'データ取得成功'
+        return self.__get_success_response(data, status_code, message)
 
-    def set_fetch_failed(self, errors, message=''):
+    def fetch_failed(self, errors, status_code, message=''):
         """ get response body if fetch failed"""
-        pass
+        raise NotImplementedError()
 
-    def fetch_no_data(self, message=''):
+    def fetch_no_data(self, status_code=NO_CONTENT, message=''):
         """ get response if fetch no data """
-        self.__response['status_code'] = NO_CONTENT
-        self.__response['message'] = message if not message else 'データがありません。'
-        self.__response['errors'] = []
-        return self.__response
+        if not message:
+            message = 'データがありません'
+        return self.__get_success_response((), status_code, message)
+
+    def notfound(self, message=''):
+        """ get response if resource not found """
+        if not message:
+            message = '要求されたリソースは見つかりませんでした'
+        return self.__get_failed_response((), NOT_FOUND, message)
+
+    def unauthorized(self, message=''):
+        """ get response if unauthorized request """
+        if not message:
+            message = '認証されていません'
+        return self.__get_failed_response((), UNAUTHORIZED, message)
+
+    def internal_server_error(self, message=''):
+        """ get response if exceptions """
+        if not message:
+            message = 'サーバープログラムでエラーが発生しました'
+        return self.__get_failed_response((), INTERNAL_SERVER_ERROR, message)
