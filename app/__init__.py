@@ -1,5 +1,6 @@
 from flask import Flask
 from app.controller import cashier
+from app.controller import item
 from app.controller import monthly_sales
 from app.controller import user
 from app.controller import view
@@ -10,6 +11,7 @@ def startup_app():
 
     blueprints = [
         cashier.bp,
+        item.bp,
         monthly_sales.bp,
         user.bp,
         view.bp
