@@ -1,9 +1,11 @@
-import unittest
 import json
+import unittest
+from urllib.parse import urljoin
 from app import startup_app
 
 
 # constant
+CONTENT_TYPE = 'application/json'
 END_POINT = '/api/items/'
 
 
