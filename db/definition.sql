@@ -22,6 +22,14 @@ CREATE TABLE sales_items (
     UNIQUE(sales_id, item_no)
 );
 
+CREATE TABLE monthly_sales (
+    id serial NOT NULL,
+    sales_date date NOT NULL,
+    proceeds integer NOT NULL
+    PRIMARY KEY(id),
+    UNIQUE(sales_date)
+);
+
 
 CREATE TABLE categories (
     id serial NOT NULL,
