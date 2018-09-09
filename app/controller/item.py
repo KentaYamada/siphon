@@ -23,31 +23,68 @@ def index():
 @bp.route('/', methods=['POST'])
 def add():
     body_creator = ResponseBodyCreator()
+
     if request.json is None:
         body = body_creator.bad_request(None)
         res = jsonify(body)
         res.status_code = body['status_code']
         return res
-    body = body_creator.created(request.json)
+
+    item = Item(
+        None,
+        request.json['category_id'],
+        request.json['name'],
+        request.json['unit_price'])
+    saved = item.save()
+
+    if saved:
+        body = body_creator.created(request.json)
+    elif not saved and item.errors:
+        body = body_creator.bad_request(item.errors)
+
     res = jsonify(body)
     res.status_code = body['status_code']
     return res
 
 
-@bp.route('/<int:item_id>', methods=['PUT'])
-def edit(item_id):
+@bp.route('/<int:id>', methods=['PUT'])
+def edit(id):
     body_creator = ResponseBodyCreator()
+
     if request.json is None:
         body = body_creator.bad_request()
         res = jsonify(body)
         res.status_code = body['status_code']
         return res
-    body = body_creator.created(request.json)
+
+    item = Item(
+        id,
+        request.json['category_id'],
+        request.json['name'],
+        request.json['unit_price'])
+    saved = item.save()
+
+    if saved:
+        body = body_creator.ok(request.json)
+    elif not saved and len(item.errors) > 0:
+        body = body_creator.conflict(item.errors)
+
     res = jsonify(body)
     res.status_code = body['status_code']
     return res
 
 
-@bp.route('/<int:item_id>', methods=['DELETE'])
-def delete(item_id):
-    pass
+@bp.route('/<int:id>', methods=['DELETE'])
+def delete(id):
+    item = Item(id)
+    deleted = item.delete()
+    body_creator = ResponseBodyCreator()
+
+    if deleted:
+        body = body_creator.no_content()
+    else:
+        body = body_creator.not_found()
+
+    res = jsonify(body)
+    res.status_code = body['status_code']
+    return res

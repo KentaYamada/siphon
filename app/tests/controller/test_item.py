@@ -9,16 +9,18 @@ CONTENT_TYPE = 'application/json'
 END_POINT = '/api/items/'
 
 
-class TestItem(unittest.TestCase):
-    def setUp(self):
+class TestItemApi(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
         app = startup_app()
-        self.api = app.test_client()
+        cls.client = app.test_client()
 
-    def tearDown(self):
-        self.api = None
+    @classmethod
+    def tearDownClass(cls):
+        cls.client = None
 
     def test_index(self):
-        res = self.api.get(END_POINT)
+        res = TestItemApi.client.get(END_POINT)
         self.assertEqual(200, res.status_code)
 
     def test_add_success(self):
@@ -28,14 +30,62 @@ class TestItem(unittest.TestCase):
             'name': 'Test item',
             'unit_price': 500
         })
-        res = self.api.post(
+        res = TestItemApi.client.post(
             END_POINT,
-            content_type='application/json',
+            content_type=CONTENT_TYPE,
             data=data)
         self.assertEqual(201, res.status_code)
 
-    def test_add_when_empty_data(self):
-        res = self.api.post(
+    def test_add_ng_when_no_data(self):
+        res = TestItemApi.client.post(
             END_POINT,
             content_type='application/json')
         self.assertEqual(400, res.status_code)
+
+    def test_add_ng_when_invalid_data(self):
+        data = json.dumps({
+            'id': None,
+            'category_id': 1,
+            'name': 'Test item',
+            'unit_price': None
+        })
+        res = TestItemApi.client.post(
+            END_POINT,
+            content_type='application/json',
+            data=data)
+        self.assertEqual(400, res.status_code)
+
+    def test_edit_ok(self):
+        url = urljoin(END_POINT, '1')
+        data = json.dumps({
+            'category_id': 1,
+            'name': 'Test item',
+            'unit_price': 500
+        })
+        res = TestItemApi.client.put(
+            url,
+            content_type=CONTENT_TYPE,
+            data=data)
+        self.assertEqual(200, res.status_code)
+
+    def test_edit_ng(self):
+        url = urljoin(END_POINT, '1')
+        data = json.dumps({
+            'category_id': None,
+            'name': 'Test item',
+            'unit_price': 500
+        })
+        res = TestItemApi.client.put(
+            url,
+            content_type=CONTENT_TYPE,
+            data=data)
+        self.assertEqual(409, res.status_code)
+
+    def test_delete_ok(self):
+        url = urljoin(END_POINT, '1')
+        res = TestItemApi.client.delete(url)
+        self.assertEqual(204, res.status_code)
+
+    def test_delete_ng(self):
+        res = TestItemApi.client.delete(END_POINT)
+        self.assertEqual(405, res.status_code)
