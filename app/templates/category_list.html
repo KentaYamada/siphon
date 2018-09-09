@@ -8,7 +8,7 @@
 <div class="row center-block">
     <div class="col-md-10 col-md-offset-1">
         <div>
-            <button type="button" class="btn btn-success pull-right" data-bind="click: onShowEditDialog">
+            <button type="button" class="btn btn-success pull-right" data-bind="click: onClickAdd">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 <span>追加</span>
             </button>
@@ -21,28 +21,43 @@
                         <th></th>
                     </tr>
                 </thead>
+                <!-- ko if: noitem -->
+                <tbody>
+                    <tr>
+                        <td class="text-center" colspan="2">表示するデータがありません。</td>
+                    </tr>
+                </tbody>
+                <!-- /ko -->
+                <!-- ko ifnot: noitem -->
                 <tbody data-bind="foreach: categories">
                     <tr>
                         <td data-bind="text: name"></td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-primary">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-bind="click: $parent.onClickEdit">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 <span>編集</span>
                             </button>
-                            <button type="button" class="btn btn-danger" data-bind="click: $root.onDelete">
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    data-bind="click: $parent.onClickDelete">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 <span>削除</span>
                             </button>
                         </td>
                     </tr>
                 </tbody>
+                <!-- /ko -->
             </table>
         </div>
     </div>
 </div>
 
 {% include "category_edit_modal.html" %}
+{% include "category_delete.html" %}
 {% endblock %}
 {% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/model/category.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/category.js') }}"></script>
 {% endblock %}
