@@ -7,7 +7,7 @@
 # Constants
 EXEC_SCRIPT_PATH=$(cd $(dirname $0); pwd)
 PROJECT_ROOT_PATH=$(pwd | xargs dirname)
-FLASK_SERVER_PATH="${PROJECT_ROOT_PATH}/server.py"
+FLASK_SERVER_PATH="${PROJECT_ROOT_PATH}/siphon/server.py"
 
 
 function echo_help() {
@@ -30,15 +30,20 @@ function run_vm() {
     VBoxManage startvm "Ubuntu14.04" -type headless
 }
 
-while getopts hfv: OPT
-do
-    case $OPT in
-        "f" ) run_flask_server ;;
-        "h" ) echo_help ;;
-        "v" ) run_vm ;;
-         *  ) run_vm; run_flask_server ;;
-    esac
-done
+if [ $# -ne 0 ]; then
+    while getopts hfv: OPT
+    do
+        case $OPT in
+            "f" ) run_flask_server ;;
+            "h" ) echo_help ;;
+            "v" ) run_vm ;;
+             *  ) echo 'run' ; run_vm; run_flask_server ;;
+        esac
+    done
+else
+    run_vm
+    run_flask_server
+fi
 
 echo "completed"
 exit 0
