@@ -1,4 +1,8 @@
-from flask import jsonify, Blueprint
+from datetime import datetime
+from flask import jsonify, request, Blueprint
+from app.model.sales import Sales
+from app.model.sales_item import SalesItem
+from app.model.response import ResponseBodyCreator
 
 
 bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
@@ -47,4 +51,49 @@ def index():
 
 @bp.route('/', methods=['POST'])
 def add():
-    pass
+    body_creator = ResponseBodyCreator()
+
+    if request.json is None:
+        body = body_creator.bad_request(None)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    if request.json['items'] is None or len(request.json['items']) < 1:
+        body = body_creator.bad_request('売上明細データがセットされていません')
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    now_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    items = []
+    for i, item in enumerate(request.json['items']):
+        items.append(SalesItem(
+            None,
+            None,
+            now_date,
+            i + 1,
+            item['item_name'],
+            item['unit_price'],
+            item['quantity'],
+            item['subtotal']))
+    sales = Sales(
+        None,
+        now_date,
+        request.json['total_price'],
+        request.json['discount_price'],
+        request.json['discount_rate'],
+        request.json['inclusive_tax'],
+        request.json['exclusive_tax'],
+        request.json['deposit'],
+        items)
+    saved = sales.save()
+
+    if saved:
+        body = body_creator.created(None)
+    elif not saved and sales.errors:
+        body = body_creator.bad_request(sales.errors)
+
+    res = jsonify(body)
+    res.status_code = body['status_code']
+    return res

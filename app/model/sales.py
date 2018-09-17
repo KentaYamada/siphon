@@ -33,7 +33,7 @@ class Sales():
         elif self.__total_price <= 0:
             isValid = False
             self.__set_error('total_price', '1円未満の合計金額は登録できません')
-        if self.__total_price < self.__discount_price:
+        elif self.__total_price < self.__discount_price:
             isValid = False
             self.__set_error('discount_price', '合計金額以上の値引額が設定されています')
         if self.__discount_rate >= 100:
