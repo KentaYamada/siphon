@@ -30,7 +30,7 @@ class Category():
     def find_all(cls):
         return [
             {'id': i, 'name': 'Category{}'.format(i)}
-            for i in range(1, 11)]
+            for i in range(1, 10)]
 
     def __set_error(self, field, message):
         self.__errors.append({'name': field, 'message': message})

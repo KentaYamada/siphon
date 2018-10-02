@@ -12,7 +12,7 @@ class Category {
         var method = 'POST';
 
         if (this.id() !== null) {
-            url += this.id();
+            url = url + this.id();
             method = 'PUT';
         }
 

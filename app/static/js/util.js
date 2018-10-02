@@ -11,7 +11,7 @@
 function requestApi(url, method, data) {
     var option = {
         contentType: 'application/json',
-        data: { data },
+        data: data,
         dataType: 'json',
         method: method,
         url: url

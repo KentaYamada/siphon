@@ -1,5 +1,5 @@
 {% extends "modal.html" %}
-{% set modal_id = 'category_remove_modal' %}
+{% set modal_id = 'category-remove-modal' %}
 {% block modal_content %}
 <div class="modal-header bg-danger">
     <h4 class="modal-title">
@@ -8,7 +8,7 @@
     </h4>
 </div>
 <div class="modal-body">
-    <p data-bind="text: removeConfirmMessage"></p>
+    <p data-bind="text: confirmMessage"></p>
     <small class="text-danger">削除したデータを元に戻すことはできません。</small>
 </div>
 <div class="modal-footer">
@@ -16,7 +16,7 @@
         <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
         <span>キャンセル</span>
     </button>
-    <button type="submit" class="btn btn-danger" data-bind="click: $root.onRemove">
+    <button type="submit" class="btn btn-danger" data-bind="click: onRemove">
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         <span>削除</span>
     </button>

@@ -1,4 +1,5 @@
 {% extends "modal.html" %}
+{% set modal_id ='category-edit-modal' %}
 {% block modal_content %}
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">
@@ -15,13 +16,17 @@
             <span class="text-danger">*</span>…必須項目</span>
         </small>
     </p>
-    <form>
+    <form data-bind="with: category">
         <div class="form-group">
             <label class="form-control-label">
                 <span class="text-danger">*</span>
                 カテゴリ名
             </label>
-            <input type="text" class="form-control" name="username" />
+            <input type="text" class="form-control" data-bind="value: name" />
+            <ul class="validation-errors">
+                <li><small class="alert-danger error-label">カテゴリ名は必須です</small></li>
+                <li><small class="alert-danger error-label">カテゴリ名は20文字以内に入力してください。</small></li>
+            </ul>
         </div>
     </form>
 </div>
@@ -30,7 +35,7 @@
         <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
         <span>閉じる</span>
     </button>
-    <button type="submit" class="btn btn-success" data-dismiss="modal">
+    <button type="submit" class="btn btn-success" data-bind="click: onSave">
         <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
         <span>保存</span>
     </button>

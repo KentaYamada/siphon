@@ -9,7 +9,7 @@ bp = Blueprint('category', __name__, url_prefix='/api/categories')
 @bp.route('/', methods=['GET'])
 def index():
     body_createor = ResponseBodyCreator()
-    body = body_createor.ok(Category.find_all())
+    body = body_createor.ok({'categories': Category.find_all()})
     res = jsonify(body)
     res.status_code = body['status_code']
     return res
@@ -56,7 +56,7 @@ def edit(id):
     saved = category.save()
 
     if saved:
-        body = body_creator.ok(request.json)
+        body = body_creator.ok({'data': request.json})
     elif not saved and len(category.errors) > 0:
         body = body_creator.conflict(category.errors)
 
