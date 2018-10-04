@@ -10,6 +10,12 @@ DATABASES = {
         'dbname': 'pgadapter_test',
         'user': 'kenta',
         'password': 'kenta'
+    },
+    'develop': {
+        'host': 'localhost',
+        'dbname': 'siphon_dev',
+        'user': 'kenta',
+        'password': 'kenta'
     }
 }
 
@@ -17,6 +23,6 @@ DATABASES = {
 def get_db_config(key):
     if not key:
         raise ValueError('key should be set value.')
-    if not key in DATABASES:
+    if key not in DATABASES:
         raise Exception('Missing dabase config.')
     return DATABASES[key]

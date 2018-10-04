@@ -12,6 +12,11 @@ class PgAdapter():
         self.__config = config
         self.__con = None
         self.__cur = None
+        self.__affected_rows = None
+
+    @property
+    def affected_rows(self):
+        return self.__affected_rows
 
     def __create_cursor(self):
         """
@@ -22,8 +27,8 @@ class PgAdapter():
         if self.__con is None or self.__con.closed:
             self.__con = psycopg2.connect(**self.__config)
         if self.__cur is None or self.__cur.closed:
-            self.__cur = self.__con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
+            self.__cur = self.__con.cursor(
+                cursor_factory=psycopg2.extras.DictCursor)
 
     def save(self, command, data):
         """
@@ -33,6 +38,7 @@ class PgAdapter():
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, data)
+        self.__affected_rows = self.__cur.rowcount
 
     def remove(self, command, data=None):
         """
@@ -90,7 +96,7 @@ class PgAdapter():
 
     def bulk_insert(self, query, values):
         """
-            run bulk insert values 
+            run bulk insert values
         """
         if not query:
             raise ValueError()
