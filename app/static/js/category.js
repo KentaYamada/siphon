@@ -17,12 +17,19 @@ class EditCategoryViewModel {
     }
 
     onSave() {
+        var self = this;
+
+        this.errors(null);
         this.category().save()
             .done(function(res) {
-                console.log(res)
+                console.log(res);
+                $('#category-list').trigger('onRequestSuccess', [res.message]);
+                $('#category-edit-modal').modal('hide');
             })
             .fail(function(xhr) {
-                console.log(xhr);
+                if (xhr.status === 400) {
+                    self.errors(xhr.responseJSON.errors);
+                }
             });
     }
 }
@@ -49,6 +56,8 @@ class RemoveCategoryViewModel {
         this.category().remove()
             .done(function(res) {
                 console.log(res)
+                $('#category-list').trigger('onRequestSuccess', ['削除しました']);
+                $('#category-remove-modal').modal('hide');
             });
     }
 }
@@ -58,6 +67,7 @@ class CategoryViewModel {
     constructor() {
         this.category = ko.observable(new Category(null, ''));
         this.categories = ko.observableArray();
+        this.flashMessage = new FlashMessageViewModel();
         this.editModal = new EditCategoryViewModel();
         this.removeModal = new RemoveCategoryViewModel();
 
@@ -65,6 +75,12 @@ class CategoryViewModel {
         this.onShowAddDialog = this.onShowAddDialog.bind(this);
         this.onShowEditDialog = this.onShowEditDialog.bind(this);
         this.onBeforeRemoveDialog = this.onBeforeRemoveDialog.bind(this);
+        this.onRequestSuccess = this.onRequestSuccess.bind(this);
+        this.onRequestFailure = this.onRequestFailure.bind(this);
+
+        // listen to events
+        $('#category-list').on('onRequestSuccess', this.onRequestSuccess);
+        $('#category-list').on('onRequestFailure', this.onRequestFailure);
 
         this._fetchCategories();
     }
@@ -79,6 +95,14 @@ class CategoryViewModel {
 
     onBeforeRemoveDialog(category) {
         this.removeModal.onShow(category);
+    }
+
+    onRequestSuccess(e, message) {
+        this.flashMessage.onShowSuccessMessage(message);
+    }
+
+    onRequestFailure(e, message) {
+        this.flashMessage.onShowFailMessage(message);
     }
 
     _fetchCategories() {
@@ -104,10 +128,13 @@ class CategoryViewModel {
 
 $(function() {
     var mainViewModel = new CategoryViewModel();
-
     ko.applyBindings(
         mainViewModel,
         document.getElementById('category-list')
+    );
+    ko.applyBindings(
+        mainViewModel.flashMessage,
+        document.getElementById('flash-message-area')
     );
     ko.applyBindings(
         mainViewModel.editModal,

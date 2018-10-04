@@ -1,7 +1,6 @@
-.container {
-    padding-top: 60px;
+.flash-message {
+    margin-top: 50px;
 }
-
 
 /**
  * margin
@@ -9,7 +8,6 @@
 .ml5 {
     margin-left: 5px;
 }
-
 
 /**
  * validation error style

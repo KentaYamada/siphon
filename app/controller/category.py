@@ -56,7 +56,7 @@ def edit(id):
     saved = category.save()
 
     if saved:
-        body = body_creator.ok({'data': request.json})
+        body = body_creator.ok({'data': request.json}, '更新しました')
     elif not saved and len(category.errors) > 0:
         body = body_creator.conflict(category.errors)
 

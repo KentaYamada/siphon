@@ -23,10 +23,13 @@
                 カテゴリ名
             </label>
             <input type="text" class="form-control" data-bind="value: name" />
-            <ul class="validation-errors">
-                <li><small class="alert-danger error-label">カテゴリ名は必須です</small></li>
-                <li><small class="alert-danger error-label">カテゴリ名は20文字以内に入力してください。</small></li>
+            <!-- ko if: $parent.errors -->
+            <ul class="validation-errors" data-bind="foreach: $parent.errors.name">
+                <li>
+                    <small class="alert-danger error-label" data-bind="text: $data"></small>
+                </li>
             </ul>
+            <!-- /ko -->
         </div>
     </form>
 </div>

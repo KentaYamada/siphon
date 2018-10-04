@@ -2,7 +2,7 @@ class Category():
     def __init__(self, id=None, name=''):
         self.__id = id
         self.__name = name
-        self.__errors = []
+        self.__errors = {}
 
     @property
     def errors(self):
@@ -33,4 +33,7 @@ class Category():
             for i in range(1, 10)]
 
     def __set_error(self, field, message):
-        self.__errors.append({'name': field, 'message': message})
+        if field in self.__errors:
+            self.__errors[field].append(message)
+        else:
+            self.__errors[field] = [message]
