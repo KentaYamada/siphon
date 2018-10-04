@@ -4,6 +4,7 @@ from app.config import get_db_config
 
 class Category():
     db = PgAdapter(get_db_config('develop'))
+    MAX_ADDABLE_DATA = 10
 
     def __init__(self, id=None, name=''):
         self.__id = id
@@ -19,6 +20,11 @@ class Category():
         isValid = True
         if not self.__name:
             self.__set_error('name', '商品カテゴリ名は必須です')
+            isValid = False
+
+        saved_rows = Category.db.fetch_rowcount('categories')
+        if self.MAX_ADDABLE_DATA <= saved_rows:
+            self.__set_error('maximum row', '商品カテゴリの上限に達しています')
             isValid = False
         return isValid
 
@@ -67,7 +73,6 @@ class Category():
         except Exception as e:
             print(e)
             raise e
-        print(categories)
         return categories
 
     def __set_error(self, field, message):

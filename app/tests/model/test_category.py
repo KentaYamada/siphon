@@ -65,6 +65,16 @@ class TestCategory(unittest.TestCase):
             print(e)
         self.assertEqual(10, len(categories))
 
+    def test_save_ng_when_maximum_rows(self):
+        category = Category(None, 'Invalid')
+        saved = False
+        try:
+            self._init_categories()
+            saved = category.save()
+        except Exception as e:
+            print(e)
+        self.assertFalse(saved)
+
     def _init_categories(self):
         data = ['Category{0}'.format(i) for i in range(1, 11)]
         for d in data:
