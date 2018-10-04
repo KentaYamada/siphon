@@ -22,9 +22,8 @@ class EditCategoryViewModel {
         this.errors(null);
         this.category().save()
             .done(function(res) {
-                console.log(res);
-                $('#category-list').trigger('onRequestSuccess', [res.message]);
                 $('#category-edit-modal').modal('hide');
+                $('#category-list').trigger('onRequestSuccess', [res.message]);
             })
             .fail(function(xhr) {
                 if (xhr.status === 400) {
@@ -99,6 +98,7 @@ class CategoryViewModel {
 
     onRequestSuccess(e, message) {
         this.flashMessage.onShowSuccessMessage(message);
+        this._fetchCategories();
     }
 
     onRequestFailure(e, message) {
