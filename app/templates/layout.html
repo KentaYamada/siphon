@@ -17,17 +17,33 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
         <!-- utils.js -->
         <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <!-- flash message -->
+        <script type="text/javascript" src="{{ url_for('static', filename='js/flash_message.js') }}"></script>
         <link rel="shortcut icon" href="{{ url_for('static', filename='resources/favicon.ico') }}">
+        <!-- page static files -->
+        {% block styles %}{% endblock %}
+        {% block scripts %}{% endblock %}
         <title>Siphon</title>
     </head>
     <body>
         {% if menu is defined %}
             {% include "navigation.html" %}
         {% endif %}
+
+        <div id="flash-message-area" class="flash-message">
+            <!-- ko if: message -->
+            <div class="alert alert-dismissible fade in"
+                 data-bind="css: messageStyle"
+                 data-dismiss="alert">
+                <button type="button" class="close" data-dissmiss="alert">
+                    <span aria-hidden="true">x</span>
+                </button>
+                <strong data-bind="text:message"></strong>
+            </div>
+            <!-- /ko -->
+        </div>
         <div class="container">
             {% block body %}{% endblock %}
         </div>
     </body>
-    {% block styles %}{% endblock %}
-    {% block scripts %}{% endblock %}
 </html>
