@@ -12,15 +12,10 @@ class PgAdapter():
         self.__config = config
         self.__con = None
         self.__cur = None
-        self.__affected_rows = None
-
-    @property
-    def affected_rows(self):
-        return self.__affected_rows
 
     def __create_cursor(self):
         """
-            attach database and create session
+            attach database and create cursor
         """
         if self.__config is None:
             raise ValueError()
@@ -32,23 +27,23 @@ class PgAdapter():
 
     def save(self, command, data):
         """
-            run save or change procedure
+            execute save or change procedure
         """
         if not command or data is None:
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, data)
-        self.__affected_rows = self.__cur.rowcount
+        return self.__cur.rowcount
 
     def remove(self, command, data=None):
         """
-            run remove procedure
+            execute remove procedure
         """
-        self.save(command, data)
+        return self.save(command, data)
 
     def find(self, command, condition=None):
         """
-            run find rows procedure
+            execute find rows procedure
         """
         if not command:
             raise ValueError()
@@ -58,7 +53,7 @@ class PgAdapter():
 
     def find_one(self, command, condition):
         """
-            run find row procedure
+            execute find row procedure
         """
         if not command:
             raise ValueError()
@@ -68,12 +63,13 @@ class PgAdapter():
 
     def execute(self, query, data=None):
         """
-            run sql command
+            execute sql command
         """
         if not query:
             raise ValueError()
         self.__create_cursor()
         self.__cur.execute(query, data)
+        return self.__cur.rowcount
 
     def fetch_rowcount(self, tablename):
         """
@@ -104,7 +100,7 @@ class PgAdapter():
             raise ValueError()
         self.__create_cursor()
         self.__cur.executemany(query, values)
-        return len(values) == self.__cur.rowcount
+        return self.__cur.rowcount
 
     def commit(self):
         """

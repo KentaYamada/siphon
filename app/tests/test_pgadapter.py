@@ -15,41 +15,30 @@ class TestPgAdapterTest(unittest.TestCase):
         self.__db.commit()
 
     def test_add_success(self):
-        data = (None, 'alfa romeo')
-        expected = False
-        try:
-            self.__db.save('save_car_maker', data)
-            self.__db.commit()
-            expected = True
-        except Exception as e:
-            self.__db.rollback()
-            expected = False
-        self.assertEqual(True, expected)
+        result = self.__db.save('save_car_maker', (None, 'alfa romeo'))
+        self.__db.commit()
+        self.assertEqual(1, result)
 
     def test_edit_success(self):
+        # modify data
         self.init_test_data()
-        try:
-            self.__db.save('save_car_maker', (1, 'Toyota'))
-            self.__db.commit()
-            expected = True
-        except Exception as e:
-            self.__db.rollback()
-            expected = False
+        result = self.__db.save('save_car_maker', (1, 'Toyota'))
+        self.__db.commit()
+
+        # fetch modified data
         row = self.__db.find_one('find_car_makers_by', ('Toyota',))
         self.__db.commit()
-        self.assertEqual(True, expected)
+
+        self.assertEqual(1, result)
         self.assertEqual('Toyota', row['name'])
 
     def test_fetch_last_row_id(self):
-        data = (None, 'test')
-        last_id = 0
-        try:
-            self.init_test_data()
-            self.__db.save('save_car_maker', data)
-            last_id = self.__db.fetch_last_row_id()
-            self.__db.commit()
-        except psycopg2.DatabaseError as e:
-            self.__db.rollback()
+        # init data
+        self.init_test_data()
+        self.__db.save('save_car_maker', (None, 'test'))
+        # fetch last row id
+        last_id = self.__db.fetch_last_row_id()
+        self.__db.commit()
         self.assertEqual(4, last_id)
 
     def test_find_success(self):
@@ -103,7 +92,7 @@ class TestPgAdapterTest(unittest.TestCase):
             self.__db.find('invalid command', (None,))
             self.__db.find_one('invalid command', (None,))
             self.__db.execute('invalid command')
-            self.__db.bulk_insert('invalid command',([]))
+            self.__db.bulk_insert('invalid command', ([]))
             self.__db.fetch_rowcount('invalid table name')
         self.__db.rollback()
 
@@ -126,11 +115,6 @@ class TestPgAdapterTest(unittest.TestCase):
         ]
         query1 = 'INSERT INTO car_makers (name) VALUES (%s);'
         query2 = 'INSERT INTO cars (maker_id, name) VALUES (%s, %s);'
-
-        try:
-            self.__db.bulk_insert(query1, car_makers)
-            self.__db.bulk_insert(query2, cars)
-            self.__db.commit()
-        except Exception as e:
-            print(e)
-            self.__db.rollback()
+        self.__db.bulk_insert(query1, car_makers)
+        self.__db.bulk_insert(query2, cars)
+        self.__db.commit()
