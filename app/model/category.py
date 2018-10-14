@@ -33,8 +33,8 @@ class Category():
             return False
         saved = False
         try:
-            Category.db.save('save_category', (self.__id, self.__name))
-            saved = True if Category.db.affected_rows == 1 else False
+            affected = Category.db.execute_proc('save_category', (self.__id, self.__name))
+            saved = True if affected == 1 else False
             if saved:
                 Category.db.commit()
             else:
@@ -50,8 +50,8 @@ class Category():
             return False
         deleted = False
         try:
-            Category.db.remove('delete_category', (self.__id,))
-            deleted = True if Category.db.affected_rows == 1 else False
+            affected = Category.db.execute_proc('delete_category', (self.__id,))
+            deleted = True if affected == 1 else False
             if deleted:
                 Category.db.commit()
             else:
