@@ -25,21 +25,21 @@ class PgAdapter():
             self.__cur = self.__con.cursor(
                 cursor_factory=psycopg2.extras.DictCursor)
 
-    def save(self, command, data):
-        """
-            execute save or change procedure
-        """
-        if not command or data is None:
+    def execute(self, command, data=None):
+        """ execute plain sql query """
+        if not command:
+            raise ValueError()
+        self.__create_cursor()
+        self.__cur.execute(command, data)
+        return self.__cur.rowcount
+
+    def execute_proc(self, command, data=None):
+        """ execute stored procedure. """
+        if not command:
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, data)
         return self.__cur.rowcount
-
-    def remove(self, command, data=None):
-        """
-            execute remove procedure
-        """
-        return self.save(command, data)
 
     def find(self, command, condition=None):
         """
@@ -60,16 +60,6 @@ class PgAdapter():
         self.__create_cursor()
         self.__cur.callproc(command, condition)
         return self.__cur.fetchone()
-
-    def execute(self, query, data=None):
-        """
-            execute sql command
-        """
-        if not query:
-            raise ValueError()
-        self.__create_cursor()
-        self.__cur.execute(query, data)
-        return self.__cur.rowcount
 
     def fetch_rowcount(self, tablename):
         """

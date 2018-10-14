@@ -15,27 +15,27 @@ class TestPgAdapterTest(unittest.TestCase):
         self.__db.commit()
 
     def test_add_success(self):
-        result = self.__db.save('save_car_maker', (None, 'alfa romeo'))
+        affected = self.__db.execute_proc(
+            'save_car_maker',
+            (None, 'alfa romeo'))
         self.__db.commit()
-        self.assertEqual(1, result)
+        self.assertEqual(1, affected)
 
     def test_edit_success(self):
         # modify data
         self.init_test_data()
-        result = self.__db.save('save_car_maker', (1, 'Toyota'))
+        affected = self.__db.execute_proc('save_car_maker', (1, 'Toyota'))
         self.__db.commit()
-
         # fetch modified data
         row = self.__db.find_one('find_car_makers_by', ('Toyota',))
         self.__db.commit()
-
-        self.assertEqual(1, result)
+        self.assertEqual(1, affected)
         self.assertEqual('Toyota', row['name'])
 
     def test_fetch_last_row_id(self):
         # init data
         self.init_test_data()
-        self.__db.save('save_car_maker', (None, 'test'))
+        self.__db.execute_proc('save_car_maker', (None, 'test'))
         # fetch last row id
         last_id = self.__db.fetch_last_row_id()
         self.__db.commit()
@@ -50,12 +50,10 @@ class TestPgAdapterTest(unittest.TestCase):
 
     def test_fetch_rowcount(self):
         self.init_test_data()
-
         # check car makers row count
         expected = self.__db.fetch_rowcount('car_makers')
         self.__db.commit()
         self.assertEqual(3, expected)
-
         # check cars row count
         expected = self.__db.fetch_rowcount('cars')
         self.__db.commit()
@@ -63,10 +61,8 @@ class TestPgAdapterTest(unittest.TestCase):
 
     def test_command_is_empty(self):
         with self.assertRaises(ValueError):
-            self.__db.save('', ('test',))
-            self.__db.save(None, ('test',))
-            self.__db.remove('', ('test',))
-            self.__db.remove(None, ('test',))
+            self.__db.execute_proc('', ('test',))
+            self.__db.execute_proc(None, ('test',))
             self.__db.find('', ('test',))
             self.__db.find(None, ('test',))
             self.__db.find_one('', ('test',))
@@ -83,12 +79,11 @@ class TestPgAdapterTest(unittest.TestCase):
     def test_config_is_empty(self):
         db = PgAdapter(None)
         with self.assertRaises(ValueError):
-            db.save('save_car_maker', ('FIAT',))
+            db.execute_proc('save_car_maker', ('FIAT',))
 
     def test_run_invalid_command(self):
         with self.assertRaises(psycopg2.ProgrammingError):
-            self.__db.save('invalid command', (None, 'test'))
-            self.__db.remove('invalid command', (None,))
+            self.__db.execute_proc('invalid command', (None, 'test'))
             self.__db.find('invalid command', (None,))
             self.__db.find_one('invalid command', (None,))
             self.__db.execute('invalid command')
