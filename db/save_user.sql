@@ -15,7 +15,7 @@ BEGIN
             name = p_name,
             nickname = p_nickname,
             email = p_email,
-            password = password
+            password = p_password
         WHERE id = p_id;
     ELSE
         INSERT INTO users (
