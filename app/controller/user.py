@@ -35,8 +35,8 @@ def add():
 
     if saved:
         body = body_createor.created(request.json)
-    elif not saved and user.errors:
-        body = body_createor.bad_request(user.errors)
+    elif not user.is_valid():
+        body = body_createor.bad_request(user.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']
@@ -56,8 +56,8 @@ def edit(id):
 
     if saved:
         body = body_createor.ok(request.json)
-    elif not saved and user.errors:
-        body = body_createor.conflict(user.errors)
+    elif not user.is_valid():
+        body = body_createor.conflict(user.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']
