@@ -32,8 +32,8 @@ def add():
 
     if saved:
         body = body_creator.created(request.json)
-    elif not saved and category.errors:
-        body = body_creator.bad_request(category.errors)
+    elif not saved and category.validation_errors:
+        body = body_creator.bad_request(category.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']
@@ -57,8 +57,8 @@ def edit(id):
 
     if saved:
         body = body_creator.ok({'data': request.json}, '更新しました')
-    elif not saved and len(category.errors) > 0:
-        body = body_creator.conflict(category.errors)
+    elif not saved and category.validation_errors:
+        body = body_creator.conflict(category.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']

@@ -9,51 +9,33 @@ class TestCategory(unittest.TestCase):
         model.db.commit()
 
     def test_add_ok(self):
-        saved = False
-        category = Category(None, 'Test')
-        try:
-            saved = category.save()
-        except Exception as e:
-            print(e)
-            saved = False
+        model = Category(None, 'Test')
+        saved = model.save()
         self.assertTrue(saved)
 
     def test_add_ng_invalid_value(self):
-        saved = False
-        category = Category(None, '')
-        try:
-            saved = category.save()
-        except Exception as e:
-            print(e)
-            saved = False
-        self.assertFalse(saved)
+        # id
+        model = Category(1, 'test')
+        model.id = 'a'
+        self.assertFalse(model.is_valid())
 
-        category = Category(None, None)
-        try:
-            saved = category.save()
-        except Exception as e:
-            print(e)
-            saved = False
-        self.assertFalse(saved)
+        #name 
+        model = Category(1, 'test')
+        model.name = ''
+        self.assertFalse(model.is_valid())
+
+        model = Category(1, 'test')
+        model.name = None 
+        self.assertFalse(model.is_valid())
 
     def test_delete_ok(self):
-        deleted = False
-        category = Category(1)
-        try:
-            deleted = category.delete()
-        except Exception as e:
-            print(e)
-            deleted = False
+        model = Category(1)
+        deleted = model.delete()
         self.assertTrue(deleted)
 
     def test_delete_ng(self):
-        deleted = False
-        category = Category(None)
-        try:
-            deleted = category.delete()
-        except Exception as e:
-            print(e)
-            deleted = False
+        model = Category(None)
+        deleted = model.delete()
         self.assertFalse(deleted)
 
     def test_find_all(self):
@@ -66,14 +48,9 @@ class TestCategory(unittest.TestCase):
         self.assertEqual(10, len(categories))
 
     def test_save_ng_when_maximum_rows(self):
-        category = Category(None, 'Invalid')
-        saved = False
-        try:
-            self._init_categories()
-            saved = category.save()
-        except Exception as e:
-            print(e)
-        self.assertFalse(saved)
+        self._init_categories()
+        model = Category(None, 'Invalid')
+        self.assertFalse(model.is_valid())
 
     def _init_categories(self):
         data = ['Category{0}'.format(i) for i in range(1, 11)]
