@@ -8,8 +8,6 @@ TEST_ROOT_DIR = './app/tests'
 def run():
     paths = (
         TEST_ROOT_DIR,
-        path.join(TEST_ROOT_DIR, 'controller'),
-        path.join(TEST_ROOT_DIR, 'model')
     )
     loader = TestLoader()
     for p in paths:
