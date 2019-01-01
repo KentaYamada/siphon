@@ -1,5 +1,6 @@
 from flask import request, jsonify, Blueprint
 from app.model.item import Item
+from app.model.mapper.item_mapper import ItemMapper
 from app.model.response import ResponseBodyCreator
 
 
@@ -30,12 +31,15 @@ def add():
         res.status_code = body['status_code']
         return res
 
-    item = Item(
-        None,
-        request.json['category_id'],
-        request.json['name'],
-        request.json['unit_price'])
-    saved = item.save()
+    item = Item(**request.json)
+    if not item.is_valid():
+        body = body_creator.bad_request(item.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = ItemMapper()
+    saved = mapper.add(item)
 
     if saved:
         body = body_creator.created(request.json)
@@ -57,12 +61,15 @@ def edit(id):
         res.status_code = body['status_code']
         return res
 
-    item = Item(
-        id,
-        request.json['category_id'],
-        request.json['name'],
-        request.json['unit_price'])
-    saved = item.save()
+    item = Item(**request.json)
+    if not item.is_valid():
+        body = body_creator.bad_request(item.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = ItemMapper()
+    saved = mapper.add(item)
 
     if saved:
         body = body_creator.ok(request.json)
@@ -76,8 +83,8 @@ def edit(id):
 
 @bp.route('/<int:id>', methods=['DELETE'])
 def delete(id):
-    item = Item(id)
-    deleted = item.delete()
+    mapper = ItemMapper()
+    deleted = mapper.delete(id)
     body_creator = ResponseBodyCreator()
 
     if deleted:
