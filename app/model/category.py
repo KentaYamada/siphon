@@ -31,12 +31,6 @@ class Category(BaseModel):
         else:
             self.__name = value
 
-    def is_valid(self):
-        if not super().is_valid():
-            return False
-        else:
-            return True
-
     @classmethod
     def find_all(cls):
         categories = []
