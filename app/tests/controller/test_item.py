@@ -79,7 +79,7 @@ class TestItemApi(unittest.TestCase):
             url,
             content_type=CONTENT_TYPE,
             data=data)
-        self.assertEqual(409, res.status_code)
+        self.assertEqual(400, res.status_code)
 
     def test_delete_ok(self):
         url = urljoin(END_POINT, '1')

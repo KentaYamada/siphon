@@ -1,5 +1,6 @@
 from flask import jsonify, request, Blueprint
 from app.model.category import Category
+from app.model.mapper.category_mapper import CategoryMapper
 from app.model.response import ResponseBodyCreator
 
 
@@ -25,10 +26,16 @@ def add():
         res.status_code = body['status_code']
         return res
 
-    category = Category(
-        None,
-        request.json['name'])
-    saved = category.save()
+    category = Category(**request.json)
+
+    if not category.is_valid():
+        body = body_creator.bad_request(category.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = CategoryMapper()
+    saved = mapper.add(category)
 
     if saved:
         body = body_creator.created(request.json)
@@ -50,10 +57,16 @@ def edit(id):
         res.status_code = body['status_code']
         return res
 
-    category = Category(
-        id,
-        request.json['name'])
-    saved = category.save()
+    category = Category(id, **request.json)
+
+    if not category.is_valid():
+        body = body_creator.bad_request(category.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = CategoryMapper()
+    saved = mapper.edit(category)
 
     if saved:
         body = body_creator.ok({'data': request.json}, '更新しました')
@@ -67,8 +80,8 @@ def edit(id):
 
 @bp.route('/<int:id>', methods=['DELETE'])
 def delete(id):
-    category = Category(id)
-    deleted = category.delete()
+    mapper = CategoryMapper()
+    deleted = mapper.delete(id)
     body_creator = ResponseBodyCreator()
 
     if deleted:

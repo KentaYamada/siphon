@@ -73,7 +73,7 @@ class TestUserApi(unittest.TestCase):
             url,
             content_type=CONTENT_TYPE,
             data=data)
-        self.assertEqual(409, res.status_code)
+        self.assertEqual(400, res.status_code)
 
     def test_delete_ok(self):
         url = urljoin(END_POINT, '1')
@@ -87,7 +87,7 @@ class TestUserApi(unittest.TestCase):
     def test_authoricate_ok(self):
         url = urljoin(END_POINT, 'authoricate')
         data = json.dumps({
-            'user_id': 'test',
+            'email': 'test',
             'password': 'test'
         })
         res = TestUserApi.client.post(
@@ -99,7 +99,7 @@ class TestUserApi(unittest.TestCase):
     def test_authoricate_ng(self):
         url = urljoin(END_POINT, 'authoricate')
         data = json.dumps({
-            'user_id': 'hoge',
+            'email': 'hoge',
             'password': 'hoge'
         })
         res = TestUserApi.client.post(

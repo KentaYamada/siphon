@@ -1,5 +1,6 @@
 from flask import jsonify, request, Blueprint
 from app.model.user import User
+from app.model.mapper.user_mapper import UserMapper
 from app.model.response import ResponseBodyCreator
 
 
@@ -25,18 +26,18 @@ def add():
         res.status_code = body['status_code']
         return res
 
-    user = User(
-        None,
-        request.json['name'],
-        request.json['nickname'],
-        request.json['email'],
-        request.json['password'])
-    saved = user.save()
+    user = User(None, **request.json)
+    if not user.is_valid():
+        body = body_createor.bad_request(user.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = UserMapper()
+    saved = mapper.add(user)
 
     if saved:
         body = body_createor.created(request.json)
-    elif not user.is_valid():
-        body = body_createor.bad_request(user.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']
@@ -46,18 +47,19 @@ def add():
 @bp.route('/<int:id>', methods=['PUT'])
 def edit(id):
     body_createor = ResponseBodyCreator()
-    user = User(
-        id,
-        request.json['name'],
-        request.json['nickname'],
-        request.json['email'],
-        request.json['password'])
-    saved = user.save()
+    user = User(id, **request.json)
+
+    if not user.is_valid():
+        body = body_createor.bad_request(user.validation_errors)
+        res = jsonify(body)
+        res.status_code = body['status_code']
+        return res
+
+    mapper = UserMapper()
+    saved = mapper.edit(user)
 
     if saved:
         body = body_createor.ok(request.json)
-    elif not user.is_valid():
-        body = body_createor.conflict(user.validation_errors)
 
     res = jsonify(body)
     res.status_code = body['status_code']
@@ -66,8 +68,8 @@ def edit(id):
 
 @bp.route('/<int:id>', methods=['DELETE'])
 def delete(id):
-    user = User(id)
-    deleted = user.delete()
+    mapper = UserMapper()
+    deleted = mapper.delete(id)
     body_createor = ResponseBodyCreator()
 
     if deleted:
@@ -92,12 +94,10 @@ def authoricate():
         res.status_code = body['status_code']
         return res
 
-    canLogin = User.authoricate(
-        request.json['user_id'],
-        request.json['password']
-    )
+    mapper = UserMapper()
+    can_login = mapper.authoricate(**request.json)
 
-    if canLogin:
+    if can_login:
         body = body_createor.ok(None, 'authorication successfuly')
     else:
         body = body_createor.unauthorized('failed authorication')
