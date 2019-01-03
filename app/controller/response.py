@@ -33,6 +33,7 @@ class ResponseBody(Response):
 
     def __init__(self):
         super().__init__()
+        self.mimetype = 'application/json'
         self.__response = {
             'errors': [],
             'message': '',
@@ -40,7 +41,7 @@ class ResponseBody(Response):
         }
 
     def set_success_response(self, status_code, data=None, message=''):
-        super().status_code = status_code
+        self.status_code = status_code
         self.__response['status_code'] = status_code
         if data is not None:
             self.__response.update(data)
@@ -49,12 +50,13 @@ class ResponseBody(Response):
         else:
             self.__response['message'] = message
         super().set_data(json.dumps(
-            self.__response, ensure_ascii=False,
-            encoding='utf8', indent=2
+            self.__response,
+            ensure_ascii=False,
+            indent=2
         ))
 
     def set_fail_response(self, status_code, errors=None, message=''):
-        super().status_code = status_code
+        self.status_code = status_code
         self.__response['status_code'] = status_code
         self.__response['errors'] = errors
         if not message and status_code in self.RESPONSE_MESSAGES.keys():
@@ -62,6 +64,7 @@ class ResponseBody(Response):
         else:
             self.__response['message'] = message
         super().set_data(json.dumps(
-            self.__response, ensure_ascii=False,
-            encoding='utf8', indent=2
+            self.__response,
+            ensure_ascii=False,
+            indent=2
         ))
