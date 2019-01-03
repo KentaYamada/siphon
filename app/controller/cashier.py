@@ -1,8 +1,8 @@
 from datetime import datetime
-from flask import jsonify, request, Blueprint
+from flask import request, Blueprint
+from app.controller.response import ResponseBody
 from app.model.sales import Sales
 from app.model.sales_item import SalesItem
-from app.model.response import ResponseBodyCreator
 
 
 bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
@@ -45,24 +45,22 @@ def generatePanel():
 
 @bp.route('/', methods=['GET'])
 def index():
+    res = ResponseBody()
     data = generatePanel()
-    return jsonify(data)
+    res.set_success_response(200, data)
+    return res
 
 
 @bp.route('/', methods=['POST'])
 def add():
-    body_creator = ResponseBodyCreator()
+    res = ResponseBody()
 
     if request.json is None:
-        body = body_creator.bad_request(None)
-        res = jsonify(body)
-        res.status_code = body['status_code']
+        res.set_fail_response(400)
         return res
 
     if request.json['items'] is None or len(request.json['items']) < 1:
-        body = body_creator.bad_request('売上明細データがセットされていません')
-        res = jsonify(body)
-        res.status_code = body['status_code']
+        res.set_fail_response(400, message='売上明細データがセットされていません')
         return res
 
     now_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
@@ -71,7 +69,6 @@ def add():
         items.append(SalesItem(
             None,
             None,
-            now_date,
             i + 1,
             item['item_name'],
             item['unit_price'],
@@ -90,10 +87,7 @@ def add():
     saved = sales.save()
 
     if saved:
-        body = body_creator.created(None)
+        res.set_success_response(201)
     elif not saved and sales.errors:
-        body = body_creator.bad_request(sales.errors)
-
-    res = jsonify(body)
-    res.status_code = body['status_code']
+        res.set_fail_response(400)
     return res
