@@ -9,9 +9,7 @@ class CategoryMapper(BaseMapper):
         super().__init__()
 
     def add(self, category):
-        if category is None:
-            raise ValueError()
-        if not isinstance(category, Category):
+        if category is None or not isinstance(category, Category):
             raise ValueError()
         query = """
             INSERT INTO categories (
