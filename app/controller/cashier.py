@@ -3,6 +3,7 @@ from flask import request, Blueprint
 from app.controller.response import ResponseBody
 from app.model.sales import Sales
 from app.model.sales_item import SalesItem
+from app.model.mapper.sales_mapper import SalesMapper
 
 
 bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
@@ -63,31 +64,23 @@ def add():
         res.set_fail_response(400, message='売上明細データがセットされていません')
         return res
 
-    now_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-    items = []
-    for i, item in enumerate(request.json['items']):
-        items.append(SalesItem(
-            None,
-            None,
-            i + 1,
-            item['item_name'],
-            item['unit_price'],
-            item['quantity'],
-            item['subtotal']))
-    sales = Sales(
-        None,
-        now_date,
-        request.json['total_price'],
-        request.json['discount_price'],
-        request.json['discount_rate'],
-        request.json['inclusive_tax'],
-        request.json['exclusive_tax'],
-        request.json['deposit'],
-        items)
-    saved = sales.save()
+    items = [SalesItem(None, None, i, **item)
+             for i, item in enumerate(request.json['items'], 1)]
+    del request.json['items']
+    # now_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    now_date = datetime.now()
+    sales = Sales(None, sales_date=now_date, items=items, **request.json)
+
+    if not sales.is_valid():
+        print(sales.validation_errors)
+        res.set_fail_response(400, sales.validation_errors)
+        return res
+
+    mapper = SalesMapper()
+    saved = mapper.add(sales)
 
     if saved:
         res.set_success_response(201)
-    elif not saved and sales.errors:
-        res.set_fail_response(400)
+    else:
+        res.set_fail_response(409)
     return res
