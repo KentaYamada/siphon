@@ -28,6 +28,7 @@ class PgAdapter():
         if not command:
             raise ValueError()
         self.__create_cursor()
+        # print(self.__cur.mogrify(command, data))
         self.__cur.execute(command, data)
         return self.__cur.rowcount
 
@@ -40,6 +41,20 @@ class PgAdapter():
         return self.__cur.rowcount
 
     def find(self, command, condition=None):
+        if not command:
+            raise ValueError()
+        self.__create_cursor()
+        self.__cur.execute(command, condition)
+        return self.__cur.fetchall()
+
+    def find_one(self, command, condition):
+        if not command:
+            raise ValueError()
+        self.__create_cursor()
+        self.__cur.execute(command, condition)
+        return self.__cur.fetchone()
+
+    def find_proc(self, command, condition=None):
         """ execute find rows procedure """
         if not command:
             raise ValueError()
@@ -47,7 +62,7 @@ class PgAdapter():
         self.__cur.callproc(command, condition)
         return self.__cur.fetchall()
 
-    def find_one(self, command, condition):
+    def find_one_proc(self, command, condition):
         """ execute find row procedure """
         if not command:
             raise ValueError()
