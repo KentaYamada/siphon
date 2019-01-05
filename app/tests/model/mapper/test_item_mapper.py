@@ -34,6 +34,15 @@ class TestItemMapper(unittest.TestCase):
         result = self.mapper.delete(1)
         self.assertTrue(result)
 
+    def test_find_by_category_id_ok(self):
+        self.__init_data()
+        result = self.mapper.find_by_category_id(1)
+        self.assertEqual(len(result), 30)
+
+    def test_find_by_category_id_when_empty_row(self):
+        result = self.mapper.find_by_category_id(1)
+        self.assertEqual(len(result), 0)
+
     def test_add_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
             self.mapper.add(None)

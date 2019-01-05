@@ -107,7 +107,7 @@ class ItemMapper(BaseMapper):
         """
         rows = None
         try:
-            rows = self._db.find(query)
+            rows = self._db.find(query, (category_id,))
             self._db.commit()
         except Exception as e:
             self._db.rollback()
