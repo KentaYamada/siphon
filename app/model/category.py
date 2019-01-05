@@ -30,17 +30,3 @@ class Category(BaseModel):
             super()._add_validation_error('name', 'ユーザー名は必須入力です')
         else:
             self.__name = value
-
-    @classmethod
-    def find_all(cls):
-        categories = []
-        try:
-            rows = Category.db.find('find_categories')
-            Category.db.commit()
-            if len(rows) > 0:
-                categories = [
-                    {'id': row['id'], 'name': row['name']} for row in rows]
-        except Exception as e:
-            print(e)
-            raise e
-        return categories

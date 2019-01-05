@@ -46,10 +46,13 @@ class TestCategoryMapper(unittest.TestCase):
         self.assertLess(result, 10)
 
     def test_find_all_ok(self):
-        pass
-        # self.__init_data()
-        # result = self.mapper.find_all()
-        # self.assertEqual(len(result), 10)
+        self.__init_data()
+        result = self.mapper.find_all()
+        self.assertEqual(len(result), 10)
+
+    def test_find_all_when_empty_row(self):
+        result = self.mapper.find_all()
+        self.assertEqual(len(result), 0)
 
     def test_add_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
