@@ -9,7 +9,8 @@ bp = Blueprint('category', __name__, url_prefix='/api/categories')
 
 @bp.route('/', methods=['GET'])
 def index():
-    categories = Category.find_all()
+    mapper = CategoryMapper()
+    categories = mapper.find_all()
     res = ResponseBody()
     res.set_success_response(200, categories)
     return res
