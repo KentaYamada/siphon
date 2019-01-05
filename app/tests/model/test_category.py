@@ -10,15 +10,12 @@ class TestCategory(unittest.TestCase):
 
     def test_add_ng_invalid_value(self):
         # id
-        model = Category(1, 'test')
-        model.id = 'a'
+        model = Category('a', 'test')
         self.assertFalse(model.is_valid())
 
         # name
-        model = Category(1, 'test')
-        model.name = ''
+        model = Category(1, '')
         self.assertFalse(model.is_valid())
 
-        model = Category(1, 'test')
-        model.name = None
+        model = Category(1, None)
         self.assertFalse(model.is_valid())
