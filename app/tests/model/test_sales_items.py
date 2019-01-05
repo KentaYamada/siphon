@@ -3,95 +3,105 @@ from app.model.sales_item import SalesItem
 
 
 class TestSalesItemTest(unittest.TestCase):
-    def test_save_ng_when_invalid_value(self):
-        pass
-    #    # sales_id
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('sales_id', errors[0]['name'])
+    def test_id_validation(self):
+        sales_item = SalesItem('1', 1, 1, 'test', 100, 1, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('id' in sales_item.validation_errors.keys())
 
-    #    # item_no
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    model = SalesItem(
-    #            None, sales_id=1, sales_date='2018/01/01 10:00:00',
-    #            item_no=None, item_name='Test', unit_price=500,
-    #            quantity=1, subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('item_no', errors[0]['name'])
+    def test_sales_id_validation(self):
+        sales_item = SalesItem(1, None, 1, 'test', 100, 1, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('sales_id' in sales_item.validation_errors.keys())
 
-    #    # item_name
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('item_name', errors[0]['name'])
+        sales_item.sales_id = '1'
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('sales_id' in sales_item.validation_errors.keys())
 
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('item_name', errors[0]['name'])
+        sales_item.sales_id = 0
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('sales_id' in sales_item.validation_errors.keys())
 
-    #    # unit_price
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    model = SalesItem(
-    #            None, sales_id=1, sales_date='2018/01/01 10:00:00',
-    #            item_no=1, item_name='Test', unit_price=None,
-    #            quantity=1, subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('unit_price', errors[0]['name'])
+    def test_item_no_validation(self):
+        sales_item = SalesItem(1, 1, None, 'test', 100, 1, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('item_no' in sales_item.validation_errors.keys())
 
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('unit_price', errors[0]['name'])
+        sales_item.item_no = '1'
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('item_no' in sales_item.validation_errors.keys())
 
-    #    # quantity
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('quantity', errors[0]['name'])
+        sales_item.item_no = 0
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('item_no' in sales_item.validation_errors.keys())
 
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('quantity', errors[0]['name'])
+    def test_item_name_validation(self):
+        sales_item = SalesItem(1, 1, 1, '', 100, 1, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('item_name' in sales_item.validation_errors.keys())
 
-    #    # subtotal
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('subtotal', errors[0]['name'])
+        sales_item.item_name = None
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('item_name' in sales_item.validation_errors.keys())
 
-    #    model = SalesItem(None, sales_id=1, item_no=1,
-    #                      item_name='Test', unit_price=500, quantity=1,
-    #                      subtotal=500)
-    #    saved = model.save()
-    #    errors = model.errors
-    #    self.assertFalse(saved)
-    #    self.assertEqual('subtotal', errors[0]['name'])
+    def test_unit_price_validation(self):
+        sales_item = SalesItem(1, 1, 1, 'test', None, 1, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('unit_price' in sales_item.validation_errors.keys())
+
+        sales_item.unit_price = '1'
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('unit_price' in sales_item.validation_errors.keys())
+
+        sales_item.unit_price = 0
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('unit_price' in sales_item.validation_errors.keys())
+
+    def test_quantity_validation(self):
+        sales_item = SalesItem(1, 1, 1, 'test', 1, None, 100)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('quantity' in sales_item.validation_errors.keys())
+
+        sales_item.quantity = '1'
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('quantity' in sales_item.validation_errors.keys())
+
+        sales_item.quantity = 0
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('quantity' in sales_item.validation_errors.keys())
+
+    def test_subtotal_validation(self):
+        sales_item = SalesItem(1, 1, 1, 'test', 1, 1, None)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('subtotal' in sales_item.validation_errors.keys())
+
+        sales_item.subtotal = '1'
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('subtotal' in sales_item.validation_errors.keys())
+
+        sales_item.subtotal = 0
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('subtotal' in sales_item.validation_errors.keys())
+
+    def test_subtotal_unmatch(self):
+        sales_item = SalesItem(1, 1, 1, 'test', 100, 1, 200)
+        result = sales_item.is_valid()
+        self.assertFalse(result)
+        self.assertTrue('subtotal' in sales_item.validation_errors.keys())

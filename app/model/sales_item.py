@@ -1,7 +1,11 @@
-class SalesItem():
+from app.model.base import BaseModel
+
+
+class SalesItem(BaseModel):
     def __init__(self, id=None, sales_id=None,
-                 item_no=None, item_name='',
-                 unit_price=None, quantity=None, subtotal=None):
+                 item_no=None, item_name=None, unit_price=None,
+                 quantity=None, subtotal=None, **kwargs):
+        super().__init__()
         self.id = id
         self.sales_id = sales_id
         self.item_no = item_no
@@ -9,42 +13,115 @@ class SalesItem():
         self.unit_price = unit_price
         self.quantity = quantity
         self.subtotal = subtotal
-        self.__errors = []
 
     @property
-    def errors(self):
-        return self.__errors
+    def id(self):
+        return self.__id
 
-    def validate(self):
-        # ToDo: decorator化
-        isValid = True
-        if self.sales_id is None:
-            isValid = False
-            self.__set_error('sales_id', '売上IDは必須です')
-            isValid = False
-            self.__set_error('item_no', '売上明細番号は必須です')
-        if not self.item_name:
-            isValid = False
-            self.__set_error('item_name', '商品名は必須です')
-        if self.unit_price is None:
-            isValid = False
-            self.__set_error('unit_price', '単価は必須です')
-        elif self.unit_price <= 0:
-            isValid = False
-            self.__set_error('unit_price', '1円未満の単価は登録できません')
-        if self.quantity is None:
-            isValid = False
-            self.__set_error('quantity', '数量は必須です')
-        elif self.quantity <= 0:
-            isValid = False
-            self.__set_error('quantity', '1未満の数量は登録できません')
-        if self.subtotal is None:
-            isValid = False
-            self.__set_error('subtotal', '小計は必須です')
-        elif self.subtotal <= 0:
-            isValid = False
-            self.__set_error('subtotal', '1円未満の小計は登録できません')
-        return isValid
+    @id.setter
+    def id(self, value):
+        super()._clear_validation_error('id')
+        if value is not None and not isinstance(value, int):
+            super()._add_validation_error('id', 'IDには整数をセットしてください')
+        else:
+            self.__id = value
 
-    def __set_error(self, field, message):
-        self.__errors.append({'name': field, 'message': message})
+    @property
+    def sales_id(self):
+        return self.__sales_id
+
+    @sales_id.setter
+    def sales_id(self, value):
+        super()._clear_validation_error('sales_id')
+        if value is None:
+            super()._add_validation_error('sales_id', '売上IDは必須です')
+        elif not isinstance(value, int):
+            super()._add_validation_error('sales_id', '売上IDには整数をセットしてください')
+        elif value <= 0:
+            super()._add_validation_error('sales_id', '無効な売上IDです')
+        else:
+            self.__sales_id = value
+
+    @property
+    def item_no(self):
+        return self.__item_no
+
+    @item_no.setter
+    def item_no(self, value):
+        super()._clear_validation_error('item_no')
+        if value is None:
+            super()._add_validation_error('item_no', '明細Noは必須です')
+        elif not isinstance(value, int):
+            super()._add_validation_error('item_no', '明細Noには整数をセットしてください')
+        elif value <= 0:
+            super()._add_validation_error('item_no', '無効な明細Noです')
+        else:
+            self.__item_no = value
+
+    @property
+    def item_name(self):
+        return self.__item_name
+
+    @item_name.setter
+    def item_name(self, value):
+        super()._clear_validation_error('item_name')
+        if not value:
+            super()._add_validation_error('item_name', '商品名は必須です')
+        else:
+            self.__item_name = value
+
+    @property
+    def unit_price(self):
+        return self.__unit_price
+
+    @unit_price.setter
+    def unit_price(self, value):
+        super()._clear_validation_error('unit_price')
+        if value is None:
+            super()._add_validation_error('unit_price', '単価は必須です')
+        elif not isinstance(value, int):
+            super()._add_validation_error('unit_price', '単価には整数をセットしてください')
+        elif value <= 0:
+            super()._add_validation_error('unit_price', '無効な単価です')
+        else:
+            self.__unit_price = value
+
+    @property
+    def quantity(self):
+        return self.__quantity
+
+    @quantity.setter
+    def quantity(self, value):
+        super()._clear_validation_error('quantity')
+        if value is None:
+            super()._add_validation_error('quantity', '数量は必須です')
+        elif not isinstance(value, int):
+            super()._add_validation_error('quantity', '数量には整数をセットしてください')
+        elif value <= 0:
+            super()._add_validation_error('quantity', '無効な数量です')
+        else:
+            self.__quantity = value
+
+    @property
+    def subtotal(self):
+        return self.__subtotal
+
+    @subtotal.setter
+    def subtotal(self, value):
+        super()._clear_validation_error('subtotal')
+        if value is None:
+            super()._add_validation_error('subtotal', '小計は必須です')
+        elif not isinstance(value, int):
+            super()._add_validation_error('subtotal', '小計には整数をセットしてください')
+        elif value <= 0:
+            super()._add_validation_error('subtotal', '無効な小計です')
+        else:
+            self.__subtotal = value
+
+    def is_valid(self):
+        if not super().is_valid():
+            return False
+        if (self.unit_price * self.quantity) != self.subtotal:
+            super()._add_validation_error('subtotal', '小計の計算値がマッチしません')
+            return False
+        return True
