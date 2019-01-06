@@ -18,6 +18,7 @@ class TestSalesMapper(unittest.TestCase):
             RESTART IDENTITY;
         """
         db.execute(query)
+        db.commit()
         query2 = """
             TRUNCATE TABLE sales_items
             RESTART IDENTITY;
