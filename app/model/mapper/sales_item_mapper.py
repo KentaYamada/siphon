@@ -6,13 +6,15 @@ class SalesItemMapper(BaseMapper):
     def __init__(self):
         super().__init__()
 
-    def find_by_sales_id(self, sales_id):
-        if sales_id is None:
+    def find_by_sales_ids(self, sales_ids):
+        if sales_ids is None or len(sales_ids) == 0:
             raise ValueError()
-        if not isinstance(sales_id, int):
+        if not isinstance(sales_ids, list):
             raise ValueError()
-        if sales_id < 0:
-            raise ValueError()
+        if sum(1 for i in sales_ids if not isinstance(i, int)) > 0:
+            raise ValueError('sales_ids include invalid data type')
+        if sum(1 for i in sales_ids if i <= 0) > 0:
+            raise ValueError('sales_ids include invalid value')
         query = """
             SELECT
                 sales_id,
@@ -22,28 +24,25 @@ class SalesItemMapper(BaseMapper):
                 quantity,
                 subtotal
             FROM sales_items
-            WHERE sales_id = %s
-            ORDER BY sales_id ASC;
+            WHERE sales_id IN %s
+            ORDER BY item_no ASC;
         """
         rows = None
-        data = (sales_id,)
         try:
-            rows = self._db.find(query, data)
+            rows = self._db.find(query, (tuple(sales_ids),))
             self._db.commit()
-            print(rows)
         except Exception as e:
             # todo: logging
             print(e)
-            print('hoge')
             self._db.rollback()
-        if rows is None:
-            return rows
-        return [SalesItem(
-            None,
-            row['sales_id'],
-            row['item_no'],
-            row['item_name'],
-            row['unit_price'],
-            row['quantity'],
-            row['subtotal'])
-            for row in rows]
+        if rows is not None:
+            rows = [SalesItem(
+                None,
+                row['sales_id'],
+                row['item_no'],
+                row['item_name'],
+                row['unit_price'],
+                row['quantity'],
+                row['subtotal'])
+                for row in rows]
+        return rows
