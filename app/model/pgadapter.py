@@ -28,7 +28,6 @@ class PgAdapter():
         if not command:
             raise ValueError()
         self.__create_cursor()
-        # print(self.__cur.mogrify(command, data))
         self.__cur.execute(command, data)
         return self.__cur.rowcount
 
