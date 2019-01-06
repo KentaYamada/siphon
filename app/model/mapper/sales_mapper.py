@@ -1,5 +1,6 @@
 import datetime
 from app.model.sales import Sales
+from app.model.monthly_sales import MonthlySales
 from app.model.mapper.base_mapper import BaseMapper
 
 
@@ -101,24 +102,46 @@ class SalesMapper(BaseMapper):
             raise ValueError()
         if month is None or not isinstance(month, int):
             raise ValueError()
+        if month < 1 or month > 12:
+            raise ValueError('Invalid month')
         query = """
             SELECT
-                *
-            FROM sales
+                s.sales_date,
+                to_char(s.sales_date, 'DD') as sales_day,
+                SUM(
+                    CASE
+                      WHEN s.discount_price > 0 THEN
+                        s.total_price - s.discount_price
+                      WHEN s.discount_rate > 0 THEN
+                        s.total_price * (1 - (s.discount_rate * 1.0) / 100)
+                      ELSE
+                        s.total_price
+                    END
+                ) AS proceeds
+            FROM sales AS s
             WHERE sales_date >= %s
-              AND sales_date < %s;
+              AND sales_date < %s
+            GROUP BY s.sales_date
+            ORDER BY s.sales_date ASC;
         """
         data = (
             datetime.datetime(year, month, 1, 0, 0, 0),
             datetime.datetime(year, month+1, 1, 0, 0, 0)
         )
         rows = None
+
         try:
             rows = self._db.find(query, data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             print(e)
+
+        rows = [MonthlySales(
+            row['sales_date'],
+            row['sales_day'],
+            row['proceeds'])
+            for row in rows]
         return rows
 
     def find_yearly_sales(self, year):
