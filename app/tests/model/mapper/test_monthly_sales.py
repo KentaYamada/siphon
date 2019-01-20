@@ -1,6 +1,5 @@
 from datetime import datetime
 from unittest import TestCase
-from app.config import get_db_config
 from app.model.pgadapter import PgAdapter
 from app.model.mapper.sales_mapper import SalesMapper
 
@@ -11,7 +10,7 @@ class TestMonthlySales(TestCase):
         self.today = datetime.today()
 
     def tearDown(self):
-        db = PgAdapter(get_db_config('develop'))
+        db = PgAdapter()
         query = """
             TRUNCATE TABLE sales
             RESTART IDENTITY;
@@ -93,6 +92,6 @@ class TestMonthlySales(TestCase):
             );
 
         """
-        db = PgAdapter(get_db_config('develop'))
+        db = PgAdapter()
         db.bulk_insert(query, data)
         db.commit()

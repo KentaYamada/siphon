@@ -5,11 +5,12 @@
 """
 import psycopg2
 import psycopg2.extras
+from app.config import get_config
 
 
 class PgAdapter():
-    def __init__(self, config):
-        self.__config = config
+    def __init__(self):
+        self.__config = get_config().DATABASE
         self.__con = None
         self.__cur = None
 

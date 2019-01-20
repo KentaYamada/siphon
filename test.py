@@ -1,13 +1,15 @@
-from os import path
+from os import environ, path
 from unittest import TestLoader, TextTestRunner
-
-
-TEST_ROOT_DIR = './app/tests'
+from app.config import get_config
 
 
 def run():
+    # switch test config
+    environ['APP_TYPE'] = 'test'
+    config = get_config()
+
     paths = (
-        TEST_ROOT_DIR,
+        config.TEST_ROOT_DIR,
     )
     loader = TestLoader()
     for p in paths:

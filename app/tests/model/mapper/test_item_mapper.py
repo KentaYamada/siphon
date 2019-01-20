@@ -1,5 +1,4 @@
 import unittest
-from app.config import get_db_config
 from app.model.pgadapter import PgAdapter
 from app.model.item import Item
 from app.model.mapper.item_mapper import ItemMapper
@@ -10,7 +9,7 @@ class TestItemMapper(unittest.TestCase):
         self.mapper = ItemMapper()
 
     def tearDown(self):
-        db = PgAdapter(get_db_config('develop'))
+        db = PgAdapter()
         query = """
             TRUNCATE TABLE items
             RESTART IDENTITY;

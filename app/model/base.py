@@ -1,10 +1,7 @@
 from app.model.pgadapter import PgAdapter
-from app.config import get_db_config
 
 
 class BaseModel:
-    db = PgAdapter(get_db_config('develop'))
-
     def __init__(self):
         self.__errors = {}
 

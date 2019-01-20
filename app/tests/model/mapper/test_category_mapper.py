@@ -1,5 +1,4 @@
 import unittest
-from app.config import get_db_config
 from app.model.pgadapter import PgAdapter
 from app.model.category import Category
 from app.model.mapper.category_mapper import CategoryMapper
@@ -10,7 +9,7 @@ class TestCategoryMapper(unittest.TestCase):
         self.mapper = CategoryMapper()
 
     def tearDown(self):
-        db = PgAdapter(get_db_config('develop'))
+        db = PgAdapter()
         query = """
             TRUNCATE TABLE categories
             RESTART IDENTITY;

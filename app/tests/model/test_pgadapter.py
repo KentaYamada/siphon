@@ -1,13 +1,11 @@
 import unittest
 import psycopg2
-from app.config import get_db_config
 from app.model.pgadapter import PgAdapter
 
 
 class TestPgAdapterTest(unittest.TestCase):
     def setUp(self):
-        config = get_db_config('pgadapter')
-        self.__db = PgAdapter(config)
+        self.__db = PgAdapter()
 
     def tearDown(self):
         self.__db.execute('TRUNCATE TABLE cars RESTART IDENTITY;')
@@ -76,11 +74,6 @@ class TestPgAdapterTest(unittest.TestCase):
             self.__db.bulk_insert('test', None)
             self.__db.bulk_insert('test', [])
         self.__db.rollback()
-
-    def test_config_is_empty(self):
-        db = PgAdapter(None)
-        with self.assertRaises(ValueError):
-            db.execute_proc('save_car_maker', ('FIAT',))
 
     def test_run_invalid_command(self):
         with self.assertRaises(psycopg2.ProgrammingError):
