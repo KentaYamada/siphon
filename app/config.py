@@ -10,9 +10,10 @@ from os import environ
 class BaseConfig:
     # flask configs
     DEBUG = False
-    TESTING = False
+    ENV = None
     JSON_AS_ASCII = False
     JSON_SORT_KEYS = True
+    TESTING = False
     SECRET_KEY = ''
 
     # database configs
@@ -32,6 +33,7 @@ class StagingConfig(BaseConfig):
 
 
 class TestConfig(BaseConfig):
+    ENV = 'test'
     TESTING = True
     TEST_ROOT_DIR = './app/tests'
     DATABASE = {
@@ -44,6 +46,7 @@ class TestConfig(BaseConfig):
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
+    ENV = 'development'
     DATABASE = {
         'host': 'localhost',
         'dbname': 'siphon_dev',
