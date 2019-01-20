@@ -7,5 +7,4 @@ if __name__ == '__main__':
     environ['APP_TYPE'] = 'development'
     app = startup_app()
     app.config.from_object('app.config.DevelopmentConfig')
-    # print(app.__dict__)
     app.run()
