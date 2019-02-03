@@ -1,5 +1,4 @@
 import unittest
-from app.config import get_db_config
 from app.model.pgadapter import PgAdapter
 from app.model.user import User
 from app.model.mapper.user_mapper import UserMapper
@@ -10,7 +9,7 @@ class TestUserMapper(unittest.TestCase):
         self.mapper = UserMapper()
 
     def tearDown(self):
-        db = PgAdapter(get_db_config('develop'))
+        db = PgAdapter()
         query = """
             TRUNCATE TABLE users
             RESTART IDENTITY;
@@ -45,6 +44,11 @@ class TestUserMapper(unittest.TestCase):
         self.__init_data()
         result = self.mapper.delete(1)
         self.assertTrue(result)
+
+    def test_find_by_ok(self):
+            self.__init_data()
+            result = self.mapper.find_by(None)
+            self.assertEqual(len(result), 10)
 
     def test_add_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):

@@ -87,41 +87,25 @@ class UserMapper(BaseMapper):
             deleted = False
         return deleted
 
-    def find_by(self, condition):
-        users = []
-        for i in range(1, 31):
-            user = User(
-                i,
-                'User{0}'.format(i),
-                'Nickname{0}'.format(i),
-                'test{0}@email.com'.format(i),
-                'hoge{0}fuga'.format(i)
-            )
-            users.append(user)
+    def find_by(self, user):
+        if user is not None and not isinstance(user, User):
+            raise ValueError()
+        query = """
+            SELECT
+                id,
+                name,
+                nickname,
+                email,
+                password
+            FROM users
+            ORDER BY id ASC;
+        """
+        users = None
+        try:
+            users = self._db.find(query)
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            print(e)
+            users = None
         return users
-
-    def authoricate(self, email, password, **kwargs):
-        # dummy
-        if not email or not password:
-            return False
-        if email != 'test' and password != 'test':
-            return False
-        return True
-        # if user is None or not isinstance(user, User):
-        #     raise ValueError()
-        # query = """
-        #     SELECT
-        #         COUNT(id) AS logged_in
-        #     FROM users
-        #     WHERE email = %s
-        #       AND password = %s;
-        # """
-        # data = (user.email, user.password)
-        # user = None
-        # try:
-        #     user = self._db.find_one(query, data)
-        #     self._db.commit()
-        # except Exception as e:
-        #     self._db.rollback()
-        #     print(e)
-        # return user
