@@ -46,3 +46,29 @@ class SalesItemMapper(BaseMapper):
                 row['subtotal'])
                 for row in rows]
         return rows
+
+    def find_popular_items(self, sales_ids):
+        if sales_ids is None or not isinstance(sales_ids, list):
+            raise ValueError()
+        if len(sales_ids) == 0:
+            raise ValueError()
+        query = """
+            SELECT
+                item_name,
+                SUM(quantity) AS quantity
+            FROM sales_items
+            WHERE sales_id IN %s
+            GROUP BY item_name
+            LIMIT 10;
+        """
+
+        try:
+            self._db.find(query, (tuple(sales_ids),))
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            print(e)
+        return [
+            {'rank': i, 'item': 'test {}'.format(i)}
+            for i in range(1, 11)
+        ]
