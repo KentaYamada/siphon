@@ -97,6 +97,48 @@ class SalesMapper(BaseMapper):
             saved = False
         return saved
 
+    def find_daily_sales(self, sales_date):
+        if sales_date is None or not isinstance(sales_date, datetime.datetime):
+            raise ValueError()
+        query = """
+            SELECT
+                id,
+                sales_date,
+                total_price,
+                CASE
+                    WHEN discount_price > 0 THEN
+                        discount_rate
+                    WHEN discount_rate > 0 THEN
+                        discount_rate
+                    ELSE
+                        NULL
+                END AS discount,
+                CASE
+                    WHEN discount_price > 0 THEN
+                        total_price - discount_price
+                    WHEN discount_rate > 0 THEN
+                        total_price * (1 - (discount_rate * 1.0) / 100)
+                    ELSE
+                        total_price
+                END AS proceeds
+            FROM sales
+            WHERE sales_date <= %s
+              AND sales_date < %s
+            ORDER BY sales_date ASC;
+        """
+        data = (
+        )
+        rows = None
+        try:
+            rows = self._db.find(query, data)
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            print(e)
+        if rows is None or len(rows) != 0:
+            rows = []
+        return rows
+
     def find_monthly_sales(self, year, month):
         if year is None or not isinstance(year, int):
             raise ValueError()
