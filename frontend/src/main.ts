@@ -3,7 +3,6 @@ import Buefy from 'buefy';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import VueLodash from 'vue-lodash';
 import './registerServiceWorker';
 import 'buefy/dist/buefy.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -15,9 +14,6 @@ Vue.config.productionTip = false;
 Vue.use(Buefy, {
     defaultIconPack: 'fas',
 });
-
-// lodash
-Vue.use(VueLodash);
 
 new Vue({
   router,
