@@ -1,0 +1,65 @@
+<section>
+    <div class="container has-text-centered">
+        <div class="column is-10 is-offset-1">
+            <div class="has-text-centered" v-if="!hasItems">
+                表示するデータがありません
+            </div>
+            <div class="is-size-4" v-if="hasItems">
+                <h3 class="has-text-left">ユーザー一覧</h3>
+                <div class="box">
+                    <form>
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input type="text" class="input is-medium">
+                            </div>
+                            <div class="control">
+                                <button type="button" class="button is-info is-medium">
+                                    Search
+                                </button>
+                            </div>
+                            <div class="control">
+                                <button
+                                    type="button"
+                                    class="button is-success is-medium"
+                                    @click="handleNew()">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table class="table is-bordered is-striped is-fullwidth" v-if="hasItems">
+                    <thead>
+                        <tr>
+                            <th class="has-text-centered">名前</th>
+                            <th class="has-text-centered">ニックネーム</th>
+                            <th class="has-text-centered">メールアドレス</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="user in users">
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.nickname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td class="has-text-centered">
+                                <button
+                                    type="button"
+                                    class="button is-info is-medium"
+                                    @click="handleEdit(user)">
+                                    編集
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button is-danger is-medium"
+                                    @click="handleDelete(user)">
+                                    削除
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
