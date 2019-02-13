@@ -1,0 +1,90 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2 is-size-4">
+                <b-collapse class="card">
+                    <header class="card-header" slot="trigger" slot-scope="props">
+                        <p class="card-header-title">商品</p>
+                        <a class="card-header-icon">
+                            <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                        </a>
+                    </header>
+                    <section class="card-content">
+                        <div class="content">
+                            <form>
+                                <div class="field has-addons">
+                                    <div class="control">
+                                        <input type="text" class="input is-medium" placeholder="例) カレー">
+                                    </div>
+                                    <div class="control">
+                                        <b-select
+                                            size="is-medium"
+                                            placeholder="商品カテゴリ">
+                                            <option
+                                                v-for="c in categories"
+                                                :value="c.id"
+                                                :key="c.id">
+                                                {{ c.name }}
+                                            </option>
+                                        </b-select>
+                                    </div>
+                                    <div class="control">
+                                        <button type="reset" class="button is-medium">
+                                            <i class="fa fa-backspace"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <div class="control">
+                                        <button type="button" class="button is-info is-medium">
+                                            <i class="fa fa-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </b-collapse>
+                <p class="has-text-centered" v-if="!hasItems">
+                    表示するデータがありません
+                </p>
+                <table class="table is-fullwidth is-striped mt10" v-if="hasItems">
+                    <thead>
+                        <tr>
+                            <th class="has-text-centered">商品</th>
+                            <th class="has-text-centered">単価</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items">
+                            <td class="has-text-centered">
+                                {{ item.name }}
+                            </td>
+                            <td class="has-text-right">
+                                {{ item.price | numberWithDelimiter }}
+                            </td>
+                            <td class="has-text-centered buttons-col">
+                                <button
+                                    type="button"
+                                    class="button is-info is-medium"
+                                    @click="handleEdit(item)">
+                                    <i class="fa fa-edit"></i>
+                                    編集
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button is-danger is-medium"
+                                    @click="handleDelete(item)">
+                                    <i class="fa fa-trash-alt"></i>
+                                    削除
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
