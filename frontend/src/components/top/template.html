@@ -1,0 +1,72 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <div class="has-text-centered">
+                    <button
+                        class="button is-medium none-border"
+                        @click="handlePrevMonth()">
+                        <i class="fa fa-angle-left is-size-3"></i>
+                    </button>
+                    <!--<span class="is-size-3">2019年01月</span>-->
+                    <span class="is-size-3">{{ currentMonth }}</span>
+                    <button
+                        class="button is-medium none-border"
+                        @click="handleNextMonth()">
+                        <i class="fa fa-angle-right is-size-3"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <h4 class="has-text-centered is-size-4">2019年01月の売上</h4>
+                <table class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th class="is-holiday">日</th>
+                            <th class="is-dayweek">月</th>
+                            <th class="is-dayweek">火</th>
+                            <th class="is-dayweek">水</th>
+                            <th class="is-dayweek">木</th>
+                            <th class="is-dayweek">金</th>
+                            <th class="is-satarday">土</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(week, index) in monthlySales">
+                            <td class="has-text-centered" v-for="item in week">
+                                <div class="has-text-weight-bold"
+                                    v-bind:class="{ 'has-text-danger': item.is_holiday, 'has-text-info': item.is_satarday }">
+                                    {{ item.sales_date }}
+                                </div>
+                                <div>
+                                    <a href="#">
+                                        {{ item.amount | numberWithDelimiter }}
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <h4 class="has-text-centered is-size-4">人気商品Top10</h4>
+                <table class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="has-text-centered">商品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in popularItems">
+                            <th class="has-text-centered">{{ item.rank }}</th>
+                            <td>{{ item.item }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

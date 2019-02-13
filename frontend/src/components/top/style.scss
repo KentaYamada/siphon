@@ -1,0 +1,32 @@
+.menu {
+    list-style-type: none;
+
+    .menu-item {
+        display: inline-block;
+        margin: 0 10px;
+    }
+}
+
+.none-border {
+    border: none;
+}
+
+.list-header {
+    margin-bottom: 10px;
+}
+
+.is-dayweek {
+    background-color: #f5f5f5;
+    text-align: center;
+}
+.is-holiday {
+    background-color: #f3adcd;
+    color: #ff3860;
+    text-align: center;
+}
+
+.is-satarday {
+    background-color: #b0def5;
+    color: #167df0;
+    text-align: center;
+}
