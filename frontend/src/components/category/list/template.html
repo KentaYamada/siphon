@@ -1,0 +1,76 @@
+<section class="section">
+    <div class="container" v-if="!hasItems">
+        <p class="has-text-centered">表示するデータがありません</p>
+    </div>
+    <div class="container" v-if="hasItems">
+        <div class="columns">
+            <div class="column is-8 is-offset-2 is-size-4">
+                <b-collapse class="card">
+                    <header class="card-header" slot="trigger" slot-scope="props">
+                        <p class="card-header-title">商品カテゴリ</p>
+                        <a class="card-header-icon">
+                            <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                        </a>
+                    </header>
+                    <section class="card-content">
+                        <div class="content">
+                            <form>
+                                <div class="field has-addons">
+                                    <div class="control">
+                                        <input type="text" class="input is-medium" placeholder="例) ランチ">
+                                    </div>
+                                    <div class="control">
+                                        <button type="reset" class="button is-medium">
+                                            <i class="fa fa-backspace"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <div class="control">
+                                        <button type="button" class="button is-info is-medium">
+                                            <i class="fa fa-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </b-collapse>
+                <table class="table is-fullwidth mt10">
+                    <thead>
+                        <tr>
+                            <th class="has-text-centered">カテゴリ名</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="scrollable-area">
+                    <table class="table is-fullwidth is-striped">
+                        <tbody>
+                            <tr v-for="category in categories" :key="category.id">
+                                <td>{{ category.name }}</td>
+                                <td class="has-text-centered buttons-col">
+                                    <button
+                                        type="button"
+                                        class="button is-info is-medium"
+                                        @click="handleEdit(category)"
+                                        v-on:save-successfully="handleSaveSuccess()">
+                                        <i class="fa fa-edit"></i>
+                                        編集
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="button is-danger is-medium"
+                                        @click="handleDelete(category)">
+                                        <i class="fa fa-trash-alt"></i>
+                                        削除
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
