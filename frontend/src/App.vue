@@ -6,7 +6,6 @@
       <router-link to="/categories">Category</router-link> |
       <router-link to="/items">Item</router-link> |
       <router-link to="/users">User</router-link> |
-      <router-link to="/about">About</router-link>
     </div>
     <router-view/>
   </div>
