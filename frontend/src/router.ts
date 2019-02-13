@@ -7,7 +7,6 @@ import CategoryList from '@/components/category/list/CategoryList.vue';
 import ItemList from '@/components/item/list/ItemList.vue';
 import UserList from '@/components/user/list/UserList.vue';
 
-
 Vue.use(Router);
 
 export default new Router({
@@ -38,14 +37,6 @@ export default new Router({
       path: '/users',
       name: 'userList',
       component: UserList,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
   ],
 });
