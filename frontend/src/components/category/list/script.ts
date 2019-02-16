@@ -23,6 +23,8 @@ export default Vue.extend({
         },
     },
     methods: {
+        handleSearch(): void {
+        },
         handleNew(): void {
             const option: any = {
                 parent: this,

@@ -1,32 +1,36 @@
-.fixed-button {
-    border-radius: 50% 50%;
-    font-size: 24px;
-    line-height: 48px;
-    background-color: #23d160;
-    color: #fff;
-    height: 50px;
-    position: fixed;
-    bottom: 20px;
-    right: 260px;
-}
-
-
-.buttons-col {
-    .fa {
-        margin-right: 6px;
+.search-form {
+    .button {
+        .fas {
+            margin-right: 6px;
+        }
     }
 }
 
-.mt10 {
+.table-header {
     margin-top: 10px;
+    margin-bottom: 0px !important;
 }
 
-.ml10 {
-    margin-left: 10px;
-}
-
-.scrollable-area {
-    max-height: 350px;
+.scrollable-table-area {
+    max-height: 331px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+
+    .table-contents {
+        .buttons-col {
+            .button.is-info {
+                margin-right: 10px;
+            }
+            .fas {
+                margin-right: 6px;
+            }
+        }
+    }
+}
+
+.table-header,
+.table-contents {
+    .name-col {
+        width: 60%;
+    }
 }

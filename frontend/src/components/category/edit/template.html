@@ -1,6 +1,9 @@
 <div class="modal-card">
     <header class="modal-card-head">
-        <p class="modal-card-title">商品カテゴリ設定</p>
+        <p class="modal-card-title">
+            <i class="fas fa-tag"></i>
+            商品カテゴリ設定
+        </p>
     </header>
     <section class="modal-card-body">
         <form>
@@ -15,8 +18,8 @@
                         class="input"
                         v-model="category.name">
                 </div>
-                <small class="help is-danger" v-show="hasError">
-                    カテゴリ名は必須です
+                <small class="help is-danger" v-show="errors.name">
+                    {{ errors.name }}
                 </small>
             </div>
         </form>
@@ -32,6 +35,7 @@
             type="submit"
             class="button is-info"
             @click="handleSave">
+            <i class="fas fa-save"></i>
             保存
         </button>
     </footer>
