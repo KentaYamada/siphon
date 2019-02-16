@@ -17,6 +17,14 @@ export default Vue.extend({
     },
     methods: {
         handleNew(): void {
+            this.$modal.open({
+                parent: this,
+                component: UserEdit,
+                hasModalCard: true,
+                props: {
+                    user: {}
+                }
+            });
         },
         handleEdit(user: User): void {
             this.$modal.open({

@@ -1,58 +1,87 @@
-<section>
-    <div class="container has-text-centered">
+<div class="container">
+    <div class="columns">
         <div class="column is-10 is-offset-1">
-            <div class="has-text-centered" v-if="!hasItems">
-                表示するデータがありません
-            </div>
-            <div class="is-size-4" v-if="hasItems">
-                <h3 class="has-text-left">ユーザー一覧</h3>
-                <div class="box">
+            <b-collapse class="card is-size-4">
+                <header class="card-header" slot="trigger" slot-scope="props">
+                    <p class="card-header-title">
+                        <i class="fas fa-users"></i>
+                        ユーザー
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                    </a>
+                </header>
+                <section class="card-content">
                     <form>
                         <div class="field has-addons">
                             <div class="control">
-                                <input type="text" class="input is-medium">
+                                <input
+                                    type="text"
+                                    class="input is-medium"
+                                    placeholder="例) Siphon太郎">
                             </div>
                             <div class="control">
-                                <button type="button" class="button is-info is-medium">
-                                    Search
+                                <button type="reset" class="button is-medium">
+                                    <i class="fa fa-backspace"></i>
                                 </button>
                             </div>
+                            <div class="control">
+                                <button
+                                    type="button"
+                                    class="button is-info is-medium">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="field">
                             <div class="control">
                                 <button
                                     type="button"
                                     class="button is-success is-medium"
                                     @click="handleNew()">
-                                    Add
+                                    <i class="fas fa-plus"></i>
+                                    新規作成
                                 </button>
                             </div>
                         </div>
                     </form>
-                </div>
-                <table class="table is-bordered is-striped is-fullwidth" v-if="hasItems">
-                    <thead>
-                        <tr>
-                            <th class="has-text-centered">名前</th>
-                            <th class="has-text-centered">ニックネーム</th>
-                            <th class="has-text-centered">メールアドレス</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                </section>
+            </b-collapse>
+            <table class="table is-bordered is-striped is-fullwidth table-header">
+                <thead>
+                    <tr>
+                        <th class="has-text-centered name-col">名前</th>
+                        <th class="has-text-centered nickname-col">ニックネーム</th>
+                        <th class="has-text-centered email-col">メールアドレス</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="scrollable-table-area">
+                <table class="table is-bordered is-striped is-fullwidth is-size-5">
                     <tbody>
-                        <tr v-for="user in users">
-                            <td>{{ user.name }}</td>
-                            <td>{{ user.nickname }}</td>
-                            <td>{{ user.email }}</td>
+                        <tr v-show="!hasItems">
                             <td class="has-text-centered">
+                                表示するデータがありません
+                            </td>
+                        </tr>
+                        <tr v-for="user in users">
+                            <td class="name-col">{{ user.name }}</td>
+                            <td class="nickname-col">{{ user.nickname }}</td>
+                            <td class="email-col">{{ user.email }}</td>
+                            <td class="has-text-centered buttons-col">
                                 <button
                                     type="button"
                                     class="button is-info is-medium"
                                     @click="handleEdit(user)">
+                                    <i class="fas fa-edit"></i>
                                     編集
                                 </button>
                                 <button
                                     type="button"
                                     class="button is-danger is-medium"
                                     @click="handleDelete(user)">
+                                    <i class="fas fa-trash-alt"></i>
                                     削除
                                 </button>
                             </td>
@@ -62,4 +91,4 @@
             </div>
         </div>
     </div>
-</section>
+</div>
