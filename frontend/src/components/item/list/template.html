@@ -3,14 +3,17 @@
         <div class="column is-8 is-offset-2">
             <b-collapse class="card is-size-4">
                 <header class="card-header" slot="trigger" slot-scope="props">
-                    <p class="card-header-title">商品</p>
+                    <p class="card-header-title">
+                        <i class="fas fa-coffee"></i>
+                        商品
+                    </p>
                     <a class="card-header-icon">
                         <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
                     </a>
                 </header>
                 <section class="card-content">
                     <div class="content">
-                        <form>
+                        <form class="search-form">
                             <div class="field has-addons">
                                 <div class="control">
                                     <input
@@ -57,17 +60,17 @@
                     </div>
                 </section>
             </b-collapse>
-            <table class="table is-fullwidth is-striped is-size-5 mt10">
+            <table class="table is-bordered is-striped is-size-5 is-fullwidth table-header">
                 <thead>
                     <tr>
-                        <th class="has-text-centered">商品</th>
-                        <th class="has-text-centered">単価</th>
+                        <th class="has-text-centered name-col">商品</th>
+                        <th class="has-text-centered price-col">単価</th>
                         <th></th>
                     </tr>
                 </thead>
             </table>
-            <div class="scrollable-table-area is-size-4">
-                <table class="table is-fullwidth is-striped">
+            <div class="scrollable-table-area is-size-5">
+                <table class="table is-fullwidth is-bordered is-striped table-contents">
                     <tbody>
                         <tr v-show="!hasItems">
                             <td class="has-text-centered">
@@ -75,25 +78,25 @@
                             </td>
                         </tr>
                         <tr v-for="item in items">
-                            <td class="has-text-centered">
+                            <td class=" name-col">
                                 {{ item.name }}
                             </td>
-                            <td class="has-text-right">
+                            <td class="has-text-right price-col">
                                 {{ item.price | numberWithDelimiter }}
                             </td>
-                            <td class="has-text-centered button-group">
+                            <td class="has-text-centered buttons-col">
                                 <button
                                     type="button"
                                     class="button is-info is-medium"
                                     @click="handleEdit(item)">
-                                    <i class="fa fa-edit"></i>
+                                    <i class="fas fa-edit"></i>
                                     編集
                                 </button>
                                 <button
                                     type="button"
                                     class="button is-danger is-medium"
                                     @click="handleDelete(item)">
-                                    <i class="fa fa-trash-alt"></i>
+                                    <i class="fas fa-trash-alt"></i>
                                     削除
                                 </button>
                             </td>
