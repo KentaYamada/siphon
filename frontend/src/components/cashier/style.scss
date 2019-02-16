@@ -1,0 +1,55 @@
+.sales-items-area {
+    padding-top: 0.15rem;
+}
+
+.scrollable-table-area {
+    height: 260px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-header {
+    margin-top: 10px;
+    margin-bottom: 0px !important;
+}
+
+.table-contents {
+    .button-cols {
+        .button-minus {
+            margin-right: 16px;
+        }
+    }
+}
+
+.table-footer {
+    .input-col {
+        padding-top: 1.0em;
+    }
+    .is-borderless {
+        border: none;
+    }
+}
+
+.table-header,
+.table-contents {
+    .item-col {
+        width: 20%;
+    }
+    .amount-col,
+    .subtotal-col {
+        width: 15%;
+    }
+    .button-cols {
+        width: 20%;
+    }
+}
+
+.scrollable-items-area {
+    height: 264px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.option-buttons {
+    padding: 0.6rem;
+}
