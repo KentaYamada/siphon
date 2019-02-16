@@ -21,6 +21,14 @@ export default Vue.extend({
     },
     methods: {
         handleNew(): void {
+            this.$modal.open({
+                parent: this,
+                component: ItemEdit,
+                hasModalCard: true,
+                props: {
+                    item: new Item()
+                }
+            });
         },
         handleEdit(item: Item): void {
             this.$modal.open({
