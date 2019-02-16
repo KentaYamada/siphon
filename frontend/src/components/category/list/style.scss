@@ -10,12 +10,19 @@
     right: 260px;
 }
 
-/*.buttons-col {
-    width: 30%;
-}*/
+
+.buttons-col {
+    .fa {
+        margin-right: 6px;
+    }
+}
 
 .mt10 {
     margin-top: 10px;
+}
+
+.ml10 {
+    margin-left: 10px;
 }
 
 .scrollable-area {
