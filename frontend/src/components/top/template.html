@@ -20,7 +20,7 @@
         </div>
         <div class="columns">
             <div class="column">
-                <h4 class="has-text-centered is-size-4">2019年01月の売上</h4>
+                <h4 class="has-text-centered is-size-4">{{ currentMonth }}の売上</h4>
                 <table class="table is-bordered is-fullwidth">
                     <thead>
                         <tr>
@@ -36,7 +36,14 @@
                     <tbody>
                         <tr v-for="(week, index) in monthlySales">
                             <td class="has-text-centered" v-for="item in week">
-                                <div class="has-text-weight-bold"
+                                <a href="#" class="day-link">
+                                    <div class="has-text-weight-bold"
+                                        v-bind:class="{ 'has-text-danger': item.is_holiday, 'has-text-info': item.is_satarday }">
+                                        {{ item.sales_date }}
+                                    </div>
+                                    <div>{{ item.amount | numberWithDelimiter }}</div>
+                                </a>
+                                <!--<div class="has-text-weight-bold"
                                     v-bind:class="{ 'has-text-danger': item.is_holiday, 'has-text-info': item.is_satarday }">
                                     {{ item.sales_date }}
                                 </div>
@@ -44,7 +51,7 @@
                                     <a href="#">
                                         {{ item.amount | numberWithDelimiter }}
                                     </a>
-                                </div>
+                                </div> -->
                             </td>
                         </tr>
                     </tbody>
