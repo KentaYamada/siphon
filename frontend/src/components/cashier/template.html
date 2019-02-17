@@ -76,132 +76,52 @@
                 </table>
             </div>
             <div class="column">
-                <div class="buttons">
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                    <button type="button" class="button is-outlined">
-                        Category 1
-                    </button>
-                </div>
-                <div class="buttons scrollable-items-area">
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                    <button type="button" class="button is-outlined is-medium">
-                        Item 1 aaaaa
-                    </button>
-                </div>
+                <nav class="panel">
+                    <p class="panel-tabs">
+                        <a class="is-active">Category 1</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                    </p>
+                    <p class="panel-tabs">
+                        <a>Category 1</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                        <a>Category X</a>
+                    </p>
+                    <div class="panel-block">
+                        <div class="scrollable-items-area">
+                            <ul class="item-group">
+                                <li class="item" v-for="item in items">
+                                    <div>
+                                        {{ item.name }} (単価: {{ item.price | numberWithDelimiter }})
+                                    </div>
+                                    <div class="has-text-right">
+                                        <button
+                                            type="button"
+                                            class="button is-info is-outlined">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="button is-info is-outlined">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="button is-danger is-outlined">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
                 <div class="box option-buttons">
-                    <div class="buttons">
+                    <div class="buttons is-centered">
                         <button type="button" class="button is-danger is-large">AC</button>
                         <button type="button" class="button is-info is-large">¥割</button>
                         <button type="button" class="button is-info is-large">%割</button>

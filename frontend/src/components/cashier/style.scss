@@ -16,7 +16,7 @@
 .table-contents {
     .button-cols {
         .button-minus {
-            margin-right: 16px;
+            margin-right: 6px;
         }
     }
 }
@@ -44,10 +44,29 @@
     }
 }
 
+
 .scrollable-items-area {
-    height: 264px;
+    height: 310px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+
+    .item-group {
+        list-style: none;
+        text-align: left;
+
+        .item {
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            margin-right: 6px;
+            padding: 6px;
+
+            .button {
+                margin-right: 6px;
+            }
+        }
+    }
 }
 
 .option-buttons {

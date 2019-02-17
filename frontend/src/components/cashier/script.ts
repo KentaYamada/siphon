@@ -6,20 +6,13 @@ import _ from 'lodash';
 
 function getItems() {
     let items = [];
-    let index = 1;
 
-    for (let i = 0; i < 10; i++) {
-        let row = [];
-
-        for(let j = 0; j < 3; j++) {
-            row.push({
-                name: 'Item ' + index,
-                price: index * 100
-            });
-            index++;
-        }
-
-        items.push(row);
+    for(let i = 1; i <= 30; i++) {
+        items.push({
+            id: i,
+            name: 'Item ' + i,
+            price: i * 100
+        });
     }
 
     return items;
