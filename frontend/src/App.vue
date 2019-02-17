@@ -3,6 +3,7 @@
     <div id="nav">
       <router-link to="/">Dashboard</router-link> |
       <router-link to="/cashier">Cashier</router-link> |
+      <router-link to="/sales/daily">Daily Sales</router-link> |
       <router-link to="/login">Login</router-link> |
       <router-link to="/categories">Category</router-link> |
       <router-link to="/items">Item</router-link> |
@@ -35,12 +36,12 @@ export default Vue.extend({
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 #nav {
   padding-top: 10px;
   padding-bottom: 20px;
+  text-align: center;
   a {
     font-weight: bold;
     color: #2c3e50;

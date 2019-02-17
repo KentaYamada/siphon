@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Login from '@/components/login/Login.vue';
 import Top from '@/components/top/Top.vue';
 import Cashier from '@/components/cashier/Cashier.vue';
+import DailySales from '@/components/sales/daily/DailySales.vue';
 import CategoryList from '@/components/category/list/CategoryList.vue';
 import ItemList from '@/components/item/list/ItemList.vue';
 import UserList from '@/components/user/list/UserList.vue';
@@ -42,6 +43,11 @@ export default new Router({
       path: '/cashier',
       name: 'cashier',
       component: Cashier,
+    },
+    {
+      path: '/sales/daily',
+      name: 'dailySales',
+      component: DailySales,
     },
   ],
 });
