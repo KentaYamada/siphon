@@ -1,27 +1,33 @@
-.table-header {
-    // todo: do not important
-    margin-bottom: 0px !important;
-}
-
-.scrollable-table-area {
-    height: 195px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-}
-
-.table-header,
-.scrollable-table-area {
-    .item-col {
-
+.daily-sales-area {
+    .daily-sales {
+        margin-top: 14px;
     }
-    .amount-col,
-    .subtotal-col {
-        width: 15%;
+    margin-top: 10px;
+    .table-header {
+        // todo: do not important
+        margin-bottom: 0px !important;
     }
-}
 
-.table-footer {
-    th {
-        width: 50%;
+    .scrollable-table-area {
+        height: 195px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-header,
+    .scrollable-table-area {
+        .item-col {
+
+        }
+        .amount-col,
+        .subtotal-col {
+            width: 15%;
+        }
+    }
+
+    .table-footer {
+        th {
+            width: 50%;
+        }
     }
 }

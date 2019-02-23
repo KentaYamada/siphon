@@ -41,128 +41,60 @@
                 </section>
             </b-collapse>
 
-            <div style="margin-top: 10px;">
-            <b-collapse class="card">
-                <header class="card-header" slot="trigger" slot-scope="props">
-                    <p class="card-header-title">
-                        2019年02月22日 09:00:00
-                    </p>
-                    <a class="card-header-icon">
-                        取消
-                    </a>
-                </header>
-                <section class="card-content">
-                    <div class="content">
-                        <table class="table is-bordered is-fullwidth table-header">
-                            <thead>
-                                <tr>
-                                    <th class="has-text-centered">商品</th>
-                                    <th class="has-text-centered amount-col">数量</th>
-                                    <th class="has-text-centered subtotal-col">小計</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div class="scrollable-table-area">
-                            <table class="table is-bordered is-striped is-fullwidth table-contents">
+            <div class="daily-sales-area">
+                <b-collapse class="card daily-sales" v-for="sales in dailySales">
+                    <header class="card-header" slot="trigger" slot-scope="props">
+                        <p class="card-header-title">
+                            2019年02月22日 09:00:00
+                        </p>
+                        <a class="card-header-icon" @click="handleCancelSales(1)">
+                            取消
+                        </a>
+                    </header>
+                    <section class="card-content">
+                        <div class="content">
+                            <table class="table is-bordered is-fullwidth table-header">
+                                <thead>
+                                    <tr>
+                                        <th class="has-text-centered">商品</th>
+                                        <th class="has-text-centered amount-col">数量</th>
+                                        <th class="has-text-centered subtotal-col">小計</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="scrollable-table-area">
+                                <table class="table is-bordered is-striped is-fullwidth table-contents">
+                                    <tbody>
+                                        <tr v-for="item in sales.items">
+                                            <td>
+                                                <div>{{ item.item_name }}</div>
+                                                <div>{{ item.price }}</div>
+                                            </td>
+                                            <td class="has-text-right amount-col">
+                                                {{ item.amount }}
+                                            </td>
+                                            <td class="has-text-right subtotal-col">
+                                                {{ item.subtotal }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="table is-bordered is-striped is-fullwidth table-footer">
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right amount-col">1</td>
-                                        <td class="has-text-right subtotal-col">450</td>
+                                        <th class="has-text-right">値引</th>
+                                        <td class="has-text-right">0</td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div>Siphon Coffee</div>
-                                            <div>450</div>
-                                        </td>
-                                        <td class="has-text-right">1</td>
-                                        <td class="has-text-right">450</td>
+                                        <th class="has-text-right">合計</th>
+                                        <td class="has-text-right">0</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <table class="table is-bordered is-striped is-fullwidth table-footer">
-                            <tbody>
-                                <tr>
-                                    <th class="has-text-right">値引</th>
-                                    <td class="has-text-right">0</td>
-                                </tr>
-                                <tr>
-                                    <th class="has-text-right">合計</th>
-                                    <td class="has-text-right">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </b-collapse>
+                    </section>
+                </b-collapse>
             </div>
         </div>
     </div>
