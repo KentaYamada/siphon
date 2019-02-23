@@ -1,91 +1,169 @@
-<section class="section">
-    <div class="container">
-        <div class="columns">
-            <div class="column is-10 is-offset-1">
-                <h4>本日の売上</h4>
-                <div class="card is-card-margin">
-                    <header class="card-header">
-                        <p class="card-header-title">売上日時: 2018.11.01 10:00:00</p>
-                        <a href="#">取消</a>
-                    </header>
-                    <div class="card-content">
-                        <table class="table is-striped is-fullwidth">
+<div class="container">
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <b-collapse class="card is-size-4">
+                <header class="card-header" slot="trigger" slot-scope="props">
+                    <p class="card-header-title">
+                        <i class="fas fa-money-bill-alt"></i>
+                        本日の売上
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                    </a>
+                </header>
+                <section class="card-content">
+                    <div class="content">
+                        <form class="search-form">
+                            <b-field grouped>
+                                <b-timepicker placeholder="9:00"></b-timepicker>
+                                <span>〜</span>
+                                <b-timepicker placeholder="19:00"></b-timepicker>
+                                <b-input placeholder="例) Siphonコーヒー"></b-input>
+                                <div class="control">
+                                    <button
+                                        type="reset"
+                                        class="button">
+                                        <i class="fas fa-search"></i>
+                                        クリア
+                                    </button>
+                                </div>
+                                <div class="control">
+                                    <button
+                                        type="button"
+                                        class="button is-info">
+                                        <i class="fas fa-search"></i>
+                                        検索
+                                    </button>
+                                </div>
+                            </b-field>
+                        </form>
+                    </div>
+                </section>
+            </b-collapse>
+
+            <div style="margin-top: 10px;">
+            <b-collapse class="card">
+                <header class="card-header" slot="trigger" slot-scope="props">
+                    <p class="card-header-title">
+                        2019年02月22日 09:00:00
+                    </p>
+                    <a class="card-header-icon">
+                        取消
+                    </a>
+                </header>
+                <section class="card-content">
+                    <div class="content">
+                        <table class="table is-bordered is-fullwidth table-header">
                             <thead>
                                 <tr>
-                                    <th>商品</th>
-                                    <th>数量</th>
-                                    <th>小計</th>
+                                    <th class="has-text-centered">商品</th>
+                                    <th class="has-text-centered amount-col">数量</th>
+                                    <th class="has-text-centered subtotal-col">小計</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="2" class="has-text-right">値引</th>
-                                    <td class="has-text-right">0</td>
-                                </tr>
-                                <tr>
-                                    <th colspan="2" class="has-text-right">合計</th>
-                                    <td class="has-text-right">450</td>
-                                </tr>
-                                <tr>
-                                    <th colspan="2" class="has-text-right">お預かり</th>
-                                    <td class="has-text-right">450</td>
-                                </tr>
-                                <tr>
-                                    <th colspan="2" class="has-text-right">おつり</th>
-                                    <td class="has-text-right">0</td>
-                                </tr>
-                            </tfoot>
+                        </table>
+                        <div class="scrollable-table-area">
+                            <table class="table is-bordered is-striped is-fullwidth table-contents">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right amount-col">1</td>
+                                        <td class="has-text-right subtotal-col">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>Siphon Coffee</div>
+                                            <div>450</div>
+                                        </td>
+                                        <td class="has-text-right">1</td>
+                                        <td class="has-text-right">450</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table class="table is-bordered is-striped is-fullwidth table-footer">
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <div>Siphon coffee</div>
-                                        <div>450</div>
-                                    </td>
-                                    <td class="has-text-right">1</td>
-                                    <td class="has-text-right">450</td>
+                                    <th class="has-text-right">値引</th>
+                                    <td class="has-text-right">0</td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div>Siphon coffee</div>
-                                        <div>450</div>
-                                    </td>
-                                    <td class="has-text-right">1</td>
-                                    <td class="has-text-right">450</td>
+                                    <th class="has-text-right">合計</th>
+                                    <td class="has-text-right">0</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="card is-card-margin">
-                    <header class="card-header">
-                        <p class="card-header-title">売上日時: 2018.11.01 10:00:00</p>
-                        <a href="#">取消</a>
-                    </header>
-                    <div class="card-content">
-                        <table class="table is-striped is-fullwidth">
-                            <thead>
-                                <tr>
-                                    <th>商品</th>
-                                    <th>数量</th>
-                                    <th>小計</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                            </tfoot>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div>Siphon coffee</div>
-                                        <div>450</div>
-                                    </td>
-                                    <td class="has-text-right">1</td>
-                                    <td class="has-text-right">450</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                </section>
+            </b-collapse>
             </div>
         </div>
     </div>
-</section>
+</div>

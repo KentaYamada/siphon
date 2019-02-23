@@ -1,4 +1,27 @@
-.is-card-margin {
-    margin-bottom: 10px;
-    margin-top: 10px;
+.table-header {
+    // todo: do not important
+    margin-bottom: 0px !important;
+}
+
+.scrollable-table-area {
+    height: 195px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-header,
+.scrollable-table-area {
+    .item-col {
+
+    }
+    .amount-col,
+    .subtotal-col {
+        width: 15%;
+    }
+}
+
+.table-footer {
+    th {
+        width: 50%;
+    }
 }
