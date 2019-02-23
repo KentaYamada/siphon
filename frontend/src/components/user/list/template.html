@@ -8,13 +8,14 @@
                         ユーザー
                     </p>
                     <a class="card-header-icon">
-                        <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                        <b-icon :icon="props.open ? 'angle-down' : 'angle-up'">
+                        </b-icon>
                     </a>
                 </header>
                 <section class="card-content">
                     <form>
-                        <div class="field has-addons">
-                            <div class="control">
+                        <div class="field is-grouped">
+                            <div class="control is-expanded">
                                 <input
                                     type="text"
                                     class="input is-medium"
@@ -22,18 +23,20 @@
                             </div>
                             <div class="control">
                                 <button type="reset" class="button is-medium">
-                                    <i class="fa fa-backspace"></i>
+                                    <i class="fa fa-times-circle"></i>
+                                    クリア
                                 </button>
                             </div>
+                        </div>
+                        <div class="field is-grouped">
                             <div class="control">
                                 <button
                                     type="button"
                                     class="button is-info is-medium">
                                     <i class="fa fa-search"></i>
+                                    検索
                                 </button>
                             </div>
-                        </div>
-                        <div class="field">
                             <div class="control">
                                 <button
                                     type="button"
