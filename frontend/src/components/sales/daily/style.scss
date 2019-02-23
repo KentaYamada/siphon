@@ -8,14 +8,8 @@
         margin-bottom: 0px !important;
     }
 
-    .scrollable-table-area {
-        height: 195px;
-        overflow-y: scroll;
-        -webkit-overflow-scrolling: touch;
-    }
 
-    .table-header,
-    .scrollable-table-area {
+    .table-header {
         .item-col {
 
         }

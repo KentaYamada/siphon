@@ -8,7 +8,8 @@
                         本日の売上
                     </p>
                     <a class="card-header-icon">
-                        <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                        <b-icon :icon="props.open ? 'angle-down' : 'angle-up'">
+                        </b-icon>
                     </a>
                 </header>
                 <section class="card-content">
@@ -61,25 +62,21 @@
                                         <th class="has-text-centered subtotal-col">小計</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    <tr v-for="item in sales.items">
+                                        <td>
+                                            <div>{{ item.item_name }}</div>
+                                            <div>{{ item.price }}</div>
+                                        </td>
+                                        <td class="has-text-right amount-col">
+                                            {{ item.amount }}
+                                        </td>
+                                        <td class="has-text-right subtotal-col">
+                                            {{ item.subtotal }}
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
-                            <div class="scrollable-table-area">
-                                <table class="table is-bordered is-striped is-fullwidth table-contents">
-                                    <tbody>
-                                        <tr v-for="item in sales.items">
-                                            <td>
-                                                <div>{{ item.item_name }}</div>
-                                                <div>{{ item.price }}</div>
-                                            </td>
-                                            <td class="has-text-right amount-col">
-                                                {{ item.amount }}
-                                            </td>
-                                            <td class="has-text-right subtotal-col">
-                                                {{ item.subtotal }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                             <table class="table is-bordered is-striped is-fullwidth table-footer">
                                 <tbody>
                                     <tr>
