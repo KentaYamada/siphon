@@ -8,19 +8,14 @@
                         商品
                     </p>
                     <a class="card-header-icon">
-                        <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+                        <b-icon :icon="props.open ? 'angle-down' : 'angle-up'">
+                        </b-icon>
                     </a>
                 </header>
                 <section class="card-content">
                     <div class="content">
                         <form class="search-form">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input
-                                        type="text"
-                                        class="input is-medium"
-                                        placeholder="例) GAMOYONカレー">
-                                </div>
+                            <div class="field is-grouped">
                                 <div class="control">
                                     <b-select
                                         size="is-medium"
@@ -33,19 +28,28 @@
                                         </option>
                                     </b-select>
                                 </div>
-                                <div class="control">
-                                    <button type="reset" class="button is-medium">
-                                        <i class="fa fa-backspace"></i>
-                                    </button>
+                                <div class="control is-expanded">
+                                    <input
+                                        type="text"
+                                        class="input is-medium"
+                                        placeholder="例) GAMOYONカレー">
                                 </div>
                                 <div class="control">
-                                    <button type="button" class="button is-info is-medium">
+                                    <button type="reset" class="button is-medium">
+                                        <i class="fas fa-times-circle"></i>
+                                        クリア
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button
+                                        type="button"
+                                        class="button is-info is-medium">
                                         <i class="fa fa-search"></i>
                                         検索
                                     </button>
                                 </div>
-                            </div>
-                            <div class="field">
                                 <div class="control">
                                     <button
                                         type="button"
