@@ -3,6 +3,11 @@ import User from '@/entity/user';
 
 
 export default Vue.extend({
+    props: {
+        user: {
+            required: true
+        }
+    },
     data() {
         return {
             errors: {
@@ -13,7 +18,7 @@ export default Vue.extend({
     },
     methods: {
         handleSave() {
+            this.$emit('save-success');
         }
     }
 });
-
