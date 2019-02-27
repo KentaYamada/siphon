@@ -14,7 +14,7 @@ export default Vue.extend({
     },
     methods: {
         handleSave(): void {
-            this.$emit('save-saccess');
+            this.$emit('save-success');
         }
     }
 });
