@@ -1,20 +1,18 @@
 import Vue from 'vue';
 import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
 import Category from '@/entity/category';
-
-
-interface IEditModalOption {
-    parent: any;
-    component: any;
-    hasModalCard: boolean;
-    props: any;
-}
+import {
+    ModalConfig,
+    ToastConfig,
+    DialogConfig
+} from 'buefy/types/components';
 
 
 export default Vue.extend({
     data() {
         return {
-            categories: Category.getDummyCategories()
+            categories: Category.getDummyCategories(),
+            errors: {}
         };
     },
     computed: {
@@ -23,45 +21,71 @@ export default Vue.extend({
         },
     },
     methods: {
+        /**
+         * 商品カテゴリ検索
+         */
         handleSearch(): void {
         },
+        /**
+         * 商品カテゴリ新規作成
+         */
         handleNew(): void {
-            const option: any = {
-                parent: this,
-                component: CategoryEdit,
-                hasModalCard: true,
-                props: {
-                    categpry: new Category(1, '')
-                }
-            };
-
-            this.$modal.open(option);
+            this._openEditModal(new Category(0, ''));
         },
+        /**
+         * 商品カテゴリ編集
+         * @param {Category} category 
+         */
         handleEdit(category: Category): void {
-            const option: IEditModalOption = {
-                parent: this,
-                component: CategoryEdit,
-                hasModalCard: true,
-                props: {
-                    category: category
-                }
-            };
-
-            this.$modal.open(option);
+            this._openEditModal(category);
         },
+        /**
+         * 商品カテゴリ削除
+         * @param {Category} category 
+         */
         handleDelete(category: Category): void {
-            // todo: 削除用モーダル
-            this.$dialog.confirm({
+            const message = `
+                <div>${category.name}を削除しますか？<div>
+                <small>Note:削除したデータを元に戻すことはできません</small>`;
+            const option: DialogConfig = {
                 title: '商品カテゴリ削除',
-                message: `<div>${category.name}を削除しますか？<div><small>Note:削除したデータを元に戻すことはできません</small>`,
+                message: message,
                 confirmText: '削除',
                 cancelText: '閉じる',
                 hasIcon: true,
-                type: 'is-danger'
-            });
+                type: 'is-danger',
+                onConfirm: () => {
+                    const option: ToastConfig = {
+                        message: '削除しました。',
+                        type: 'is-success'
+                    };
+                    this.$toast.open(option);
+                }
+            }
+            this.$dialog.confirm(option);
         },
-        handleSaveSuccess(): void {
-            console.log('success');
+        /**
+         * 編集モーダル表示
+         * @param category  
+         */
+        _openEditModal(category: Category): void {
+            const option: ModalConfig = {
+                parent: this,
+                component: CategoryEdit,
+                props: {
+                    category: category
+                },
+                events: {
+                    'save-success': () => {
+                        const option: ToastConfig = {
+                            message: '保存しました',
+                            type:'is-success'
+                        };
+                        this.$toast.open(option);
+                    }
+                }
+            };
+            this.$modal.open(option);
         }
     }
 });

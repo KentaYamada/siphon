@@ -10,18 +10,12 @@ export default Vue.extend({
     },
     data() {
         return {
-            errors: {
-                //name: 'カテゴリ名は必須です'
-            }
+            errors: {}
         };
-    },
-    computed: {
     },
     methods: {
         handleSave(): void {
-            //this.hasError = this.category.name === '';
-            //console.log('run');
-            this.$emit('save-successfully');
+            this.$emit('save-success');
         }
     }
 });
