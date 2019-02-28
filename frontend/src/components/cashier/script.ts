@@ -1,134 +1,183 @@
 import Vue from 'vue';
+import _ from 'lodash';
 import Sales from '@/entity/sales';
 import SalesItem from '@/entity/sales_item';
-import _ from 'lodash';
+import Category from '@/entity/category';
+import Item from '@/entity/item';
 
+/**
+ * 値引種別
+ */
+enum DISCOUNT_TYPES {
+    // 値引額
+    PRICE,
+    // 値引率
+    RATE
+};
 
-function getItems() {
-    let items = [];
-
-    for(let i = 1; i <= 30; i++) {
-        items.push({
-            id: i,
-            name: 'Item ' + i,
-            price: i * 100
-        });
-    }
-
-    return items;
-}
-
-function getDummySalesItems(): SalesItem[] {
-    let list = [];
-
-    for (let i = 1; i <= 10; i++) {
-        list.push(new SalesItem(
-            `Item ${i}`,
-            500,
-            i,
-            500 * i
-        ));
-    }
-
-    return list;
-}
 export default Vue.extend({
-    data() {
-        const items = getItems();
-        const salesItems = getDummySalesItems();
+    data(): any {
+        const sales = new Sales();
+        const categories = Category.getDummyCashierPanel();
+        const items = categories[0].items;
+        const discountMode = DISCOUNT_TYPES.PRICE;
+        const saving = false;
+        const charge = 0;
 
         return {
-            sales: new Sales(0, 0, 0, 0),
-            items: items,
-            sales_items: salesItems
+            sales,
+            sales_items: sales.items,
+            items,
+            saving,
+            charge,
+            discountMode,
+            errors: {}
         };
     },
+    watch: {
+        'sales.total_price': function(val: number) {
+            this.charge = this.sales.deposit - val;
+        },
+        'sales.deposit': function(val: number) {
+            this.charge = val - this.sales.total_price;
+        }
+    },
     methods: {
-        handleIncreaseItem(selectedItem: SalesItem): void {
-            const target = _.find(this.sales.items, (item: SalesItem) => {
-                return item.item_name === selectedItem.item_name;
-            });
-
-            if (!_.isUndefined(target)) {
-            } else {
-            }
-            //if (this._.isUndefined(target)) {
-            //   this.sales.items.push(new SalesItem(
-            //       selectedItem.name,
-            //       selectedItem.price,
-            //       1,
-            //       selectedItem.price,
-            //   ));
-            //} else {
-            //    target.amount += 1;
-            //}
+        /**
+         * 明細データ作成 or 数量追加
+         * @param {Item} item
+         */
+        handleIncreaseItem(item: Item): void {
+            this.sales.increaseItem(item);
         },
-        handleDecreaseItem(selectedItem: SalesItem): void {
-            //const target = this._.find(this.sales.items, function(item) {
-            //    return selectedItem.name === item.item;
-            //});
-
-            //if (!this._.isUndefined(target)) {
-            //    if (--target.amount > 0) {
-            //        target.amount -= 1;
-            //    } else {
-            //        this.sales.items = this._.reject(this.sales.items, function(item) {
-            //            return selectedItem === item.item;
-            //        });
-            //    }
-            //}
+        /**
+         * 明細データ削除 or 数量を減らす
+         *
+         */
+        handleDecreaseItem(itemName: string): void {
+            this.sales.decreaseItem(itemName);
         },
-        handleDeleteItem(selectedItem: SalesItem): void {
-            //const target = this._.find(this.sales.items, function(item) {
-            //    return selectedItem.name === item.item;
-            //});
-            //let option = {
-            //    message: '',
-            //    type: ''
-            //};
-
-            //if (!this._.isUndefined(target)) {
-            //    this.sales.items = this._.reject(this.sales.items, function(item) {
-            //        return selectedItem === item.item;
-            //    });
-            //    option.message = '削除しました';
-            //    option.type = 'is-success';
-            //} else {
-            //    option.message = '削除する商品が見つかりませんでした';
-            //    option.type = 'is-danger';
-            //}
-
-            //this.$toast.open(option);
-        },
-        handleChangeDiscountMode(): void {
-        },
-        handleSave(): void {
-        },
-        handleConfirmDeleteItem(): void {
-            const option = {
-                title: '商品削除',
-                message: '選択した商品を削除します。よろしいですか？',
+        /**
+         * 明細データ削除
+         */
+        handleDeleteItem(salesItem: SalesItem, index: number): void {
+            this.$dialog.confirm({
+                title: '明細データ削除',
+                message: `${salesItem.item_name}を削除します。よろしいですか？`,
                 confirmText: '削除',
-                cancelText: '閉じる',
+                cancelText: 'キャンセル',
+                hasIcon: true,
                 type: 'is-danger',
                 onConfirm: () => {
-                    const option = {
+                    this.sales.deleteItem(salesItem, index);
+                    this.$toast.open({
                         message: '削除しました。',
                         type: 'is-success'
-                    };
-                    this.$toast.open(option);
+                    });
                 }
+            });
+        },
+        /**
+         * 入力中の売上データリセットイベント
+         */
+        handleClearSales(): void {
+            this.$dialog.confirm({
+                title: '売上データクリア',
+                message: '入力中の売上データをクリアします。よろしいですか？',
+                confirmText: 'クリア',
+                cancelText: 'キャンセル',
+                hasIcon: true,
+                type: 'is-warning',
+                onConfirm: () => {
+                    this.sales = new Sales();
+                    this.sales_items.splice(0, this.sales_items.length);
+                    this.$toast.open({
+                        message: 'クリアしました',
+                        type: 'is-success'
+                    });
+                }
+            });
+        },
+        /**
+         * 値引額切替イベント
+         */
+        handleChangeDiscountPrice(): void {
+            this.sales.discount_rate = 0;
+            this.discountMode = DISCOUNT_TYPES.PRICE;
+        },
+        /**
+         * 値引率切替イベント
+         */
+        handleChangeDiscountRate(): void {
+            this.sales.discount_price = 0;
+            this.discountMode = DISCOUNT_TYPES.RATE;
+        },
+        /**
+         * 決済ボタンクリックイベント
+         */
+        handleSave(): void {
+            this.saving = true;
+            setTimeout(() => {
+                this.saving = false;
+                // todo: call save api
+                const saved = true;
+                const message = saved ? '売上登録しました' : '売上登録に失敗しました';
+                const toastType = saved ? 'is-success' : 'is-danger';
+
+                this.$toast.open({
+                    message: message,
+                    type: toastType
+                });
+            }, 4000);
+        },
+        /**
+         * 明細データ削除確認画面表示
+         * @param {string} item_name
+         * @param {number} index
+         */
+        _showDeleteConfirm(item_name: string, index: number): void {
+            this.$dialog.confirm({
+                title: '明細データ削除',
+                message: `${item_name}を削除します。よろしいですか？`,
+                confirmText: '削除',
+                cancelText: 'キャンセル',
+                hasIcon: true,
+                type: 'is-danger',
+                onConfirm: () => {
+                    this.sales.deleteItem(index);
+                    this.$toast.open({
+                        message: '削除しました。',
+                        type: 'is-success'
+                    });
+                }
+            });
+        }
+    },
+    computed: {
+        hasItems(): boolean {
+            return this.sales.items.length > 0;
+        },
+        discountUnit(): string {
+            let unit = '';            
+
+            switch (this.discountMode) {
+                case DISCOUNT_TYPES.PRICE:
+                    unit = '円';
+                    break;
+                case DISCOUNT_TYPES.RATE:
+                    unit = '％';
+                    break;
+                default:
+                    // do nothing
+                    break;
             };
-            this.$dialog.confirm(option);
+
+            return unit;
         }
     },
     filters: {
         numberWithDelimiter(value: number): string {
-            if (!value) {
-                // todo: lodash or native??
-                return '';
-            }
-            return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+            return value ? value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,') : '0';
         }
     }
 });

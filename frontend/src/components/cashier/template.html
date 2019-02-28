@@ -15,7 +15,12 @@
                 <div class="scrollable-table-area">
                     <table class="table is-bordered is-striped is-fullwidth table-contents">
                         <tbody>
-                            <tr v-for="s in sales_items">
+                            <tr v-show="!hasItems">
+                                <td colspan="4" class="has-text-centered">
+                                    明細データがありません
+                                </td>
+                            </tr>
+                            <tr v-for="(s, index) in sales_items">
                                 <td class="item-col">
                                     <div>{{ s.item_name }}</div>
                                     <div class="has-text-right">{{ s.price }}</div>
@@ -29,12 +34,14 @@
                                 <td class="has-text-centered button-cols">
                                     <button
                                         type="button"
-                                        class="button is-info is-outlined button-minus">
+                                        class="button is-info is-outlined button-minus"
+                                        @click="handleDecreaseItem(s, index)">
                                         <i class="fas fa-minus-circle"></i>
                                     </button>
                                     <button
                                         type="button"
-                                        class="button is-danger is-outlined">
+                                        class="button is-danger is-outlined"
+                                        @click="handleDeleteItem(s, index)">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -45,32 +52,50 @@
                 <table class="table is-bordered is-striped is-fullwidth table-footer">
                     <tbody>
                         <tr>
-                            <th class="has-text-right input-col">値引</th>
+                            <th class="has-text-right input-col">
+                                値引({{ discountUnit }})
+                            </th>
                             <td class="has-text-right">
                                 <div class="field">
                                     <div class="control">
                                         <input type="number" class="input has-text-right is-borderless">
+                                        <p class="help is-danger">
+                                            値引額が合計金額を上回っています
+                                        </p>
+                                        <p class="help is-danger">
+                                            不正な値引率です
+                                        </p>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th class="has-text-right">合計</th>
-                            <td class="has-text-right">2,000</td>
+                            <td class="has-text-right">
+                                {{ sales.total_price | numberWithDelimiter }}
+                            </td>
                         </tr>
                         <tr>
                             <th class="has-text-right input-col">お預り</th>
                             <td class="has-text-right">
                                 <div class="field">
                                     <div class="control">
-                                        <input type="number" class="input has-text-right is-borderless">
+                                        <input
+                                            type="number"
+                                            class="input has-text-right is-borderless"
+                                            v-model="sales.deposit">
+                                        <p class="help is-danger">
+                                            お預り金額が不足しています
+                                        </p>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th class="has-text-right">おつり</th>
-                            <td class="has-text-right">0</td>
+                            <td class="has-text-right">
+                                {{ charge | numberWithDelimiter }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -101,18 +126,15 @@
                                     <div class="has-text-right">
                                         <button
                                             type="button"
-                                            class="button is-info is-outlined">
+                                            class="button is-info is-outlined"
+                                            @click="handleIncreaseItem(item)">
                                             <i class="fas fa-plus-circle"></i>
                                         </button>
                                         <button
                                             type="button"
-                                            class="button is-info is-outlined">
+                                            class="button is-danger is-outlined"
+                                            @click="handleDecreaseItem(item.name)">
                                             <i class="fas fa-minus-circle"></i>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="button is-danger is-outlined">
-                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </li>
@@ -122,13 +144,30 @@
                 </nav>
                 <div class="box option-buttons">
                     <div class="buttons is-centered">
-                        <button type="button" class="button is-warning is-large">
+                        <button
+                            type="button"
+                            class="button is-warning is-large"
+                            @click="handleClearSales()">
                             <i class="fas fa-exclamation-circle"></i>
                             AC
                         </button>
-                        <button type="button" class="button is-info is-large">¥割</button>
-                        <button type="button" class="button is-info is-large">%割</button>
-                        <button type="button" class="button is-danger is-large">
+                        <button
+                            type="button"
+                            class="button is-info is-large"
+                            @click="handleChangeDiscountPrice()">
+                            ¥割
+                        </button>
+                        <button
+                            type="button"
+                            class="button is-info is-large"
+                            @click="handleChangeDiscountRate">
+                            %割
+                        </button>
+                        <button
+                            type="button"
+                            class="button is-danger is-large"
+                            v-bind:disabled="saving"
+                            @click="handleSave()">
                             <i class="fas fa-cash-register"></i>
                             決済
                         </button>
