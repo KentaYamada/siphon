@@ -13,8 +13,14 @@
                     商品名:
                 </label>
                 <div class="control">
-                    <input type="text" class="input">
+                    <input
+                        type="text"
+                        class="input"
+                        v-model="item.name">
                 </div>
+                <small class="help is-danger" v-for="error in errors.name">
+                    {{ error }}
+                </small>
             </div>
             <div class="field">
                 <label class="label">
@@ -22,15 +28,23 @@
                     単価:
                 </label>
                 <div class="control">
-                    <input type="number" class="input">
+                    <input 
+                        type="number"
+                        class="input has-text-right"
+                        v-model.number="item.unit_price">
                 </div>
+                <small class="help is-danger" v-for="error in errors.unit_price">
+                    {{ error }}
+                </small>
             </div>
             <div class="field">
                 <label class="label">
                     <small class="has-text-danger">*</small>
                     カテゴリ:
                 </label>
-                <b-select placeholder="商品カテゴリを選択してください">
+                <b-select
+                    placeholder="商品カテゴリを選択してください"
+                    v-model="item.category_id">
                     <option
                           v-for="c in categories"
                           :value="c.id"
@@ -38,6 +52,9 @@
                         {{ c.name }}
                     </option>
                 </b-select>
+                <small class="help is-danger" v-for="error in errors.category_id">
+                    {{ error }}
+                </small>
             </div>
         </section>
         <footer class="modal-card-foot buttons is-right">

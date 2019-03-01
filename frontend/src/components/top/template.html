@@ -43,15 +43,6 @@
                                     </div>
                                     <div>{{ item.amount | numberWithDelimiter }}</div>
                                 </a>
-                                <!--<div class="has-text-weight-bold"
-                                    v-bind:class="{ 'has-text-danger': item.is_holiday, 'has-text-info': item.is_satarday }">
-                                    {{ item.sales_date }}
-                                </div>
-                                <div>
-                                    <a href="#">
-                                        {{ item.amount | numberWithDelimiter }}
-                                    </a>
-                                </div> -->
                             </td>
                         </tr>
                     </tbody>
@@ -69,7 +60,7 @@
                     <tbody>
                         <tr v-for="item in popularItems">
                             <th class="has-text-centered">{{ item.rank }}</th>
-                            <td>{{ item.item }}</td>
+                            <td>{{ item.name }}</td>
                         </tr>
                     </tbody>
                 </table>

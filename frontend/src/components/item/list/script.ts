@@ -1,23 +1,40 @@
 import Vue from 'vue';
-import Category from '@/entity/category';
-import Item from '@/entity/item';
-import ItemEdit from '@/components/item/edit/ItemEdit.vue';
 import {
     ModalConfig,
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
+import { AxiosResponse } from 'axios';
+import CategoryService from '@/api/category.service';
+import {Item, ItemSearchOption } from '@/entity/item';
+import ItemEdit from '@/components/item/edit/ItemEdit.vue';
+import ItemService from '@/api/item.service';
 
 
 export default Vue.extend({
     data() {
-        const categories = Category.getDummyCategories();
-        const items = Item.getDummyItems(1)
-
         return {
-            categories,
-            items
+            categories: [],
+            items: []
         };
+    },
+    mounted() {
+        CategoryService.fetchCategories()
+            .then((response: AxiosResponse<any>) => {
+                this.categories = response.data.categories;
+            })
+            .catch((error: any) => {
+                console.error(error);
+            });
+        this._fetch();
+    },
+    props: {
+        q: {
+            type: String
+        },
+        category_id: {
+            type: Number
+        }
     },
     computed: {
         hasItems(): boolean {
@@ -35,7 +52,13 @@ export default Vue.extend({
          * 商品新規登録
          */
         handleNew(): void {
-            this._openEditModal(new Item(1, 1, 'item', 500));
+            const newItem: Item = {
+                id: null,
+                category_id: null,
+                name: '',
+                unit_price: 0
+            };
+            this._openEditModal(newItem);
         },
         /**
          * 商品編集
@@ -60,18 +83,10 @@ export default Vue.extend({
                 hasIcon: true,
                 type: 'is-danger',
                 onConfirm: () => {
-                    // todo: call delete api
-                    this.deleteSuccess();
-                    this.deleteFailed();
+                    this._onDelete(item);
                 }
             };
             this.$dialog.confirm(option);
-        },
-        deleteSuccess(): void {
-            console.log('success');
-        },
-        deleteFailed(): void {
-            console.log('failed');
         },
         /**
          * 編集モーダル表示
@@ -86,9 +101,9 @@ export default Vue.extend({
                     item: item
                 },
                 events: {
-                    'save-success': () => {
+                    'save-success': (message: string) => {
                         const option: ToastConfig = {
-                            message: '保存しました',
+                            message: message,
                             type:'is-success'
                         };
                         this.$toast.open(option);
@@ -96,16 +111,42 @@ export default Vue.extend({
                 }
             };
             this.$modal.open(option);
+        },
+        _fetch(): void {
+            const option: ItemSearchOption = {
+                category_id: this.category_id,
+                q: this.q
+            };
+            ItemService.fetchItems(option)
+                .then((response: AxiosResponse<any>) => {
+                    console.log(response);
+                    this.items = response.data.items;
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        },
+        _onDelete(item: Item): void {
+            ItemService.deleteItem(item.id)
+                .then((response: AxiosResponse<any>) => {
+                    const option: ToastConfig = {
+                        message: '削除しました',
+                        type: 'is-success'
+                    };
+                    this.$toast.open(option);
+                    this._fetch();
+                })
+                .catch((error: any) => {
+                });
         }
     },
     filters: {
         numberWithDelimiter(value: number): string {
             if (!value) {
                 // todo: lodash or native??
-                return '';
+                return '0';
             }
             return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
         }
     }
 });
-
