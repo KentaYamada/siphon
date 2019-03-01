@@ -2,24 +2,17 @@ import Item from '@/entity/item';
 
 
 export default class Category {
-    public id: number | null = null;
-    public name: string | null = null;
-    public items: Item[];
+    public id: number | null;
+    public name: string | null;
+    public items: Item[] | null;
 
-    constructor(id: number, name: string, items: Item[]=[]) {
+    constructor(
+        id: number | null,
+        name: string | null,
+        items: Item[] | null = null) {
         this.id = id;
         this.name = name;
         this.items = items;
-    }
-
-    public static getDummyCategories(): Category[] {
-        let list = [];
-
-        for (let i = 1; i <= 10; i++) {
-            list.push(new Category(i, 'Category ' + i));
-        }
-
-        return list;
     }
 
     public static getDummyCashierPanel(): Category[] {
@@ -31,8 +24,10 @@ export default class Category {
             categories.push(category);
         }
 
-        console.log(categories);
         return categories;
     }
 }
 
+export interface CategorySerachOption {
+    q: string;
+}

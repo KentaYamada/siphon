@@ -18,8 +18,8 @@
                         class="input"
                         v-model="category.name">
                 </div>
-                <small class="help is-danger" v-show="errors.name">
-                    {{ errors.name }}
+                <small class="help is-danger" v-for="error in errors.name">
+                    {{ error }}
                 </small>
             </div>
         </form>
@@ -32,7 +32,7 @@
             閉じる
         </button>
         <button
-            type="submit"
+            type="button"
             class="button is-info"
             @click="handleSave">
             <i class="fas fa-save"></i>

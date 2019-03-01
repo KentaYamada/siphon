@@ -1,11 +1,13 @@
 import Vue from 'vue';
+import _ from 'lodash';
 import Category from '@/entity/category';
-
+import CategoryService from '@/api/category.service';
 
 export default Vue.extend({
     props: {
         category: {
-            required: true
+            required: true,
+            type: Category
         }
     },
     data() {
@@ -13,9 +15,28 @@ export default Vue.extend({
             errors: {}
         };
     },
+    
     methods: {
+        /**
+         * 保存イベント
+         */
         handleSave(): void {
-            this.$emit('save-success');
+            CategoryService.saveCategory(this.category)
+                .then((response: any) => {
+                    this.$emit('close');
+                    this.$emit('save-success', response.data.message);
+                })
+                .catch((error: any) => {
+                    const response = error.response;
+                    this.$toast.open({
+                        message: response.data.message,
+                        type: 'is-danger'
+                    });
+
+                    if (!_.isEmpty(response.data.errors)) {
+                        this.errors =  _.extend({}, response.data.errors);
+                    }
+            });
         }
     }
 });

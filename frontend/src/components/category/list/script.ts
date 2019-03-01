@@ -1,19 +1,24 @@
 import Vue from 'vue';
-import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
-import Category from '@/entity/category';
 import {
     ModalConfig,
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
+import { AxiosResponse } from 'axios';
+import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
+import Category from '@/entity/category';
+import CategoryService from '@/api/category.service';
 
 
 export default Vue.extend({
     data() {
         return {
-            categories: Category.getDummyCategories(),
+            categories: [],
             errors: {}
         };
+    },
+    mounted() {
+        this._fetch();
     },
     computed: {
         hasItems(): boolean {
@@ -25,12 +30,13 @@ export default Vue.extend({
          * 商品カテゴリ検索
          */
         handleSearch(): void {
+            this._fetch();
         },
         /**
          * 商品カテゴリ新規作成
          */
         handleNew(): void {
-            this._openEditModal(new Category(0, ''));
+            this._openEditModal(new Category(null, ''));
         },
         /**
          * 商品カテゴリ編集
@@ -55,14 +61,23 @@ export default Vue.extend({
                 hasIcon: true,
                 type: 'is-danger',
                 onConfirm: () => {
-                    const option: ToastConfig = {
-                        message: '削除しました。',
-                        type: 'is-success'
-                    };
-                    this.$toast.open(option);
+                    this._onDelete(category);
                 }
             }
             this.$dialog.confirm(option);
+        },
+        /**
+         * 商品カテゴリ取得
+         */
+        _fetch(): void {
+            CategoryService.fetchCategories()
+            .then((response: AxiosResponse<any>) => {
+                console.log(response.data);
+                this.categories = response.data.categories;
+            })
+            .catch((error: any) => {
+                console.error(error);
+            });
         },
         /**
          * 編集モーダル表示
@@ -76,16 +91,35 @@ export default Vue.extend({
                     category: category
                 },
                 events: {
-                    'save-success': () => {
+                    'save-success': (message: string) => {
                         const option: ToastConfig = {
-                            message: '保存しました',
+                            message: message,
                             type:'is-success'
                         };
                         this.$toast.open(option);
+                        this._fetch();
                     }
                 }
             };
             this.$modal.open(option);
+        },
+        /**
+         * 削除実行
+         * @param category 
+         */
+        _onDelete(category: Category): void {
+            CategoryService.deleteCategory(category.id)
+                .then(() => {
+                    const option: ToastConfig = {
+                        message: '削除しました',
+                        type: 'is-success'
+                    };
+                    this.$toast.open(option);
+                    this._fetch();
+                })
+                .catch((error: any) => {
+
+                });
         }
     }
 });
