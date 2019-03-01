@@ -44,6 +44,12 @@ export default Vue.extend({
         'sales.total_price': function(val: number) {
             this.charge = this.sales.deposit - val;
         },
+        'sales.discount_price': function() {
+            this.sales.calcTotalPrice(this.discountMode);
+        },
+        'sales.discount_rate': function() {
+            this.sales.calcTotalPrice(this.discountMode);
+        },
         'sales.deposit': function(val: number) {
             this.charge = val - this.sales.total_price;
         }
@@ -54,7 +60,7 @@ export default Vue.extend({
          * @param {Item} item
          */
         handleIncreaseItem(item: Item): void {
-            this.sales.increaseItem(item);
+            this.sales.increaseItem(item, this.discountMode);
         },
         /**
          * 明細データ削除 or 数量を減らす
@@ -210,4 +216,3 @@ export default Vue.extend({
         }
     }
 });
-

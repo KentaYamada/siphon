@@ -35,13 +35,13 @@
                                     <button
                                         type="button"
                                         class="button is-info is-outlined button-minus"
-                                        @click="handleDecreaseItem(s, index)">
+                                        @click="handleDecreaseItem(s.item_name)">
                                         <i class="fas fa-minus-circle"></i>
                                     </button>
                                     <button
                                         type="button"
                                         class="button is-danger is-outlined"
-                                        @click="handleDeleteItem(s, index)">
+                                        @click="handleDeleteItem(s)">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -61,7 +61,8 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.discount_price">
+                                            v-model.number="sales.discount_price"
+                                            min="0">
                                         <p class="help is-danger" v-for="error in errors.discount_price">
                                             {{ error }}
                                         </p>
@@ -70,7 +71,8 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.discount_rate">
+                                            v-model.number="sales.discount_rate"
+                                            min="0">
                                         <p class="help is-danger" v-for="error in errors.discount_rate">
                                             {{ error }}
                                         </p>
@@ -92,8 +94,9 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.deposit">
-                                        <p class="help is-danger" v-for="error in errors.total_price">
+                                            v-model.number="sales.deposit"
+                                            min="0">
+                                        <p class="help is-danger" v-for="error in errors.deposit">
                                             {{ error }}
                                         </p>
                                     </div>

@@ -1,6 +1,6 @@
-export default class SalesItem {
+export class SalesItem {
     public item_name: string;
-    public price: number;
+    public unit_price: number;
     public amount: number;
     public subtotal: number;
 
@@ -9,7 +9,7 @@ export default class SalesItem {
         price: number=0,
         amount: number=0) {
         this.item_name = item_name;
-        this.price = price;
+        this.unit_price = price;
         this.amount = amount;
         this.subtotal = price * amount;
     }
@@ -18,7 +18,7 @@ export default class SalesItem {
      * 小計計算
      */
     public calcSubtotal(): void {
-        this.subtotal = this.price * this.amount;
+        this.subtotal = this.unit_price * this.amount;
     }
 }
 
