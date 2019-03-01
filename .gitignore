@@ -130,3 +130,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
+# vagrant
+/vagrant/.vagrant
