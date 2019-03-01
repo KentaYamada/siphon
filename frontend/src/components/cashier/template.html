@@ -57,13 +57,22 @@
                             </th>
                             <td class="has-text-right">
                                 <div class="field">
-                                    <div class="control">
-                                        <input type="number" class="input has-text-right is-borderless">
-                                        <p class="help is-danger">
-                                            値引額が合計金額を上回っています
+                                    <div class="control" v-show="isDiscountPrice">
+                                        <input
+                                            type="number"
+                                            class="input has-text-right is-borderless"
+                                            v-model.number="sales.discount_price">
+                                        <p class="help is-danger" v-for="error in errors.discount_price">
+                                            {{ error }}
                                         </p>
-                                        <p class="help is-danger">
-                                            不正な値引率です
+                                    </div>
+                                    <div class="control" v-show="isDiscountRate">
+                                        <input
+                                            type="number"
+                                            class="input has-text-right is-borderless"
+                                            v-model.number="sales.discount_rate">
+                                        <p class="help is-danger" v-for="error in errors.discount_rate">
+                                            {{ error }}
                                         </p>
                                     </div>
                                 </div>
@@ -83,9 +92,9 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model="sales.deposit">
-                                        <p class="help is-danger">
-                                            お預り金額が不足しています
+                                            v-model.number="sales.deposit">
+                                        <p class="help is-danger" v-for="error in errors.total_price">
+                                            {{ error }}
                                         </p>
                                     </div>
                                 </div>
@@ -121,7 +130,7 @@
                             <ul class="item-group">
                                 <li class="item" v-for="item in items">
                                     <div>
-                                        {{ item.name }} (単価: {{ item.price | numberWithDelimiter }})
+                                        {{ item.name }} (単価: {{ item.unit_price | numberWithDelimiter }})
                                     </div>
                                     <div class="has-text-right">
                                         <button

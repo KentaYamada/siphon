@@ -1,38 +1,44 @@
 import Vue from 'vue';
 import _ from 'lodash';
-import Sales from '@/entity/sales';
-import SalesItem from '@/entity/sales_item';
-import Category from '@/entity/category';
-import Item from '@/entity/item';
+import { AxiosResponse } from 'axios';
+import { Sales, DISCOUNT_TYPES } from '@/entity/sales';
+import { SalesItem } from '@/entity/sales_item';
+import { Category } from '@/entity/category';
+import { Item } from '@/entity/item';
+import CashierService from '@/api/cashier.service';
+import CategoryService from '@/api/category.service';
 
 /**
- * 値引種別
+ * 初期データ取得
  */
-enum DISCOUNT_TYPES {
-    // 値引額
-    PRICE,
-    // 値引率
-    RATE
+const defaultData = (): any => {
+    const sales = new Sales();
+    const categories = Category.getDummyCashierPanel();
+
+    return {
+        categories: [],
+        charge: 0,
+        errors: {},
+        sales: sales,
+        sales_items: sales.items,
+        items: categories[0].items,
+        saving: false,
+        discountMode: DISCOUNT_TYPES.PRICE,
+    };
 };
 
 export default Vue.extend({
-    data(): any {
-        const sales = new Sales();
-        const categories = Category.getDummyCashierPanel();
-        const items = categories[0].items;
-        const discountMode = DISCOUNT_TYPES.PRICE;
-        const saving = false;
-        const charge = 0;
+    data() {
+        return defaultData();
+    },
+    mounted() {
+        CategoryService.fetchCategories()
+            .then((response: AxiosResponse<any>) => {
+                this.categories = response.data.categories;
+            })
+            .catch((error: any) => {
 
-        return {
-            sales,
-            sales_items: sales.items,
-            items,
-            saving,
-            charge,
-            discountMode,
-            errors: {}
-        };
+            });
     },
     watch: {
         'sales.total_price': function(val: number) {
@@ -89,8 +95,8 @@ export default Vue.extend({
                 hasIcon: true,
                 type: 'is-warning',
                 onConfirm: () => {
-                    this.sales = new Sales();
-                    this.sales_items.splice(0, this.sales_items.length);
+                    _.assign(this.$data, defaultData());
+
                     this.$toast.open({
                         message: 'クリアしました',
                         type: 'is-success'
@@ -117,18 +123,35 @@ export default Vue.extend({
          */
         handleSave(): void {
             this.saving = true;
-            setTimeout(() => {
-                this.saving = false;
-                // todo: call save api
-                const saved = true;
-                const message = saved ? '売上登録しました' : '売上登録に失敗しました';
-                const toastType = saved ? 'is-success' : 'is-danger';
 
-                this.$toast.open({
-                    message: message,
-                    type: toastType
+            CashierService.createSales(this.sales)
+                .then((response: AxiosResponse<any>) => {
+                    this.$toast.open({
+                        message: '売上登録しました',
+                        type: 'is-success'
+                    });
+                    _.assign(this.$data, this.$options.data);
+                })
+                .catch((error: any) => {
+                    const response = error.response;
+                    let message = '';
+
+                    if (!_.isEmpty(response.data.message)) {
+                        message = response.data.message;
+                    }
+
+                    if (!_.isEmpty(response.data.errors)) {
+                        this.errors = _.extend({}, response.data.errors);
+                    }
+
+                    this.$toast.open({
+                        message: message,
+                        type: 'is-danger'
+                    });
+                })
+                .finally(() => {
+                    this.saving = false;
                 });
-            }, 4000);
         },
         /**
          * 明細データ削除確認画面表示
@@ -173,6 +196,12 @@ export default Vue.extend({
             };
 
             return unit;
+        },
+        isDiscountPrice(): boolean {
+            return this.discountMode === DISCOUNT_TYPES.PRICE;
+        },
+        isDiscountRate(): boolean {
+            return this.discountMode === DISCOUNT_TYPES.RATE;
         }
     },
     filters: {
