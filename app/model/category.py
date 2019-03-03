@@ -27,6 +27,6 @@ class Category(BaseModel):
     def name(self, value):
         super()._clear_validation_error('name')
         if not value:
-            super()._add_validation_error('name', 'ユーザー名は必須入力です')
+            super()._add_validation_error('name', 'カテゴリ名は必須入力です')
         else:
             self.__name = value
