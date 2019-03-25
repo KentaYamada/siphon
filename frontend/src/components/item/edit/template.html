@@ -46,7 +46,7 @@
                     placeholder="商品カテゴリを選択してください"
                     v-model="item.category_id">
                     <option
-                          v-for="c in categories"
+                          v-for="c in getCategories"
                           :value="c.id"
                           :key="c.id">
                         {{ c.name }}

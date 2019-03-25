@@ -1,71 +1,67 @@
 import Vue from 'vue';
 import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import {
     ModalConfig,
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
-import { AxiosResponse } from 'axios';
-import CategoryService from '@/api/category.service';
 import {Item, ItemSearchOption } from '@/entity/item';
 import ItemEdit from '@/components/item/edit/ItemEdit.vue';
-import ItemService from '@/api/item.service';
 
 
 export default Vue.extend({
     data() {
+        const searchOption: ItemSearchOption = {
+            q: '',
+            category_id: null
+        };
+
         return {
-            categories: [],
-            items: []
+            searchOption
         };
     },
     mounted() {
-        CategoryService.fetchCategories()
-            .then((response: AxiosResponse<any>) => {
-                this.categories = response.data.categories;
-            })
-            .catch((error: any) => {
-                console.error(error);
-            });
-        this._fetch();
-    },
-    props: {
-        q: {
-            type: String
-        },
-        category_id: {
-            type: Number
-        }
+        this.fetchCategories();
+        this.fetchItems();
     },
     computed: {
-        hasItems(): boolean {
-            return this.items.length > 0 ? true : false;
-        }
+        ...mapGetters('category', [
+            'getCategories'
+        ]),
+        ...mapGetters('item', [
+            'getItems',
+            'hasItems'
+        ])
     },
     methods: {
+        ...mapActions('category', [
+            'fetchCategories'
+        ]),
+        ...mapActions('item', [
+            'fetchItems',
+            'delete'
+        ]),
         /**
          * 商品検索
          */
         handleSearch(): void {
-
+            this.fetchItems(this.searchOption);
         },
         /**
          * 商品新規登録
          */
         handleNew(): void {
-            const newItem: Item = {
-                id: null,
-                category_id: null,
-                name: '',
-                unit_price: 0
-            };
-            this._openEditModal(newItem);
+            this._openEditModal();
         },
         /**
          * 商品編集
          * @param {Item} item
          */
         handleEdit(item: Item): void {
-            this._openEditModal(item);
+            this._openEditModal(item.id);
         },
         /**
          * 商品削除
@@ -92,13 +88,13 @@ export default Vue.extend({
          * 編集モーダル表示
          * @param {Item} item
          */
-        _openEditModal(item: Item): void {
+        _openEditModal(id?: number | null): void {
             const option: ModalConfig = {
                 parent: this,
                 component: ItemEdit,
                 hasModalCard: true,
                 props: {
-                    item: item
+                    id: id
                 },
                 events: {
                     'save-success': (message: string) => {
@@ -107,40 +103,28 @@ export default Vue.extend({
                             type:'is-success'
                         };
                         this.$toast.open(option);
+                        this.fetchItems();
                     }
                 }
             };
             this.$modal.open(option);
         },
-        _fetch(): void {
-            const option: ItemSearchOption = {
-                category_id: this.category_id,
-                q: this.q
-            };
-            ItemService.fetchItems(option)
-                .then((response: AxiosResponse<any>) => {
-                    console.log(response);
-                    this.items = response.data.items;
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
-        },
         _onDelete(item: Item): void {
-            ItemService.deleteItem(item.id)
-                .then((response: AxiosResponse<any>) => {
+            this.delete(item.id)
+                .then(() => {
                     const option: ToastConfig = {
                         message: '削除しました',
                         type: 'is-success'
                     };
                     this.$toast.open(option);
-                    this._fetch();
+                    this.fetchItems();
                 })
                 .catch((error: any) => {
                 });
         }
     },
     filters: {
+        // todo: register global filter
         numberWithDelimiter(value: number): string {
             if (!value) {
                 // todo: lodash or native??

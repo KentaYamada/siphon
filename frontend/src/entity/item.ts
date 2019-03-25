@@ -21,7 +21,7 @@ export interface Item {
     id: number | null,
     category_id: number | null;
     name: string;
-    unit_price: number;
+    unit_price: number | null;
 }
 
 /**

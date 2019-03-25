@@ -1,38 +1,47 @@
 import Vue from 'vue';
+import {
+    mapActions,
+    mapGetters
+} from 'vuex';
 import _ from 'lodash';
-import CategoryService from '@/api/category.service';
-import { Item } from '@/entity/item';
-import ItemService from '@/api/item.service';
 import { AxiosResponse } from 'axios';
-
 
 export default Vue.extend({
     props: {
-        item: {
-            required: true
+        id: {
+            type: Number
         }
     },
     data() {
         return {
-            categories: [],
+            item: {},
             errors: {}
         };
     },
     mounted() {
-        CategoryService.fetchCategories()
-            .then((response: AxiosResponse<any>) => {
-                this.categories = response.data.categories;
-            })
-            .catch((error: any) => {
-                console.error(error);
-            });
+        this.item = this.findOrCreate(this.id);
+        this.fetchCategories();
+    },
+    computed: {
+        ...mapGetters('category', [
+            'getCategories'
+        ]),
+        ...mapGetters('item', [
+            'findOrCreate',
+        ])
     },
     methods: {
+        ...mapActions('category', [
+            'fetchCategories'
+        ]),
+        ...mapActions('item', [
+            'save',
+        ]),
         /**
          * 保存イベント
          */
         handleSave(): void { 
-            ItemService.saveItem(this.item as Item)
+            this.save(this.item)
                 .then((response: AxiosResponse<any>) => {
                     this.$emit('close');
                     this.$emit('save-success', response.data.message);
