@@ -1,13 +1,9 @@
 import _ from 'lodash';
 import axios, { AxiosResponse } from 'axios';
 import { Item, ItemSearchOption } from '@/entity/item';
-
+import { ItemState } from '@/store/store_types';
 
 const ROOT_URL = '/api/items/';
-
-interface ItemState {
-    items: Item[];
-}
 
 const state: ItemState = {
     items: []
