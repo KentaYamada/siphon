@@ -1,49 +1,51 @@
 import Vue from 'vue';
 import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import {
     ModalConfig,
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
-import { AxiosResponse } from 'axios';
 import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
-import Category from '@/entity/category';
-import CategoryService from '@/api/category.service';
+import { Category } from '@/entity/category';
 
 
 export default Vue.extend({
-    data() {
-        return {
-            categories: [],
-            errors: {}
-        };
-    },
     mounted() {
-        this._fetch();
+        this.fetchCategories();
     },
     computed: {
-        hasItems(): boolean {
-            return this.categories.length > 0;
-        },
+        ...mapGetters('category', [
+            'getCategories',
+            'hasItems'
+        ])
     },
     methods: {
+        ...mapActions('category', [
+            'fetchCategories',
+            'delete'
+        ]),
         /**
          * 商品カテゴリ検索
          */
         handleSearch(): void {
-            this._fetch();
+            // 検索条件の指定
+            this.fetchCategories();
         },
         /**
          * 商品カテゴリ新規作成
          */
         handleNew(): void {
-            this._openEditModal(new Category(null, ''));
+            this._openEditModal();
         },
         /**
          * 商品カテゴリ編集
          * @param {Category} category 
          */
         handleEdit(category: Category): void {
-            this._openEditModal(category);
+            this._openEditModal(category.id);
         },
         /**
          * 商品カテゴリ削除
@@ -67,28 +69,15 @@ export default Vue.extend({
             this.$dialog.confirm(option);
         },
         /**
-         * 商品カテゴリ取得
-         */
-        _fetch(): void {
-            CategoryService.fetchCategories()
-            .then((response: AxiosResponse<any>) => {
-                console.log(response.data);
-                this.categories = response.data.categories;
-            })
-            .catch((error: any) => {
-                console.error(error);
-            });
-        },
-        /**
          * 編集モーダル表示
          * @param category  
          */
-        _openEditModal(category: Category): void {
+        _openEditModal(id?: number | null): void {
             const option: ModalConfig = {
                 parent: this,
                 component: CategoryEdit,
                 props: {
-                    category: category
+                    id: id
                 },
                 events: {
                     'save-success': (message: string) => {
@@ -97,7 +86,7 @@ export default Vue.extend({
                             type:'is-success'
                         };
                         this.$toast.open(option);
-                        this._fetch();
+                        this.fetchCategories();
                     }
                 }
             };
@@ -108,14 +97,14 @@ export default Vue.extend({
          * @param category 
          */
         _onDelete(category: Category): void {
-            CategoryService.deleteCategory(category.id)
+            this.delete(category.id)
                 .then(() => {
                     const option: ToastConfig = {
                         message: '削除しました',
                         type: 'is-success'
                     };
                     this.$toast.open(option);
-                    this._fetch();
+                    this.fetchCategories();
                 })
                 .catch((error: any) => {
 
@@ -123,4 +112,3 @@ export default Vue.extend({
         }
     }
 });
-

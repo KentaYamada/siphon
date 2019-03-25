@@ -63,7 +63,7 @@
                         <tr v-show="!hasItems">
                             <td class="has-text-centered">表示するデータがありません</td>
                         </tr>
-                        <tr v-for="category in categories" :key="category.id">
+                        <tr v-for="category in getCategories" :key="category.id">
                             <td class="name-col">{{ category.name }}</td>
                             <td class="has-text-centered buttons-col">
                                 <button
