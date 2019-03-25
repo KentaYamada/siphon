@@ -1,57 +1,61 @@
 import Vue from 'vue';
 import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import {
     ModalConfig,
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
+import UserEdit from '@/components/user/edit/UserEdit.vue';
 import {
     User,
     UserSearchOption
 } from '@/entity/user';
-import UserEdit from '@/components/user/edit/UserEdit.vue';
-import UserService from '@/api/user.service';
-import { AxiosResponse } from 'axios';
 
 
 export default Vue.extend({
     data() {
+        const option: UserSearchOption = {
+            q: ''
+        };
+
         return {
-            users: []
+            option
         };
     },
     mounted() {
-        this._fetch();
+        this.fetchUsers();
     },
     computed: {
-        hasItems(): boolean {
-            return this.users.length > 0;
-        }
+        ...mapGetters('user', [
+            'getUsers',
+            'hasItems'
+        ])
     },
     methods: {
+        ...mapActions('user', [
+            'fetchUsers',
+            'delete'
+        ]),
         /**
          * ユーザー検索
          */
         handleSearch(): void {
-            this._fetch();
+            this.fetchUsers();
         },
         /**
          * ユーザー新規登録
          */
         handleNew(): void {
-            const newUser: User = {
-                id: null,
-                name: '',
-                nickname: '',
-                email: '',
-                password: ''
-            };
-            this._openEditModal(newUser);
+            this._openEditModal();
         },
         /**
          * ユーザー編集
          */
         handleEdit(user: User): void {
-            this._openEditModal(user);
+            this._openEditModal(user.id);
         },
         /**
          * ユーザー削除
@@ -75,31 +79,16 @@ export default Vue.extend({
             this.$dialog.confirm(option);
         },
         /**
-         * ユーザー一覧取得
-         */
-        _fetch(): void {
-            const option: UserSearchOption = {
-                q: ''
-            };
-            UserService.fetchUsers(option)
-                .then((response: AxiosResponse<any>) => {
-                    this.users = response.data.users;
-                })
-                .catch((error: any) => {
-
-                });
-        },
-        /**
          * 編集モーダル表示
          * @param {User} user
          */
-        _openEditModal(user: User): void {
+        _openEditModal(id?: number | null): void {
             const option: ModalConfig = {
                 parent: this,
                 component: UserEdit,
                 hasModalCard: true,
                 props: {
-                    user: user
+                    id: id
                 },
                 events: {
                     'save-success': () => {
@@ -108,7 +97,7 @@ export default Vue.extend({
                             type:'is-success'
                         };
                         this.$toast.open(option);
-                        this._fetch();
+                        this.fetchUsers();
                     }
                 }
             };
@@ -119,13 +108,13 @@ export default Vue.extend({
          * @param {User} user 
          */
         _onDelete(user: User): void {
-            UserService.deleteUser(user.id)
-                .then((response: AxiosResponse<any>) => {
+            this.delete(user.id)
+                .then(() => {
                     this.$toast.open({
                         message: '削除しました',
                         type: 'is-success'
                     });
-                    this._fetch();
+                    this.fetchUsers();
                 })
                 .catch((error: any) => {
 

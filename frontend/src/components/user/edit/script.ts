@@ -1,28 +1,44 @@
 import Vue from 'vue';
+import {
+    mapActions,
+    mapGetters
+} from 'vuex';
 import _ from 'lodash';
 import { AxiosResponse } from 'axios';
-import { User } from '@/entity/user';
-import UserService from '@/api/user.service';
 
 
+/**
+ * ユーザー情報編集
+ */
 export default Vue.extend({
-    props: {
-        user: {
-            required: true,
-            //type: User
-        }
-    },
     data() {
         return {
+            user: {},
             errors: {}
         };
     },
+    mounted() {
+        this.user = this.findOrCreate(this.id);
+    },
+    props: {
+        id: {
+            type: Number
+        }
+    },
+    computed: {
+        ...mapGetters('user', [
+            'findOrCreate'
+        ])
+    },  
     methods: {
+        ...mapActions('user', [
+            'save'
+        ]),
         /**
          * 保存イベント
          */
         handleSave(): void {
-            UserService.saveUser(this.user)
+            this.save(this.user)
                 .then((response: AxiosResponse<any>) => {
                     this.$emit('close');
                     this.$emit('save-success', response.data.message);
