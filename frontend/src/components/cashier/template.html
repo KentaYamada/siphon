@@ -20,7 +20,8 @@
                                     明細データがありません
                                 </td>
                             </tr>
-                            <tr v-for="(s, index) in sales_items">
+                            <!-- <tr v-for="(s, index) in sales_items"> -->
+                            <tr v-for="(s, index) in getSales.items"> 
                                 <td class="item-col">
                                     <div>{{ s.item_name }}</div>
                                     <div class="has-text-right">{{ s.price }}</div>
@@ -61,7 +62,7 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.discount_price"
+                                            v-model.number="getSales.discount_price"
                                             min="0">
                                         <p class="help is-danger" v-for="error in errors.discount_price">
                                             {{ error }}
@@ -71,7 +72,7 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.discount_rate"
+                                            v-model.number="getSales.discount_rate"
                                             min="0">
                                         <p class="help is-danger" v-for="error in errors.discount_rate">
                                             {{ error }}
@@ -83,7 +84,7 @@
                         <tr>
                             <th class="has-text-right">合計</th>
                             <td class="has-text-right">
-                                {{ sales.total_price | numberWithDelimiter }}
+                                {{ getSales.total_price | numberWithDelimiter }}
                             </td>
                         </tr>
                         <tr>
@@ -94,7 +95,7 @@
                                         <input
                                             type="number"
                                             class="input has-text-right is-borderless"
-                                            v-model.number="sales.deposit"
+                                            v-model.number="getSales.deposit"
                                             min="0">
                                         <p class="help is-danger" v-for="error in errors.deposit">
                                             {{ error }}
@@ -106,7 +107,7 @@
                         <tr>
                             <th class="has-text-right">おつり</th>
                             <td class="has-text-right">
-                                {{ charge | numberWithDelimiter }}
+                                {{ getCharge | numberWithDelimiter }}
                             </td>
                         </tr>
                     </tbody>
