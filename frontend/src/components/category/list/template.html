@@ -17,7 +17,11 @@
                         <form class="search-form">
                             <div class="field is-grouped">
                                 <div class="control is-expanded">
-                                    <input type="text" class="input is-medium" placeholder="例) ランチメニュー">
+                                    <input
+                                        type="text"
+                                        class="input is-medium"
+                                        placeholder="例) ランチメニュー"
+                                        v-model="option.q">
                                 </div>
                                 <div class="control">
                                     <button type="reset" class="button is-medium">

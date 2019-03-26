@@ -9,10 +9,23 @@ import {
     DialogConfig
 } from 'buefy/types/components';
 import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
-import { Category } from '@/entity/category';
+import {
+    Category,
+    CategorySerachOption
+} from '@/entity/category';
 
 
 export default Vue.extend({
+    data() {
+        const option: CategorySerachOption = {
+            q: '',
+            with_items: false
+        }
+
+        return {
+            option
+        };
+    },
     mounted() {
         this.fetchCategories();
     },
@@ -31,8 +44,7 @@ export default Vue.extend({
          * 商品カテゴリ検索
          */
         handleSearch(): void {
-            // 検索条件の指定
-            this.fetchCategories();
+            this.fetchCategories(this.option);
         },
         /**
          * 商品カテゴリ新規作成

@@ -4,22 +4,34 @@ import { Category, CategorySerachOption } from '@/entity/category';
 import { CategoryState } from '@/store/store_types';
 
 
-const ROOT_URL = '/api/categories/';
+const ROOT_URL = '/api/categories';
 
 const state: CategoryState = {
     categories: [],
 };
 
 const mutations = {
+    /**
+     * 商品カテゴリリストセット
+     */
     setCategories: (state: CategoryState, categories: Category[]) => {
         state.categories = categories;
     }
 }
 
 const getters = {
+    /**
+     * 商品カテゴリリスト取得
+     * @return List of categories
+     */
     getCategories: (state: CategoryState) => {
         return state.categories;
     },
+    /**
+     * 商品カテゴリ検索 or 新規商品カテゴリ取得
+     * @param id
+     * @return Find or create category object
+     */
     findOrCreate: (state: CategoryState) => (id?: number) => {
         let category = null;
 
@@ -38,6 +50,9 @@ const getters = {
         
         return category;
     },
+    /**
+     * 商品カテゴリリストがあるかどうか
+     */
     hasItems: (state: CategoryState) => {
         return state.categories.length > 0;
     }
@@ -45,21 +60,24 @@ const getters = {
 
 const actions = {
     /**
-     * 商品カテゴリ一覧取得
-     * @param { any } context
-     * @param { CategorySerachOption } option
-     * @return { AxiosResponse }
+     * 商品カテゴリAPIリクエスト
+     * @param context
+     * @param option category search option
+     * @return Axios promise object
      */
     fetchCategories: async (context: any, option: CategorySerachOption) => {
-        return axios.get(ROOT_URL).then((response: AxiosResponse<any>) => {
-            context.commit('setCategories', response.data.categories);
-        });
+        return axios.get(ROOT_URL, {
+                params: option
+            })
+            .then((response: AxiosResponse<any>) => {
+                context.commit('setCategories', response.data.categories);
+            });
     },
     /**
      * 商品カテゴリ登録
-     * @param { any } context
-     * @param { Category } category
-     * @return { AxiosResponse }
+     * @param context
+     * @param category
+     * @return Axios promise object
      */
     save: async (context: any, category: Category) => {
         let promise$ = null;
@@ -67,7 +85,7 @@ const actions = {
         if (_.isNull(category.id)) {
             promise$ = axios.post(ROOT_URL, category);
         } else {
-            const url = ROOT_URL + category.id;
+            const url = `${ROOT_URL}/${category.id}`;
             promise$ = axios.put(url, category);
         }
 
@@ -75,9 +93,9 @@ const actions = {
     },
     /**
      * 商品カテゴリ削除
-     * @param { any } context
-     * @param { number } id
-     * @return { AxiosResponse }
+     * @param context
+     * @param id
+     * @return Axios promise object
      */
     delete: async (context: any, id: number) => {
         const url = ROOT_URL + id;
