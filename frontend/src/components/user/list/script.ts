@@ -43,7 +43,7 @@ export default Vue.extend({
          * ユーザー検索
          */
         handleSearch(): void {
-            this.fetchUsers();
+            this.fetchUsers(this.option);
         },
         /**
          * ユーザー新規登録

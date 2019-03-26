@@ -6,7 +6,7 @@ import {
 } from '@/entity/user';
 import { UserState } from '@/store/store_types';
 
-const ROOT_URL = '/api/users/';
+const ROOT_URL = '/api/users';
 
 const state: UserState = {
     users: []
@@ -47,25 +47,36 @@ const getters = {
 }
 
 const actions = {
+    /**
+     * ユーザー一覧取得APIリクエスト
+     */
     fetchUsers: async (context: any, option: UserSearchOption) => {
-        return await axios.get(ROOT_URL).then((response: AxiosResponse<any>) => {
+        return await axios
+            .get(ROOT_URL, { params: option })
+            .then((response: AxiosResponse<any>) => {
             context.commit('setUsers', response.data.users);
         });
     },
+    /**
+     * ユーザーデータ保存APIリクエスト
+     */
     save : async (context: any, user: User) => {
         let promise$ = null;
 
         if (_.isNull(user.id)) {
             promise$ = axios.post(ROOT_URL, user);
         } else {
-            const url = ROOT_URL + user.id;
+            const url = `${ROOT_URL}/${user.id}`;
             promise$ = axios.put(url, user);
         }
 
         return await promise$;
     },
+    /**
+     * ユーザーデータ削除APIリクエスト
+     */
     delete: async (context: any, id: number) => {
-        const url = ROOT_URL + id;
+        const url = `${ROOT_URL}/${id}`;
         return await axios.delete(url);
     }
 }
