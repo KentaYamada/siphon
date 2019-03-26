@@ -10,6 +10,9 @@ from app.controller import view
 
 def startup_app():
     app = Flask(__name__)
+
+    # URL末尾のスラッシュを含めなくて良いようにする
+    app.url_map.strict_slashes = False
     blueprints = [
         cashier.bp,
         category.bp,
