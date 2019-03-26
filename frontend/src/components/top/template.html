@@ -8,7 +8,6 @@
                         @click="handlePrevMonth()">
                         <i class="fa fa-angle-left is-size-3"></i>
                     </button>
-                    <!--<span class="is-size-3">2019年01月</span>-->
                     <span class="is-size-3">{{ currentMonth }}</span>
                     <button
                         class="button is-medium none-border"
@@ -34,7 +33,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(week, index) in monthlySales">
+                        <tr v-show="!hasMonthlySales">
+                            <td colspan="7" class="has-text-centered">表示するデータがありません</td>
+                        </tr>
+                        <tr v-for="(week, index) in getMonthlySales">
                             <td class="has-text-centered" v-for="item in week">
                                 <a href="#" class="day-link">
                                     <div class="has-text-weight-bold"
@@ -58,9 +60,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in popularItems">
+                        <tr v-show="!hasPopularItems">
+                            <td colspan="7" class="has-text-centered">表示するデータがありません</td>
+                        </tr>
+                        <tr v-for="item in getPopularItems">
                             <th class="has-text-centered">{{ item.rank }}</th>
-                            <td>{{ item.name }}</td>
+                            <td>{{ item.item_name }}</td>
                         </tr>
                     </tbody>
                 </table>

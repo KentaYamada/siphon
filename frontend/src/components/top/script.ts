@@ -1,101 +1,65 @@
 import Vue from 'vue';
 import moment from 'moment';
+import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import { DashboardSearchOption } from '@/entity/dashboard';
 
-
-// mock
-function getItems() {
-    return [
-        [
-            { sales_date: null, amount: null, is_holiday: false, is_satarday: false},
-            { sales_date: null, amount: null, is_holiday: false, is_satarday: false},
-            { sales_date: null, amount: null, is_holiday: false, is_satarday: false},
-            { sales_date: null, amount: null, is_holiday: false, is_satarday: false},
-            { sales_date: 1, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 2, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 3, amount: 100000, is_holiday: true, is_satarday: false}
-        ],
-        [
-            { sales_date: 4, amount: 100000, is_holiday: true, is_satarday: false},
-            { sales_date: 5, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 6, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 7, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 8, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 9, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 10, amount: 100000, is_holiday: false, is_satarday: true}
-        ],
-        [
-            { sales_date: 11, amount: 100000, is_holiday: true, is_satarday: false},
-            { sales_date: 12, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 13, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 14, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 15, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 16, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 17, amount: 100000, is_holiday: false, is_satarday: true},
-        ],
-        [
-            { sales_date: 18, amount: 100000, is_holiday: true, is_satarday: false},
-            { sales_date: 19, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 20, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 21, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 22, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 23, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 24, amount: 100000, is_holiday: false, is_satarday: true},
-        ],
-        [
-            { sales_date: 25, amount: 100000, is_holiday: true, is_satarday: false},
-            { sales_date: 26, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 27, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 28, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 29, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: 30, amount: 100000, is_holiday: false, is_satarday: false},
-            { sales_date: null, amount: null, is_holiday: false, is_satarday: false}
-        ]
-    ];
-}
 
 export default Vue.extend({
     data() {
-        const monthlySales = getItems();
-        const popularItems = [
-            {'rank': 1, 'item': 'Gamoyonカレー'},
-            {'rank': 2, 'item': 'Siphonコーヒー'},
-            {'rank': 3, 'item': 'ペペロンチーノ'},
-            {'rank': 4, 'item': 'ガトーショコラ'},
-            {'rank': 5, 'item': '究極のチーズケーキ'},
-            {'rank': 6, 'item': 'Gamoyonカレー'},
-            {'rank': 7, 'item': 'Siphonコーヒー'},
-            {'rank': 8, 'item': 'ペペロンチーノ'},
-            {'rank': 9, 'item': 'ガトーショコラ'},
-            {'rank': 10, 'item': '究極のチーズケーキ'}
-        ];
-        const today = moment().toDate();
+        const option: DashboardSearchOption = {
+            target: moment().toDate()
+        };
 
         return {
-            popularItems,
-            monthlySales,
-            today
+            option
         };
     },
+    mounted() {
+        this.fetchDashboardData(this.option);
+    },
     computed: {
+        ...mapGetters('dashboard', [
+            'getMonthlySales',
+            'getPopularItems',
+            'hasMonthlySales',
+            'hasPopularItems'
+        ]),
+        /**
+         * 売上年月
+         */
         currentMonth(): string {
-            return moment(this.today).format('YYYY年MM月');
+            return moment(this.option.target).format('YYYY年MM月');
         }
     },
     methods: {
+        ...mapActions('dashboard', [
+            'fetchDashboardData'
+        ]),
+        /**
+         * 前年月のデータ取得
+         */
         handlePrevMonth(): void {
-            this.today = moment(this.today).add(-1, 'M').toDate();
+            this.option.target = moment(this.option.target).add(-1, 'M').toDate();
+            this.fetchDashboardData(this.option);
+
         },
+        /**
+         * 次年月のデータ取得
+         */
         handleNextMonth(): void {
-            this.today = moment(this.today, 'YYYY-MM-DD').add(1, 'M').toDate();
+            this.option.target = moment(this.option.target, 'YYYY-MM-DD').add(1, 'M').toDate();
+            this.fetchDashboardData(this.option);
         }
     },
     filters: {
         numberWithDelimiter(value: number): string {
             if (!value) {
-                return '';
+                return '0';
             }
             return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
         }
     }
 });
-

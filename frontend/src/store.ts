@@ -4,6 +4,7 @@ import category from '@/store/category';
 import item from '@/store/item';
 import user from '@/store/user';
 import cashier from '@/store/cashier';
+import dashboard from '@/store/dashboard';
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
     item,
     user,
     cashier,
+    dashboard
   }
 });
