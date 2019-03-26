@@ -58,6 +58,10 @@ const mutations = {
             };
             state.sales.items.push(salesItem);
         }
+
+        state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
+            return item.subtotal;
+        });
     },
     /**
      * 商品削減
@@ -80,6 +84,10 @@ const mutations = {
             } else {
                 state.sales.items.splice(index, 1);
             }
+
+            state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
+                return item.subtotal;
+            });
         }
     },
     /**
@@ -89,6 +97,9 @@ const mutations = {
      */
     deleteItem: (state: CashierState, index: number) => {
         state.sales.items.splice(index, 1);
+        state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
+            return item.subtotal;
+        });
     },
     /**
      * 売上合計金額計算
@@ -143,6 +154,28 @@ const getters = {
         return  charge > 0 ? charge : 0;
     },
     /**
+     * 売上総合計金額取得
+     */
+    getGrandTotalPrice: (state: CashierState) => (mode: DISCOUNT_TYPES) => {
+        let grandTotalPrice = null;
+
+        switch (mode) {
+            case DISCOUNT_TYPES.PRICE:
+                // 値引額
+                grandTotalPrice = state.sales.total_price - state.sales.discount_price;
+                break;
+            case DISCOUNT_TYPES.RATE:
+                // 値引率
+                grandTotalPrice = state.sales.total_price * (1 - state.sales.discount_rate / 100);
+                break;
+            default:
+                // do nothing
+                break;
+        }
+
+        return grandTotalPrice;
+    },
+    /**
      * 売上明細があるかどうか
      */
     hasItems: (state: CashierState) => {
@@ -156,7 +189,10 @@ export const actions = {
      * @param {any} context
      */
     save: async (context: any) => {
-        return await axios.post( ROOT_URL, context.state.sales);
+        return await axios.post(
+            ROOT_URL,
+            context.state.sales
+        );
     }
 };
 

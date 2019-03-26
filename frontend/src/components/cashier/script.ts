@@ -38,7 +38,8 @@ export default Vue.extend({
         ...mapGetters('cashier', [
             'getSales',
             'hasItems',
-            'getCharge'
+            'getCharge',
+            'getGrandTotalPrice'
         ]),
         ...mapGetters('category', [
             'getCategories'
@@ -47,7 +48,7 @@ export default Vue.extend({
          * 値引単位
          */
         discountUnit(): string {
-            let unit = '';            
+            let unit = '';
 
             switch (this.discountMode) {
                 case DISCOUNT_TYPES.PRICE:
@@ -164,7 +165,7 @@ export default Vue.extend({
         handleSave(): void {
             this.saving = true;
 
-            this.save(this.sales)
+            this.save()
                 .then((response: AxiosResponse<any>) => {
                     this.$toast.open({
                         message: '売上登録しました',
