@@ -43,7 +43,8 @@
             </b-collapse>
 
             <div class="daily-sales-area">
-                <b-collapse class="card daily-sales" v-for="sales in dailySales">
+                <p class="has-text-centered" v-show="hasItems">表示するデータがありません</p>
+                <b-collapse class="card daily-sales" v-for="sales in getDailySales">
                     <header class="card-header" slot="trigger" slot-scope="props">
                         <p class="card-header-title">
                             2019年02月22日 09:00:00

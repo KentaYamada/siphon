@@ -6,6 +6,7 @@ import user from '@/store/user';
 import cashier from '@/store/cashier';
 import dashboard from '@/store/dashboard';
 import auth from '@/store/auth';
+import daily_sales from '@/store/daily_sales';
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     user,
     cashier,
     dashboard,
-    auth
+    auth,
+    daily_sales
   }
 });

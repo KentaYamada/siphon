@@ -1,8 +1,9 @@
 import { Authrication } from '@/entity/auth';
 import { Sales } from '@/entity/sales';
 import { Category } from '@/entity/category';
-import { Item } from  '@/entity/item';
-import { User } from  '@/entity/user';
+import { Item } from '@/entity/item';
+import { User } from '@/entity/user';
+import { DailySales } from '@/entity/daily_sales';
 import { MonthlySales, PopularItem } from '@/entity/dashboard';
 
 /** Auth state */
@@ -18,6 +19,11 @@ export interface CashierState {
 /** Category state */
 export interface CategoryState {
     categories: Category[];
+}
+
+/** Daily sales state */
+export interface DailySalesState {
+    daily_sales: DailySales[];
 }
 
 /** Dashboard state */

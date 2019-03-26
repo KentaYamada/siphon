@@ -1,48 +1,53 @@
 import Vue from 'vue';
+import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import { ToastConfig } from 'buefy/types/components';
+import { DailySalesSearchOption } from '@/entity/daily_sales';
 
-
+/**
+ * 日次売上一覧
+ */
 export default Vue.extend({
     data() {
-        let dailySales = [];
-        let searchCondition = {
-            time_from: null,
-            time_to: null,
-            q: 'Siphon'
+        const option: DailySalesSearchOption = {
+            time_from: '',
+            time_to: '',
+            q: ''
         };
-
-        for (let i = 0; i < 10; i++) {
-            let items = [];
-
-            for (let j = 1; j < 10; j++) {
-                items.push({
-                    item_name: 'Item',
-                    price: 500,
-                    amount: j,
-                    subtotal: j * 500
-                });
-            }
-
-            dailySales.push({items: items});
-        }
 
         return {
-            dailySales,
-            searchCondition
+            option
         };
     },
+    mounted() {
+        this.fetchDailySales(this.option);
+    },
+    computed: {
+        ...mapGetters('daily_sales', [
+            'getDailySales',
+            'hasItems'
+        ])
+    },
     methods: {
+        ...mapActions('daily_sales', [
+            'fetchDailySales',
+            'cancel'
+        ]),
         /**
          * 売上検索
          */
         handleSearch(): void {
+            this.fetchDailySales(this.option);
         },
         /**
          * 検索条件クリア
          */
         handleClearConditions(): void {
-            this.searchCondition.time_from = null;
-            this.searchCondition.time_to = null;
-            this.searchCondition.q = '';
+            this.option.time_from = '';
+            this.option.time_to = '';
+            this.option.q = '';
         },
         /**
          * 売上取消
@@ -63,23 +68,32 @@ export default Vue.extend({
                 hasIcon: true,
                 type: 'is-danger',
                 onConfirm: () => {
-                    // todo: call cancel api
-                    this.cancelSalesSuccess();
-                    this.cancelSalesFailed();
+                    this._cancel(salesId);
                 }
             });
         },
         /**
-         * 売上取消後のコールバック
+         * 売上取り消し実行
+         * @param salesId 
          */
-        cancelSalesSuccess(): void {
-            console.log('success');
-        },
-        /**
-         * 売上取消失敗時のエラーハンドラ
-         */
-        cancelSalesFailed(): void {
-            console.log('failed');
+        _cancel(salesId: number): void {
+            this.cancel(salesId)
+                .then(() => {
+                    const option: ToastConfig = {
+                        message: '売上取り消しました',
+                        type: 'is-success'
+                    };
+
+                    this.$toast.open(option);
+                    this.getDailySales(this.option);
+                })
+                .catch((error: any) => {
+                    const option: ToastConfig = {
+                        message: '売上取り消しに失敗しました',
+                        type: 'is-danger'
+                    };
+                    this.$toast.open(option);
+                });
         }
     }
 });
