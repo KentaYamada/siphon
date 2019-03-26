@@ -41,7 +41,7 @@ const getters = {
                 id: null,
                 category_id: null,
                 name: '',
-                unit_price: null
+                unit_price: 0
             } as Item;
         }
 
