@@ -3,22 +3,31 @@ import axios, { AxiosResponse } from 'axios';
 import { Item, ItemSearchOption } from '@/entity/item';
 import { ItemState } from '@/store/store_types';
 
-const ROOT_URL = '/api/items/';
+const ROOT_URL = '/api/items';
 
 const state: ItemState = {
     items: []
 };
 
 const mutations = {
+    /**
+     * 商品リストをステートへセット
+     */
     setItems: (state: ItemState, items: Item[]) => {
         state.items = items;
     }
 };
 
 const getters = {
+    /**
+     * 商品リスト取得
+     */
     getItems: (state: ItemState) => {
         return state.items; 
     },
+    /**
+     * 商品検索 or 新規商品取得
+     */
     findOrCreate: (state: ItemState) => (id?: number) => {
         let item = null;
 
@@ -44,12 +53,19 @@ const getters = {
 };
 
 const actions = {
+    /**
+     * 商品リストAPIリクエスト
+     */
     fetchItems: async (context: any, option: ItemSearchOption ) => {
-        return await axios.get(ROOT_URL)
+        return await axios
+            .get(ROOT_URL, { params: option })
             .then((response: AxiosResponse<any>) => {
                 context.commit('setItems', response.data.items);
             });
     },
+    /**
+     * 商品保存APIリクエスト
+     */
     save: async (context: any, item: Item) => {
         let promise$ = null;
 
@@ -62,6 +78,9 @@ const actions = {
 
         return await promise$;
     },
+    /**
+     * 商品削除APIリクエスト
+     */
     delete: async (context: any, id: number) => {
         const url = ROOT_URL + id;
         return await axios.delete(url);

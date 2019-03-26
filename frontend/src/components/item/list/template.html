@@ -19,7 +19,8 @@
                                 <div class="control">
                                     <b-select
                                         size="is-medium"
-                                        placeholder="商品カテゴリ">
+                                        placeholder="商品カテゴリ"
+                                        v-model="option.category_id">
                                         <option
                                             v-for="c in getCategories"
                                             :value="c.id"
@@ -32,7 +33,8 @@
                                     <input
                                         type="text"
                                         class="input is-medium"
-                                        placeholder="例) GAMOYONカレー">
+                                        placeholder="例) GAMOYONカレー"
+                                        v-model="option.q">
                                 </div>
                                 <div class="control">
                                     <button type="reset" class="button is-medium">
@@ -45,7 +47,8 @@
                                 <div class="control">
                                     <button
                                         type="button"
-                                        class="button is-info is-medium">
+                                        class="button is-info is-medium"
+                                        @click="handleSearch()">
                                         <i class="fa fa-search"></i>
                                         検索
                                     </button>

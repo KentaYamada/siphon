@@ -8,19 +8,22 @@ import {
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
-import {Item, ItemSearchOption } from '@/entity/item';
 import ItemEdit from '@/components/item/edit/ItemEdit.vue';
+import {
+    Item,
+    ItemSearchOption
+} from '@/entity/item';
 
 
 export default Vue.extend({
     data() {
-        const searchOption: ItemSearchOption = {
+        const option: ItemSearchOption = {
             q: '',
             category_id: null
         };
 
         return {
-            searchOption
+            option
         };
     },
     mounted() {
@@ -48,7 +51,7 @@ export default Vue.extend({
          * 商品検索
          */
         handleSearch(): void {
-            this.fetchItems(this.searchOption);
+            this.fetchItems(this.option);
         },
         /**
          * 商品新規登録
@@ -58,14 +61,14 @@ export default Vue.extend({
         },
         /**
          * 商品編集
-         * @param {Item} item
+         * @param item
          */
         handleEdit(item: Item): void {
             this._openEditModal(item.id);
         },
         /**
          * 商品削除
-         * @param {Item} item
+         * @param item
          */
         handleDelete(item: Item): void {
             const message = `
@@ -86,7 +89,7 @@ export default Vue.extend({
         },
         /**
          * 編集モーダル表示
-         * @param {Item} item
+         * @param id
          */
         _openEditModal(id?: number | null): void {
             const option: ModalConfig = {
@@ -109,6 +112,10 @@ export default Vue.extend({
             };
             this.$modal.open(option);
         },
+        /**
+         * 削除実行
+         * @param item 
+         */
         _onDelete(item: Item): void {
             this.delete(item.id)
                 .then(() => {
