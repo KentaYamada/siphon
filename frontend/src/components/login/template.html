@@ -3,7 +3,7 @@
         <div class="box">
             <h3 class="title">Siphon</h3>
             <p class="subtitle">Cafe de GAMOYON</p>
-            <p v-show="isError">ログインに失敗しました</p>
+            <p class="" v-show="isError">ログインに失敗しました</p>
             <form>
                 <div class="field">
                     <label class="label has-text-left">メールアドレス</label>
@@ -12,7 +12,7 @@
                             type="text"
                             class="input is-large"
                             placeholder="例)example@email.com"
-                            v-model="user.email">
+                            v-model="getAuth.email">
                     </div>
                 </div>
                 <div class="field">
@@ -21,13 +21,13 @@
                         <input
                             type="password"
                             class="input is-large"
-                            v-model="user.password">
+                            v-model="getAuth.password">
                     </div>
                 </div>
                 <button
                     type="button"
                     class="button is-block is-info is-large is-fullwidth"
-                    @click="handleLogin">
+                    @click="handleLogin()">
                     ログイン
                 </button>
             </form>

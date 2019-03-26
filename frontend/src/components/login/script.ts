@@ -1,26 +1,39 @@
 import Vue from 'vue';
-import Authrication from '@/entity/auth';
+import {
+    mapActions,
+    mapGetters
+} from 'vuex';
+import { AxiosResponse } from 'axios';
 
 
 export default Vue.extend({
     data() {
         return {
-            user: new Authrication('', ''),
-            error: false
+            isError: false,
+            errors: {}
         };
     },
     computed: {
-        isError(): boolean {
-            return this.error;
-        }
+        ...mapGetters('auth', [
+            'getAuth'
+        ])
     },
     methods: {
+        ...mapActions('auth', [
+            'login'
+        ]),
         /**
          * ログインボタンクリックイベント
          */
         handleLogin(): void {
-            this.isError = this.user.email !== 'test' ||
-                this.user.password !== 'test';
+            // todo: 認証情報の保持とかとか
+            this.login()
+                .then((response: AxiosResponse) => {
+
+                })
+                .catch((error: any) => {
+                    this.isError = true;
+                });
         },
     },
 });

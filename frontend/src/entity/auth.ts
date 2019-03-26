@@ -1,11 +1,8 @@
-
-export default class Authrication {
-    public email: string;
-    public password: string;
-
-    public constructor(email: string, password: string) {
-        this.email = email;
-        this.password = password;
-    }
+/**
+ * 認証エンティティ
+ */
+export interface Authrication {
+    email: string;
+    password: string;
 }
 

@@ -1,9 +1,14 @@
+import { Authrication } from '@/entity/auth';
 import { Sales } from '@/entity/sales';
 import { Category } from '@/entity/category';
 import { Item } from  '@/entity/item';
 import { User } from  '@/entity/user';
 import { MonthlySales, PopularItem } from '@/entity/dashboard';
 
+/** Auth state */
+export interface AuthState {
+    auth: Authrication
+}
 
 /** Cashier state */
 export interface CashierState {
