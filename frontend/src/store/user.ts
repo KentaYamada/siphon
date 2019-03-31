@@ -35,7 +35,7 @@ const getters = {
                 name: '',
                 nickname: '',
                 email: '',
-                password: ""
+                password: ''
             } as User;
         }
 

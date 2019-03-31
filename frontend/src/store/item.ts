@@ -72,7 +72,7 @@ const actions = {
         if (_.isNull(item.id)) {
             promise$ = axios.post(ROOT_URL, item);
         } else {
-            const url = ROOT_URL + item.id;
+            const url = `${ROOT_URL}/${item.id}`;
             promise$ = axios.put(url, item);
         }
 
@@ -82,7 +82,7 @@ const actions = {
      * 商品削除APIリクエスト
      */
     delete: async (context: any, id: number) => {
-        const url = ROOT_URL + id;
+        const url = `${ROOT_URL}/${id}`;
         return await axios.delete(url);
     }
 };
