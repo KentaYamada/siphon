@@ -44,16 +44,16 @@ const mutations = {
         });
 
         if (index > -1) {
-            state.sales.items[index].amount += 1;
+            state.sales.items[index].quantity += 1;
 
-            const amount = state.sales.items[index].amount;
+            const quantity = state.sales.items[index].quantity;
             const price = state.sales.items[index].unit_price;
-            state.sales.items[index].subtotal = amount * price;
+            state.sales.items[index].subtotal = quantity * price;
         } else {
             const salesItem: SalesItem = {
                 item_name: selectedItem.name,
                 unit_price: selectedItem.unit_price,
-                amount: 1,
+                quantity: 1,
                 subtotal: selectedItem.unit_price
             };
             state.sales.items.push(salesItem);
@@ -76,11 +76,11 @@ const mutations = {
         if (index > -1) {
             let item = state.sales.items[index];
 
-            if (item.amount > 1) {
-                item.amount -= 1;
-                const amount = state.sales.items[index].amount;
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+                const quantity = state.sales.items[index].quantity;
                 const price = state.sales.items[index].unit_price;
-                state.sales.items[index].subtotal = amount * price;
+                state.sales.items[index].subtotal = quantity * price;
             } else {
                 state.sales.items.splice(index, 1);
             }
