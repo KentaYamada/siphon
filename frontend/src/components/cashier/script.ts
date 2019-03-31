@@ -45,6 +45,12 @@ export default Vue.extend({
             'getCategories'
         ]),
         /**
+         * 総合計
+         */
+        total_price(): number {
+            return this.getGrandTotalPrice(this.discountMode);
+        },
+        /**
          * 値引単位
          */
         discountUnit(): string {
@@ -77,7 +83,6 @@ export default Vue.extend({
             'addItem',
             'reduceItem',
             'deleteItem',
-            'calcTotalPrice',
             'resetDiscountPrice',
             'resetDiscountRate'
         ]),
@@ -93,7 +98,6 @@ export default Vue.extend({
          */
         handleIncreaseItem(item: Item): void {
             this.addItem(item);
-            this.calcTotalPrice(this.discountMode);
         },
         /**
          * 明細データ削除 or 数量を減らす
@@ -101,7 +105,6 @@ export default Vue.extend({
          */
         handleDecreaseItem(itemName: string): void {
             this.reduceItem(itemName);
-            this.calcTotalPrice(this.discountMode);
         },
         /**
          * 明細データ削除

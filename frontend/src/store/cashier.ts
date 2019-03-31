@@ -102,30 +102,6 @@ const mutations = {
         });
     },
     /**
-     * 売上合計金額計算
-     * @param {CashierState} state 
-     * @param mode 
-     */
-    calcTotalPrice: (state: CashierState, mode: DISCOUNT_TYPES) => {
-        state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
-            return item.subtotal;
-        });
-
-        switch (mode) {
-            case DISCOUNT_TYPES.PRICE:
-                // 値引額
-                state.sales.total_price -= state.sales.discount_price;
-                break;
-            case DISCOUNT_TYPES.RATE:
-                // 値引率
-                state.sales.total_price = state.sales.total_price * (1 - state.sales.discount_rate / 100);
-                break;
-            default:
-                // do nothing
-                break;
-        }
-    },
-    /**
      * 値引額初期化
      */
     resetDiscountPrice: (state: CashierState) => {

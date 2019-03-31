@@ -20,7 +20,6 @@
                                     明細データがありません
                                 </td>
                             </tr>
-                            <!-- <tr v-for="(s, index) in sales_items"> -->
                             <tr v-for="(s, index) in getSales.items"> 
                                 <td class="item-col">
                                     <div>{{ s.item_name }}</div>
@@ -84,7 +83,7 @@
                         <tr>
                             <th class="has-text-right">合計</th>
                             <td class="has-text-right">
-                                {{ getSales.total_price | numberWithDelimiter }}
+                                {{ total_price | numberWithDelimiter }}
                             </td>
                         </tr>
                         <tr>
