@@ -98,7 +98,7 @@ const actions = {
      * @return Axios promise object
      */
     delete: async (context: any, id: number) => {
-        const url = ROOT_URL + id;
+        const url = `${ROOT_URL}/${id}`;
         return await axios.delete(url);
     }
 };
