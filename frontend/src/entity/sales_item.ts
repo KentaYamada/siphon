@@ -4,6 +4,6 @@
 export default interface SalesItem {
     item_name: string;
     unit_price: number;
-    amount: number;
+    quantity: number;
     subtotal: number;
 }
