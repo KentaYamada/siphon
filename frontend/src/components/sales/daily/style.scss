@@ -1,27 +1,11 @@
-.daily-sales-area {
-    .daily-sales {
-        margin-top: 14px;
-    }
-    margin-top: 10px;
-    .table-header {
-        // todo: do not important
-        margin-bottom: 0px !important;
-    }
+.daily-sales-list {
+    .columns {
+        margin-top: 0.2rem;
 
-
-    .table-header {
-        .item-col {
-
-        }
-        .amount-col,
-        .subtotal-col {
-            width: 15%;
-        }
-    }
-
-    .table-footer {
-        th {
-            width: 50%;
+        .daily-sales-items {
+            max-height: 420px;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
         }
     }
 }

@@ -10,7 +10,7 @@ import UserList from '@/components/user/list/UserList.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -45,9 +45,11 @@ export default new Router({
       component: Cashier,
     },
     {
-      path: '/sales/daily',
+      path: '/sales/daily/:year/:month/:day',
       name: 'dailySales',
       component: DailySales,
     },
   ],
 });
+
+export default router;

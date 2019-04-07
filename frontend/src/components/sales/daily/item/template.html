@@ -1,0 +1,39 @@
+<div class="daily-sales-item-area">
+    <b-collapse class="card">
+        <header class="card-header" slot="trigger" slot-scope="props" role="button">
+            <p class="card-header-title">
+                {{ dailySales.sales_date }}
+            </p>
+            <a class="card-header-icon" @click="handleClickHeader()">
+                <b-icon :icon="isOpen ? 'angle-down' : 'angle-up'"></b-icon>
+            </a>
+        </header>
+        <section class="card-content">
+            <div class="cancel-btn-area" v-show=!dailySales.is_cancel>
+                <a class="has-text-danger" @click="handleCancel()">
+                    <i class="fas fa-minus-circle"></i>
+                    取消
+                </a>
+            </div>
+            <table class="table is-bordered is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th class="has-text-centered">商品</th>
+                        <th class="has-text-centered">数量</th>
+                        <th class="has-text-centered">小計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in dailySales.sales_items" :key="item.id">
+                        <td>
+                            <div>{{ item.item_name }}</div>
+                            <div class="has-text-right">{{ item.unit_price }}</div>
+                        </td>
+                        <td class="has-text-right">{{ item.quantity }}</td>
+                        <td class="has-text-right">{{ item.unit_price * item.quantity }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </b-collapse>
+</div>
