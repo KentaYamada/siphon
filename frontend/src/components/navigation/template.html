@@ -1,28 +1,31 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" href="#">
-            <a href="/">Siphon</a>
-        </a>
+        <a class="navbar-item" href="/">cafe de GAMOYON</a>
         <a role="button"
             class="navbar-burger burger"
             aria-label="menu"
-            aria-expanded="false"
-            data-target="nav-groups">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+            data-target="nav-groups"
+            @click="toggleNav()">
+            <span area-hidden="true"></span>
+            <span></span>
+            <span></span>
         </a>
     </div>
-    <div id="nav-groups" class="navbar-menu">
+    <div id="nav-groups" class="navbar-menu" :class="{ 'is-active': showNav }">
         <div class="navbar-start">
             <div class="navbar-item has-dropdown is-hoverable" v-for="m in menu">
-                <a class="navbar-link is-arrowless">{{m.title}}</a>
+                <a class="navbar-link is-arrowless">
+                    <i class="fas" :class="m.icon"></i>
+                    {{m.title}}
+                </a>
                 <div class="navbar-dropdown">
                     <router-link
                         v-for="s in m.submenu"
                         v-bind:key="s.title"
                         :to="{path: s.url}"
-                        class="navbar-item">
+                        class="navbar-item"
+                        @click.native="handleCloseNav()">
+                            <i class="fas" :class="s.icon"></i>
                             {{s.title}}
                     </router-link>
                 </div>
@@ -30,8 +33,8 @@
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
-                <button type="button" class="button is-right">
-                    <!-- <router-link to="/logout" class="is-light">ログアウト</router-link> -->
+                <button class="button is-light">
+                    <i class="fas fa-door-open"></i>
                     ログアウト
                 </button>
             </div>
