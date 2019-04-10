@@ -1,4 +1,4 @@
-from app.model.item import Item
+from app.model.item import Item, ItemSearchOption
 from app.model.mapper.base_mapper import BaseMapper
 
 
@@ -7,6 +7,25 @@ class ItemMapper(BaseMapper):
 
     def __init__(self):
         super().__init__()
+
+    def save(self, item):
+        if item is None or not isinstance(item, Item):
+            raise ValueError()
+        try:
+            data = (
+                item.id,
+                item.category_id,
+                item.name,
+                item.unit_price
+            )
+            self._db.execute_proc('save_item', data)
+            self._db.commit()
+            saved = True
+        except Exception as e:
+            print(e)
+            self._db.rollback()
+            saved = False
+        return saved
 
     def add(self, item):
         if item is None:
@@ -41,75 +60,32 @@ class ItemMapper(BaseMapper):
             saved = False
         return saved
 
-    def edit(self, item):
-        if item is None:
-            raise ValueError()
-        if not isinstance(item, Item):
-            raise ValueError()
-        query = """
-            UPDATE items SET
-                category_id = %s,
-                name = %s,
-                unit_price = %s
-            WHERE id = %s;
-        """
-        data = (
-            item.category_id,
-            item.name,
-            item.unit_price,
-            item.id
-        )
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
     def delete(self, id):
         if id is None:
             raise ValueError()
-        if not isinstance(id, int):
+        if not isinstance(id, int) or id <= 0:
             raise ValueError()
-        if id <= 0:
-            raise ValueError('Invalid id')
-        query = 'DELETE FROM items WHERE id = %s;'
-        data = (id,)
         try:
-            self._db.execute(query, data)
+            self._db.execute_proc('delete_item', (id,))
             self._db.commit()
-            saved = True
+            deleted = True
         except Exception as e:
             self._db.rollback()
             # todo: logging
             print(e)
-            saved = False
-        return saved
+            deleted = False
+        return deleted
 
-    def find_by_category_id(self, category_id):
-        if category_id is None:
+    def find(self, option):
+        if option is None or not isinstance(option, ItemSearchOption):
             raise ValueError()
-        if not isinstance(category_id, int):
-            raise ValueError()
-        query = """
-            SELECT
-                id,
-                category_id,
-                name,
-                unit_price
-            FROM items
-            WHERE category_id = %s
-            ORDER BY id ASC;
-        """
-        rows = None
         try:
-            rows = self._db.find(query, (category_id,))
+            data = (option.category_id, option.q)
+            rows = self._db.find_proc('find_items', data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             print(e)
-        return rows
+        field_list = ['id', 'category_id', 'name', 'unit_price']
+        items = [{f: row[f] for f in field_list} for row in rows]
+        return items

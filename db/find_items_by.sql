@@ -1,6 +1,6 @@
-CREATE OR REPLACE FUNCTION find_items_by(
+CREATE OR REPLACE FUNCTION find_items(
     p_category_id integer,
-    p_name text
+    p_keyword text
 )
 RETURNS SETOF items
 LANGUAGE plpgsql
@@ -16,7 +16,7 @@ BEGIN
     FROM items AS i
     WHERE i.category_id = p_category_id
       AND (
-        p_name IS NULL OR
-        i.name LIKE '%' || p_name || '%'
-    );
+        p_keyword IS NULL OR
+        p_keyword = '' OR
+        p.name LIKE '%' || p_keyword || '%');
 END $$;

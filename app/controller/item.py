@@ -1,6 +1,6 @@
 from flask import request, Blueprint
 from app.controller.response import ResponseBody
-from app.model.item import Item
+from app.model.item import Item, ItemSearchOption
 from app.model.mapper.item_mapper import ItemMapper
 
 
@@ -9,11 +9,9 @@ bp = Blueprint('item', __name__, url_prefix='/api/items')
 
 @bp.route('/', methods=['GET'])
 def index():
-    if request.args is None:
-        category_id = 1
-    else:
-        category_id = request.args.get('category_id')
-    items = Item.find_by(category_id)
+    option = ItemSearchOption(**request.args)
+    mapper = ItemMapper()
+    items = mapper.find(option)
     res = ResponseBody()
     res.set_success_response(200, {'items': items})
     return res
@@ -30,11 +28,14 @@ def add():
     item = Item(**request.json)
 
     if not item.is_valid():
-        res.set_fail_response(400, item.validation_errors)
+        res.set_fail_response(
+            400,
+            item.validation_errors,
+            '保存エラー。エラー内容を確認してください。')
         return res
 
     mapper = ItemMapper()
-    saved = mapper.add(item)
+    saved = mapper.save(item)
 
     if saved:
         res.set_success_response(201)
@@ -53,11 +54,14 @@ def edit(id):
 
     item = Item(**request.json)
     if not item.is_valid():
-        res.set_fail_response(400, item.validation_errors)
+        res.set_fail_response(
+            400,
+            item.validation_errors,
+            '保存エラー。エラー内容を確認してください。')
         return res
 
     mapper = ItemMapper()
-    saved = mapper.add(item)
+    saved = mapper.save(item)
 
     if saved:
         res.set_success_response(200, message='更新しました')

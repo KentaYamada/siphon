@@ -79,11 +79,13 @@ class Item(BaseModel):
         else:
             self.__unit_price = value
 
-    @classmethod
-    def find_by(cls, category_id):
-        return [{
-            'id': i,
-            'category_id': category_id,
-            'name': 'Item{}'.format(i),
-            'unit_price': i * 100
-        } for i in range(1, 11)]
+
+class ItemSearchOption:
+    def __init__(
+        self,
+        category_id=None,
+        q='',
+        **kwargs
+    ):
+        self.category_id = category_id
+        self.q = q

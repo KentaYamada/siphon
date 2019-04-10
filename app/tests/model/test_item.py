@@ -26,7 +26,3 @@ class TestItem(unittest.TestCase):
         item = Item(1, 1, 'Test Item', 0)
         is_valid = item.is_valid()
         self.assertFalse(is_valid)
-
-    def test_find_by(self):
-        items = Item.find_by(1)
-        self.assertEqual(10, len(items))

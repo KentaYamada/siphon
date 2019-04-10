@@ -1,6 +1,6 @@
 import unittest
 from app.model.pgadapter import PgAdapter
-from app.model.item import Item
+from app.model.item import Item, ItemSearchOption
 from app.model.mapper.item_mapper import ItemMapper
 
 
@@ -19,13 +19,13 @@ class TestItemMapper(unittest.TestCase):
 
     def test_add_ok(self):
         data = Item(None, 1, 'test', 500)
-        result = self.mapper.add(data)
+        result = self.mapper.save(data)
         self.assertTrue(result)
 
     def test_edit_ok(self):
         self.__init_data()
         item = Item(1, 1, 'Edit', 500)
-        result = self.mapper.edit(item)
+        result = self.mapper.save(item)
         self.assertTrue(result)
 
     def test_delete_ok(self):
@@ -33,26 +33,22 @@ class TestItemMapper(unittest.TestCase):
         result = self.mapper.delete(1)
         self.assertTrue(result)
 
-    def test_find_by_category_id_ok(self):
+    def test_find_all_items(self):
         self.__init_data()
-        result = self.mapper.find_by_category_id(1)
+        data = ItemSearchOption(1)
+        result = self.mapper.find(data)
         self.assertEqual(len(result), 30)
 
-    def test_find_by_category_id_when_empty_row(self):
-        result = self.mapper.find_by_category_id(1)
+    def test_find_when_empty_row(self):
+        data = ItemSearchOption(1, 'No data')
+        result = self.mapper.find(data)
         self.assertEqual(len(result), 0)
 
-    def test_add_ng_when_invalid_value(self):
+    def test_save_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
-            self.mapper.add(None)
-            self.mapper.add(1)
-            self.mapper.add('test')
-
-    def test_edit_ng_when_invalid_value(self):
-        with self.assertRaises(ValueError):
-            self.mapper.edit(None)
-            self.mapper.edit(1)
-            self.mapper.edit('test')
+            self.mapper.save(None)
+            self.mapper.save(1)
+            self.mapper.save('test')
 
     def test_delete_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
@@ -66,3 +62,4 @@ class TestItemMapper(unittest.TestCase):
             for j in range(1, 31):
                 item = Item(j, i, 'Item{0}'.format(j), j*100)
                 self.mapper.add(item)
+                # self.mapper.save(item)
