@@ -30,3 +30,9 @@ class Category(BaseModel):
             super()._add_validation_error('name', 'カテゴリ名は必須入力です')
         else:
             self.__name = value
+
+
+class CategorySearchOption:
+    def __init__(self, q='', with_items=False, **kwargs):
+        self.q = q
+        self.with_items = with_items

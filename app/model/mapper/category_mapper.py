@@ -1,4 +1,4 @@
-from app.model.category import Category
+from app.model.category import Category, CategorySearchOption
 from app.model.mapper.base_mapper import BaseMapper
 
 
@@ -7,6 +7,35 @@ class CategoryMapper(BaseMapper):
 
     def __init__(self):
         super().__init__()
+
+    def save(self, category):
+        if category is None or not isinstance(category, Category):
+            raise ValueError()
+        try:
+            data = (category.id, category.name)
+            self._db.execute_proc('save_category', data)
+            self._db.commit()
+            saved = True
+        except Exception as e:
+            self._db.rollback()
+            # todo: logging
+            print(e)
+            saved = False
+        return saved
+
+    def find(self, option):
+        if option is None or not isinstance(option, CategorySearchOption):
+            raise ValueError()
+        try:
+            rows = self._db.find_proc('find_categories', (option.q,))
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            # todo: logging
+            print(e)
+        field_list = ['id', 'name']
+        categories = [{f: row[f] for f in field_list} for row in rows]
+        return categories
 
     def add(self, category):
         if category is None or not isinstance(category, Category):
@@ -31,66 +60,21 @@ class CategoryMapper(BaseMapper):
             saved = False
         return saved
 
-    def edit(self, category):
-        if category is None:
-            raise ValueError()
-        if not isinstance(category, Category):
-            raise ValueError()
-        query = """
-            UPDATE categories SET
-                name = %s
-            WHERE id = %s;
-        """
-        data = (category.name, category.id)
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
     def delete(self, id):
         if id is None:
             raise ValueError()
-        if not isinstance(id, int):
+        if not isinstance(id, int) or id <= 0:
             raise ValueError()
-        if id <= 0:
-            raise ValueError('Invalid id')
-        query = """
-            DELETE FROM categories WHERE id = %s
-        """
-        data = (id,)
         try:
-            self._db.execute(query, data)
+            self._db.execute_proc('delete_category', (id,))
             self._db.commit()
-            saved = True
+            deleted = True
         except Exception as e:
             self._db.rollback()
             # todo: logging
             print(e)
-            saved = False
-        return saved
-
-    def find_all(self):
-        query = """
-            SELECT
-                id,
-                name
-            FROM categories
-            ORDER BY id;
-        """
-        rows = None
-        try:
-            rows = self._db.find(query)
-            self._db.commit()
-        except Exception as e:
-            self._db.rollback()
-            print(e)
-        return rows
+            deleted = False
+        return deleted
 
     def is_upper_limit(self):
         row_count = 0
