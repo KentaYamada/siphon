@@ -1,21 +1,22 @@
 import unittest
 from app.model.pgadapter import PgAdapter
-from app.model.user import User
+from app.model.user import User, UserSearchOption
 from app.model.mapper.user_mapper import UserMapper
 
 
 class TestUserMapper(unittest.TestCase):
     def setUp(self):
         self.mapper = UserMapper()
+        self.db = PgAdapter()
 
     def tearDown(self):
-        db = PgAdapter()
         query = """
             TRUNCATE TABLE users
             RESTART IDENTITY;
         """
-        db.execute(query)
-        db.commit()
+        self.db.execute(query)
+        self.db.commit()
+        self.db = None
 
     def test_add_ok(self):
         data = User(
@@ -47,8 +48,9 @@ class TestUserMapper(unittest.TestCase):
 
     def test_find_by_ok(self):
             self.__init_data()
-            result = self.mapper.find_by(None)
-            self.assertEqual(len(result), 10)
+            data = UserSearchOption()
+            result = self.mapper.find(data)
+            self.assertEqual(len(result), 3)
 
     def test_add_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
@@ -66,12 +68,5 @@ class TestUserMapper(unittest.TestCase):
             self.mapper.delete(-1)
 
     def __init_data(self):
-        for i in range(1, 11):
-            user = User(
-                i,
-                'Test user{0}'.format(i),
-                'Mr. test{0}'.format(i),
-                'test{0}@email.com'.format(i),
-                'test{0}test'.format(i)
-            )
-            self.mapper.add(user)
+        self.db.execute_proc('create_test_data_users')
+        self.db.commit()

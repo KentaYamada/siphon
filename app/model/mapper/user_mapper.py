@@ -1,8 +1,28 @@
-from app.model.user import User
+from app.model.user import User, UserSearchOption
 from app.model.mapper.base_mapper import BaseMapper
 
 
 class UserMapper(BaseMapper):
+    def save(self, user):
+        if user is None or not isinstance(user, User):
+            raise ValueError()
+        try:
+            data = (
+                user.id,
+                user.name,
+                user.nickname,
+                user.password
+            )
+            self._db.execute_proc('save_user', data)
+            self._db.commit()
+            saved = True
+        except Exception as e:
+            # todo logging
+            print(e)
+            self._db.rollback()
+            saved = False
+        return saved
+
     def add(self, user):
         if user is None:
             raise ValueError()
@@ -87,25 +107,15 @@ class UserMapper(BaseMapper):
             deleted = False
         return deleted
 
-    def find_by(self, user):
-        if user is not None and not isinstance(user, User):
+    def find(self, option):
+        if option is None or not isinstance(option, UserSearchOption):
             raise ValueError()
-        query = """
-            SELECT
-                id,
-                name,
-                nickname,
-                email,
-                password
-            FROM users
-            ORDER BY id ASC;
-        """
-        users = None
         try:
-            users = self._db.find(query)
+            rows = self._db.find_proc('find_users_by', (option.q,))
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             print(e)
-            users = None
+        field_list = ['id', 'name', 'nickname']
+        users = [{f: row[f] for f in field_list} for row in rows]
         return users

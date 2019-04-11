@@ -66,3 +66,8 @@ class User(BaseModel):
             super()._add_validation_error('password', 'パスワードは必須入力です')
         else:
             self.__password = value
+
+
+class UserSearchOption:
+    def __init__(self, q='', **kwargs):
+        self.q = q

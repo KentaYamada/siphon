@@ -84,33 +84,33 @@ class TestUserApi(unittest.TestCase):
         res = TestUserApi.client.delete(END_POINT)
         self.assertEqual(405, res.status_code)
 
-    def test_authoricate_ok(self):
-        url = urljoin(END_POINT, 'authoricate')
-        data = json.dumps({
-            'email': 'test',
-            'password': 'test'
-        })
-        res = TestUserApi.client.post(
-            url,
-            content_type=CONTENT_TYPE,
-            data=data)
-        self.assertEqual(200, res.status_code)
+    # def test_authoricate_ok(self):
+    #     url = urljoin(END_POINT, 'authoricate')
+    #     data = json.dumps({
+    #         'email': 'test',
+    #         'password': 'test'
+    #     })
+    #     res = TestUserApi.client.post(
+    #         url,
+    #         content_type=CONTENT_TYPE,
+    #         data=data)
+    #     self.assertEqual(200, res.status_code)
 
-    def test_authoricate_ng(self):
-        url = urljoin(END_POINT, 'authoricate')
-        data = json.dumps({
-            'email': 'hoge',
-            'password': 'hoge'
-        })
-        res = TestUserApi.client.post(
-            url,
-            content_type=CONTENT_TYPE,
-            data=data)
-        self.assertEqual(401, res.status_code)
+    # def test_authoricate_ng(self):
+    #     url = urljoin(END_POINT, 'authoricate')
+    #     data = json.dumps({
+    #         'email': 'hoge',
+    #         'password': 'hoge'
+    #     })
+    #     res = TestUserApi.client.post(
+    #         url,
+    #         content_type=CONTENT_TYPE,
+    #         data=data)
+    #     self.assertEqual(401, res.status_code)
 
-    def test_authoricate_when_bad_request(self):
-        url = urljoin(END_POINT, 'authoricate')
-        res = TestUserApi.client.post(
-            url,
-            content_type=CONTENT_TYPE)
-        self.assertEqual(400, res.status_code)
+    # def test_authoricate_when_bad_request(self):
+    #     url = urljoin(END_POINT, 'authoricate')
+    #     res = TestUserApi.client.post(
+    #         url,
+    #         content_type=CONTENT_TYPE)
+    #     self.assertEqual(400, res.status_code)

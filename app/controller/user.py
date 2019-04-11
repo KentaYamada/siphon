@@ -9,9 +9,10 @@ bp = Blueprint('user', __name__, url_prefix='/api/users')
 
 @bp.route('/', methods=['GET'])
 def index():
+    mapper = UserMapper()
+    users = mapper.find_by()
     res = ResponseBody()
-    users = User.find_by('')
-    res.set_success_response(200, users)
+    res.set_success_response(200, {'users': users})
     return res
 
 
@@ -23,10 +24,14 @@ def add():
         res.set_fail_response(400)
         return res
 
-    user = User(None, **request.json)
+    user = User(**request.json)
 
     if not user.is_valid():
-        res.set_fail_response(400, user.validation_errors)
+        res.set_fail_response(
+            400,
+            user.validation_errors,
+            '保存エラー。エラー内容を確認してください。'
+        )
         return res
 
     mapper = UserMapper()
@@ -42,10 +47,13 @@ def add():
 @bp.route('/<int:id>', methods=['PUT'])
 def edit(id):
     res = ResponseBody()
-    user = User(id, **request.json)
+    user = User(**request.json)
 
     if not user.is_valid():
-        res.set_fail_response(400)
+        res.set_fail_response(
+            400,
+            user.validation_errors,
+            '保存エラー。エラー内容を確認してください。')
         return res
 
     mapper = UserMapper()
@@ -83,7 +91,7 @@ def authoricate():
     can_login = mapper.authoricate(**request.json)
 
     if can_login:
-        res.set_success_response(200, message='認証成功')
+        res.set_success_response(200, message='ログインしました。')
     else:
-        res.set_fail_response(401, message='認証失敗')
+        res.set_fail_response(401, message='ログインに失敗しました。')
     return res
