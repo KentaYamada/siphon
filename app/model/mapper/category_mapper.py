@@ -37,29 +37,6 @@ class CategoryMapper(BaseMapper):
         categories = [{f: row[f] for f in field_list} for row in rows]
         return categories
 
-    def add(self, category):
-        if category is None or not isinstance(category, Category):
-            raise ValueError()
-        query = """
-            INSERT INTO categories (
-                name
-            ) VALUES (
-                %s
-            );
-        """
-        data = (category.name,)
-        saved = False
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
     def delete(self, id):
         if id is None:
             raise ValueError()

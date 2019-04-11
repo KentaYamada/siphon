@@ -7,15 +7,16 @@ from app.model.mapper.category_mapper import CategoryMapper
 class TestCategoryMapper(unittest.TestCase):
     def setUp(self):
         self.mapper = CategoryMapper()
+        self.db = PgAdapter()
 
     def tearDown(self):
-        db = PgAdapter()
         query = """
             TRUNCATE TABLE categories
             RESTART IDENTITY;
         """
-        db.execute(query)
-        db.commit()
+        self.db.execute(query)
+        self.db.commit()
+        self.db = None
 
     def test_add_ok(self):
         data = Category(None, 'test')
@@ -36,7 +37,7 @@ class TestCategoryMapper(unittest.TestCase):
 
     def test_find_keyword_search(self):
         self.__init_data()
-        data = CategorySearchOption(q='Test1')
+        data = CategorySearchOption(q='セット')
         result = self.mapper.find(data)
         self.assertEqual(len(result), 2)
 
@@ -70,7 +71,5 @@ class TestCategoryMapper(unittest.TestCase):
             self.mapper.delete(-1)
 
     def __init_data(self):
-        for i in range(1, 11):
-            category = Category(i, 'Test{0}'.format(i))
-            self.mapper.add(category)
-            # self.mapper.save(category)
+        self.db.execute_proc('create_test_data_categories')
+        self.db.commit()
