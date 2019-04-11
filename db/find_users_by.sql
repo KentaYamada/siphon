@@ -6,10 +6,6 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-    IF p_keyword IS NOT NULL THEN
-        p_keyword := '%' || p_keyword || '%';
-    END IF;
-
     RETURN QUERY
     SELECT
         u.id,
@@ -17,6 +13,8 @@ BEGIN
         u.nickname
     FROM users AS u
     WHERE p_keyword IS NULL
-       OR u.name LIKE p_keyword
-       OR u.nickname LIKE p_keyword;
+       OR p_keyword = ''
+       OR u.name LIKE '%' || p_keyword || '%'
+       OR u.nickname LIKE '%' || p_keyword || '%'
+    ORDER BY u.id ASC;
 END $$;
