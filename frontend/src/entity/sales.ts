@@ -17,8 +17,8 @@ export interface Sales {
     total_price: number;
     discount_price: number;
     discount_rate: number;
-    inclusive_tax: number | null;
-    exclusive_tax: number | null;
+    inclusive_tax?: number;
+    exclusive_tax?: number;
     deposit: number;
     items: SalesItem[];
 }

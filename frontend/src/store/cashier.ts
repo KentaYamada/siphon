@@ -13,8 +13,6 @@ const state: CashierState = {
         total_price: 0,
         discount_price: 0,
         discount_rate: 0,
-        inclusive_tax: 0,
-        exclusive_tax: 0,
         deposit: 0,
         items: []
     } as Sales
@@ -29,8 +27,6 @@ const mutations = {
             total_price: 0,
             discount_price: 0,
             discount_rate: 0,
-            inclusive_tax: 0,
-            exclusive_tax: 0,
             deposit: 0,
             items: []
         } as Sales;

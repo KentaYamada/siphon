@@ -18,7 +18,7 @@ export const getDummyItems = (categoryId: number) => {
  * Item entity
  */
 export interface Item {
-    id: number | null,
+    id?: number,
     category_id: number | null;
     name: string;
     unit_price: number;
@@ -29,5 +29,5 @@ export interface Item {
  */
 export interface ItemSearchOption {
     q: string;
-    category_id: number | null;
+    category_id?: number;
 }
