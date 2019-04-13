@@ -1,6 +1,7 @@
 CREATE TABLE sales (
     id serial NOT NULL,
-    sales_date timestamp with time zone NOT NULL,
+    sales_date date NOT NULL,
+    sales_time time without time zone NOT NULL,
     total_price integer NOT NULL,
     discount_price integer NOT NULL,
     discount_rate integer NOT NULL,
