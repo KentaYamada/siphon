@@ -11,47 +11,9 @@ class SalesMapper(BaseMapper):
     def add(self, sales):
         if sales is None or not isinstance(sales, Sales):
             raise ValueError()
-        if not sales.is_valid():
-            return False
-        sales_query = """
-            INSERT INTO sales (
-                sales_date,
-                total_price,
-                discount_price,
-                discount_rate,
-                inclusive_tax,
-                exclusive_tax,
-                deposit
-            ) VALUES (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            );
-
-        """
-        sales_item_query = """
-            INSERT INTO sales_items (
-                sales_id,
-                item_no,
-                item_name,
-                unit_price,
-                quantity,
-                subtotal
-            ) VALUES (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            );
-        """
         sales_data = (
             sales.sales_date,
+            sales.sales_time,
             sales.total_price,
             sales.discount_price,
             sales.discount_rate,
@@ -61,22 +23,33 @@ class SalesMapper(BaseMapper):
         )
 
         try:
-            self._db.execute(sales_query, sales_data)
+            # 売上データ登録
+            affected_row = self._db.execute_proc('save_sales', sales_data)
+            if affected_row < 1:
+                self._db.rollback()
+                return False
+
+            # 売上明細データ登録
             sales_id = self._db.fetch_last_row_id()
-            sales_item_data = tuple([(
-                sales_id,
-                item.item_no,
-                item.item_name,
-                item.unit_price,
-                item.quantity,
-                item.subtotal
-            ) for item in sales.items])
-            self._db.bulk_insert(sales_item_query, sales_item_data)
+            for item in sales.items:
+                item_data = (
+                    sales_id,
+                    item.item_no,
+                    item.item_name,
+                    item.unit_price,
+                    item.quantity,
+                    item.subtotal
+                )
+                affected_row = self._db.execute_proc('save_sales_item', item_data)
+                if affected_row < 1:
+                    self._db.rollback()
+                    return False
             self._db.commit()
             saved = True
         except Exception as e:
-            self._db.commit()
+            # todo: logging
             print(e)
+            self._db.rollback()
             saved = False
         return saved
 
@@ -85,15 +58,14 @@ class SalesMapper(BaseMapper):
             raise ValueError()
         if sales_id <= 0:
             raise ValueError('Invalid sales_id')
-
-        data = (sales_id,)
         try:
-            self._db.execute_proc('save_cancel_sales', data)
+            self._db.execute_proc('save_cancel_sales', (sales_id,))
             self._db.commit()
             saved = True
         except Exception as e:
-            self._db.rollback()
+            # todo: logging
             print(e)
+            self._db.rollback()
             saved = False
         return saved
 
@@ -141,11 +113,11 @@ class SalesMapper(BaseMapper):
 
     def find_monthly_sales(self, year, month):
         if year is None or not isinstance(year, int):
-            raise ValueError()
+            raise ValueError('Invalid data type: year')
         if month is None or not isinstance(month, int):
-            raise ValueError()
+            raise ValueError('Invalid data type: month')
         if month < 1 or month > 12:
-            raise ValueError('Invalid month')
+            raise ValueError('Invalid period of month')
         query = """
             SELECT
                 s.sales_date,
@@ -184,27 +156,4 @@ class SalesMapper(BaseMapper):
             row['sales_day'],
             row['proceeds'])
             for row in rows]
-        return rows
-
-    def find_yearly_sales(self, year):
-        if year is None or not isinstance(year, int):
-            raise ValueError()
-        query = """
-            SELECT
-                *
-            FROM sales
-            WHERE sales_date >= %s
-              AND sales_date < %s;
-        """
-        data = (
-            datetime.datetime(year, 1, 1, 0, 0, 0),
-            datetime.datetime(year+1, 1, 1, 0, 0, 0)
-        )
-        rows = None
-        try:
-            rows = self._db.find(query, data)
-            self._db.commit()
-        except Exception as e:
-            self._db.rollback()
-            print(e)
         return rows

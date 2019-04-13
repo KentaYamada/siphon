@@ -3,14 +3,24 @@ from app.model.base import BaseModel
 
 
 class Sales(BaseModel):
-    def __init__(self, id=None,
-                 sales_date=None, total_price=None,
-                 discount_price=None, discount_rate=None,
-                 inclusive_tax=None, exclusive_tax=None,
-                 deposit=None, items=None, **kwargs):
+    def __init__(
+        self,
+        id=None,
+        sales_date=None,
+        sales_time=None,
+        total_price=None,
+        discount_price=None,
+        discount_rate=None,
+        inclusive_tax=None,
+        exclusive_tax=None,
+        deposit=None,
+        items=None,
+        **kwargs
+    ):
         super().__init__()
         self.id = id
         self.sales_date = sales_date
+        self.sales_time = sales_time
         self.total_price = total_price
         self.discount_price = discount_price
         self.discount_rate = discount_rate
@@ -43,13 +53,33 @@ class Sales(BaseModel):
                 'sales_date',
                 '売上日は必須です'
             )
-        elif not isinstance(value, datetime.datetime):
+        elif not isinstance(value, datetime.date):
             super()._add_validation_error(
                 'sales_date',
                 '売上日は日付をセットしてください'
             )
         else:
             self.__sales_date = value
+
+    @property
+    def sales_time(self):
+        return self.__sales_time
+
+    @sales_time.setter
+    def sales_time(self, value):
+        super()._clear_validation_error('sales_date')
+        if value is None:
+            super()._add_validation_error(
+                'sales_time',
+                '売上時間をセットしてください'
+            )
+        elif not isinstance(value, datetime.time):
+            super()._add_validation_error(
+                'sales_time',
+                '売上時間のデータ型が不正です'
+            )
+        else:
+            self.__sales_time = value
 
     @property
     def total_price(self):

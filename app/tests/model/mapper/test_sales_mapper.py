@@ -26,38 +26,18 @@ class TestSalesMapper(unittest.TestCase):
         db.commit()
 
     def test_add_ok(self):
-        items = [
-            SalesItem(
-                None,
-                None,
-                i,
-                'test{0}'.format(i),
-                100,
-                1,
-                100
-            )
-            for i in range(1, 11)
-        ]
-        today = datetime.now()
-        sales = Sales(None, today, 100, 0, 0, 0, 0, 100, items)
+        items = self.__get_sales_items()
+        today = datetime.now().date()
+        now_time = datetime.now().time()
+        sales = Sales(None, today, now_time, 100, 0, 0, 0, 0, 100, items)
         result = self.mapper.add(sales)
         self.assertTrue(result)
 
     def test_cancel_ok(self):
-        items = [
-            SalesItem(
-                None,
-                None,
-                i,
-                'test{0}'.format(i),
-                100,
-                1,
-                100
-            )
-            for i in range(1, 11)
-        ]
-        today = datetime.now()
-        sales = Sales(None, today, 100, 0, 0, 0, 0, 100, items)
+        items = self.__get_sales_items()
+        today = datetime.now().date()
+        now_time = datetime.now().time()
+        sales = Sales(None, today, now_time, 100, 0, 0, 0, 0, 100, items)
         self.mapper.add(sales)
         result = self.mapper.cancel(1)
         self.assertTrue(result)
@@ -76,3 +56,10 @@ class TestSalesMapper(unittest.TestCase):
             self.mapper.cancel(1)
             self.mapper.cancel(True)
             self.mapper.cancel(0)
+
+    def __get_sales_items(self):
+        items = []
+        for i in range(1, 11):
+            item = SalesItem(None, None, i, 'test{0}'.format(i), 100, 1, 100)
+            items.append(item)
+        return items

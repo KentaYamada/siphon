@@ -67,12 +67,11 @@ def add():
     items = [SalesItem(None, None, i, **item)
              for i, item in enumerate(request.json['items'], 1)]
     del request.json['items']
-    # now_date = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-    now_date = datetime.now()
-    sales = Sales(None, sales_date=now_date, items=items, **request.json)
+    now_date = datetime.now().date()
+    now_time = datetime.now().time()
+    sales = Sales(None, sales_date=now_date, sales_time=now_time, items=items, **request.json)
 
     if not sales.is_valid():
-        print(sales.validation_errors)
         res.set_fail_response(400, sales.validation_errors)
         return res
 
