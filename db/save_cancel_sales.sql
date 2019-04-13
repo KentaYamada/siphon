@@ -10,6 +10,7 @@ DECLARE
 BEGIN
     INSERT INTO sales (
         sales_date,
+        sales_time,
         total_price,
         discount_price,
         discount_rate,
@@ -19,6 +20,7 @@ BEGIN
     )
     SELECT
         s.sales_date,
+        s.sales_time,
         s.total_price * (-1),
         s.discount_price * (-1),
         s.discount_rate,
@@ -29,7 +31,7 @@ BEGIN
     WHERE s.id = p_id;
 
     IF FOUND THEN
-        cancel_sales_id := (SELECT LASTVAL()); 
+        cancel_sales_id := (SELECT LASTVAL());
         INSERT INTO sales_items (
             sales_id,
             item_no,
