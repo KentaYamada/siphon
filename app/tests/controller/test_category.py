@@ -25,6 +25,14 @@ class TestCategoryApi(unittest.TestCase):
             content_type=CONTENT_TYPE)
         self.assertEqual(200, res.status_code)
 
+    def test_index_with_items(self):
+        data = json.dumps({'with_items': True})
+        res = TestCategoryApi.client.get(
+            END_POINT,
+            content_type=CONTENT_TYPE,
+            data=data)
+        self.assertEqual(200, res.status_code)
+
     def test_add_ok(self):
         data = json.dumps({
             'id': None,
