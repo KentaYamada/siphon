@@ -1,38 +1,13 @@
 import Vue from 'vue';
-import moment from 'moment';
+import { getMenus } from '@/entity/menu';
 
-
-const getMenu = () => {
-    const today = moment();
-    const dailySalesUrl = `/sales/daily/${today.year()}/${today.month()}/${today.day()}`;
-
-    return [
-        {
-            title: '売上',
-            icon: 'fa-coins',
-            submenu: [
-                {title: '売上登録', icon: 'fa-cash-register', url: '/cashier', submenu: null},
-                // {title: '1日の売上', icon: 'fa-calendar-day', url: '/sales/daily', submenu: null}
-                {title: '1日の売上', icon: 'fa-calendar-day', url: dailySalesUrl, submenu: null}
-            ]
-        },
-        {
-            title: '設定',
-            icon: 'fa-user-cog',
-            submenu: [
-                {title: '商品カテゴリ', icon: 'fa-tag', url: '/categories', submenu: null},
-                {title: '商品', icon: 'fa-coffee', url: '/items', submenu: null},
-                {title: 'ユーザー', icon: 'fa-users', url: '/users', submenu: null}
-            ]
-        }
-    ];
-};
-
-
+/**
+ * ナビゲーションメニュー
+ */
 export default Vue.extend({
     template: '<navigation/>',
     data() {
-        const menu = getMenu();
+        const menu = getMenus();
 
         return {
             menu,
