@@ -1,9 +1,9 @@
 CREATE OR REPLACE FUNCTION find_monthly_sales(
-    start_date timestamp with time zone,
-    end_date timestamp with time zone
+    start_date date,
+    end_date date
 )
 RETURNS TABLE (
-    sales_date timestamp,
+    sales_date date,
     sales_day integer,
     total_price integer
 )
