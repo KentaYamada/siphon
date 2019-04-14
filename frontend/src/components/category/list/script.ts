@@ -98,7 +98,7 @@ export default Vue.extend({
                             type:'is-success'
                         };
                         this.$toast.open(option);
-                        this.fetchCategories();
+                        this.fetchCategories(this.option);
                     }
                 }
             };
