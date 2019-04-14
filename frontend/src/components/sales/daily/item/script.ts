@@ -18,7 +18,7 @@ export default Vue.extend({
     },
     methods: {
         ...mapActions('daily_sales', [
-            'cancel'
+            'cancelSales'
         ]),
         handleClickHeader(): void {
             this.isOpen = !this.isOpen;
@@ -50,7 +50,7 @@ export default Vue.extend({
          * @param salesId 
          */
         _cancel(salesId: number): void {
-            this.cancel(salesId)
+            this.cancelSales(salesId)
                 .then(() => {
                     const option: ToastConfig = {
                         message: '売上取り消しました',

@@ -1,22 +1,22 @@
 import { Sales } from '@/entity/sales';
 
-
 /**
  * 日次売上モデル
  */
 export interface DailySales extends Sales {
-    sales_id: number;
     sales_date: Date;
+    is_canceled: boolean;
+    total_price: number;
     discount_unit: string;
-    is_cancel: boolean;
+    grand_total: number;
 }
 
 /**
  * 日次売上検索オプション
  */
 export interface DailySalesSearchOption {
-    sales_date: Date | null,
-    time_from: string,
-    time_to: string,
-    q: string
+    sales_date?: Date | null,
+    time_from?: string,
+    time_to?: string,
+    q?: string
 }

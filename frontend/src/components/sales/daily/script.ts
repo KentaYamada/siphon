@@ -3,36 +3,42 @@ import {
     mapActions,
     mapGetters
 } from 'vuex';
+import moment from 'moment';
+import _ from 'lodash';
 import DailySalesItem from '@/components/sales/daily/item/DailySalesItem.vue';
 import { DailySalesSearchOption } from '@/entity/daily_sales';
+
 
 const getDummy = () => {
     let list = [];
 
     for (let i = 1; i < 10; i++) {
+        let is_equal = i % 2 === 0;
         list.push({
             sales_id: i,
-            total_price: 1000,
-            sales_date: '2019年04月04日 09:32:29',
+            total_price: is_equal ? -1000 : 1000,
+            grand_total_price: is_equal ? -1000 : 1000,
+            sales_date: moment().format('YYYY年MM月DD日 HH:mm:ss'),
             discount: 0,
+            is_cancel: is_equal,
             sales_items: [
                 {
                     id: 1,
                     item_name: 'Item A',
                     unit_price: 300,
-                    quantity: 1
+                    quantity: is_equal ? -1 : 1
                 },
                 {
                     id: 2,
                     item_name: 'Item B',
                     unit_price: 400,
-                    quantity: 2
+                    quantity: is_equal ? -2 : 2
                 },
                 {
                     id: 3,
                     item_name: 'Item C',
                     unit_price: 500,
-                    quantity: 3
+                    quantity: is_equal ? -3 : 3
                 }
             ]
         });
@@ -53,13 +59,24 @@ export default Vue.extend({
             q: ''
         };
 
+        const params = this.$route.params;
+
+        if (_.isUndefined(params) || _.isNull(params)) {
+            option.sales_date = moment().toDate();
+        } else {
+            const year: number = +params.year;
+            const month: number = +params.month;
+            const day: number = +params.day;
+            option.sales_date = new Date(year, month, day);
+        }
+
         return {
             option,
             dailySales: getDummy()
         };
     },
     mounted() {
-        //this.fetchDailySales(this.option);
+        this.fetchDailySales(this.option);
     },
     components: {
         DailySalesItem
@@ -70,8 +87,9 @@ export default Vue.extend({
             'hasItems'
         ]),
         title(): string {
-            const params = this.$route.params;
-            return `${params.year}年${params.month}月${params.day}の売上`; 
+            return `${moment().format('YYYY年MM月DD日')}の売上`;
+            //const params = this.$route.params;
+            //return `${params.year}年${params.month}月${params.day}の売上`; 
         },
     },
     methods: {

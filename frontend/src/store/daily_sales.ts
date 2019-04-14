@@ -22,7 +22,7 @@ const mutations = {
 
 const getters = {
     /**
-     * 日次売上取得
+     * 日次売上リスト取得
      */
     getDailySales: (state: DailySalesState) => {
         return state.daily_sales;
@@ -40,7 +40,7 @@ const actions = {
      * 日次売上取得APIリクエスト
      */
     fetchDailySales: async (context: any, option: DailySalesSearchOption) => {
-        return axios
+        return await axios
             .get(ROOT_URL, { params: option })
             .then((response: AxiosResponse) => {
                 context.commit('setDailySales', response.data.daily_sales);
@@ -49,7 +49,7 @@ const actions = {
     /**
      * 売上取消APIリクエスト
      */
-    cancel: async (context: any, salesId: number) => {
+    cancelSales: async (context: any, salesId: number) => {
         const data = {
             sales_id: salesId
         };

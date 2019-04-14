@@ -1,7 +1,7 @@
 <div class="daily-sales-item-area">
     <b-collapse class="card">
         <header class="card-header" slot="trigger" slot-scope="props" role="button">
-            <p class="card-header-title">
+            <p class="card-header-title" :class="{ 'has-text-danger': dailySales.is_cancel }">
                 {{ dailySales.sales_date }}
             </p>
             <a class="card-header-icon" @click="handleClickHeader()">
@@ -29,10 +29,34 @@
                             <div>{{ item.item_name }}</div>
                             <div class="has-text-right">{{ item.unit_price }}</div>
                         </td>
-                        <td class="has-text-right">{{ item.quantity }}</td>
-                        <td class="has-text-right">{{ item.unit_price * item.quantity }}</td>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                            {{ item.quantity }}
+                        </td>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                            {{ item.unit_price * item.quantity }}
+                        </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="has-text-right" colspan="2">合計</th>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                            {{ dailySales.total_price }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="has-text-right" colspan="2">値引</th>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                            {{ dailySales.discount }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="has-text-right" colspan="2">総合計</th>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                            {{ dailySales.grand_total_price }}
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </section>
     </b-collapse>
