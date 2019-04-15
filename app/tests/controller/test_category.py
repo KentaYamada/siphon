@@ -1,7 +1,8 @@
 import json
 import unittest
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlencode
 from app import startup_app
+from app.model.pgadapter import PgAdapter
 
 
 # constant
@@ -15,15 +16,39 @@ class TestCategoryApi(unittest.TestCase):
         app = startup_app()
         cls.client = app.test_client()
 
+    def tearDown(self):
+        query = """
+            TRUNCATE TABLE categories
+            RESTART IDENTITY;
+        """
+        db = PgAdapter()
+        db.execute(query)
+        db.commit()
+
     @classmethod
     def tearDownClass(cls):
         cls.client = None
 
     def test_index(self):
+        self.__init_data()
         res = TestCategoryApi.client.get(
             END_POINT,
             content_type=CONTENT_TYPE)
+        body = json.loads(res.data)
         self.assertEqual(200, res.status_code)
+        self.assertEquals(10, len(body['categories']))
+
+    def test_index_keyword_search(self):
+        self.__init_data()
+        query_string = urlencode({'q': 'セット'})
+        #todo: strict_slashes = false
+        url = '/api/categories?{0}'.format(query_string)
+        res = TestCategoryApi.client.get(
+            url,
+            content_type=CONTENT_TYPE)
+        body = json.loads(res.data)
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(2, len(body['categories']))
 
     def test_index_with_items(self):
         data = json.dumps({'with_items': True})
@@ -89,3 +114,8 @@ class TestCategoryApi(unittest.TestCase):
     def test_delete_ng(self):
         res = TestCategoryApi.client.delete(END_POINT)
         self.assertEqual(405, res.status_code)
+
+    def __init_data(self):
+        db = PgAdapter()
+        db.execute_proc('create_test_data_categories')
+        db.commit()

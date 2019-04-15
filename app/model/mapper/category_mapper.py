@@ -27,7 +27,7 @@ class CategoryMapper(BaseMapper):
         if option is None or not isinstance(option, CategorySearchOption):
             raise ValueError()
         try:
-            rows = self._db.find_proc('find_categories', (option.q,))
+            rows = self._db.find_proc('find_categories', [option.q])
             self._db.commit()
         except Exception as e:
             self._db.rollback()

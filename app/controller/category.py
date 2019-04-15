@@ -12,19 +12,20 @@ bp = Blueprint('category', __name__, url_prefix='/api/categories')
 @bp.route('/', methods=['GET'])
 def index():
     if request.args is not None:
-        option = CategorySearchOption(**request.args)
+        option = CategorySearchOption(
+            q=request.args.get('q', type=str),
+            with_items=request.args.get('with_items') == 'true'
+        )
     else:
         option = CategorySearchOption()
 
     mapper = CategoryMapper()
     categories = mapper.find(option)
-
     if len(categories) > 0 and option.with_items:
         item_option = ItemSearchOption()
         item_option.category_ids = (c['id'] for c in categories)
         item_mapper = ItemMapper()
         items = item_mapper.find_items_by_category_ids(item_option)
-
         if items is not None:
             for c in categories:
                 c.items = (item for item in items if item['category_id'] == c['id'])
