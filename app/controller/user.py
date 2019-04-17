@@ -35,7 +35,7 @@ def add():
         return res
 
     mapper = UserMapper()
-    saved = mapper.add(user)
+    saved = mapper.save(user)
 
     if saved:
         res.set_success_response(201)
@@ -57,7 +57,7 @@ def edit(id):
         return res
 
     mapper = UserMapper()
-    saved = mapper.edit(user)
+    saved = mapper.save(user)
 
     if saved:
         res.set_success_response(200, message='更新しました')

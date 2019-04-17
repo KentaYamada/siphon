@@ -11,6 +11,7 @@ class UserMapper(BaseMapper):
                 user.id,
                 user.name,
                 user.nickname,
+                user.email,
                 user.password
             )
             self._db.execute_proc('save_user', data)
@@ -23,81 +24,13 @@ class UserMapper(BaseMapper):
             saved = False
         return saved
 
-    def add(self, user):
-        if user is None:
-            raise ValueError()
-        if not isinstance(user, User):
-            raise ValueError()
-        query = """
-            INSERT INTO users (
-                name,
-                nickname,
-                email,
-                password
-            ) VALUES (
-                %s,
-                %s,
-                %s,
-                %s
-            );
-        """
-        data = (
-            user.name,
-            user.nickname,
-            user.email,
-            user.password
-        )
-        saved = False
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
-    def edit(self, user):
-        if user is None:
-            raise ValueError()
-        if not isinstance(user, User):
-            raise ValueError()
-        query = """
-            UPDATE users SET
-                name = %s,
-                nickname = %s,
-                email = %s,
-                password = %s
-            WHERE id = %s;
-        """
-        data = (
-            user.name,
-            user.nickname,
-            user.email,
-            user.password,
-            user.id
-        )
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
     def delete(self, id):
         if id is None or not isinstance(id, int):
             raise ValueError()
         if id <= 0:
             raise ValueError('Invalid id')
-        query = 'DELETE FROM users WHERE id = %s;'
         try:
-            self._db.execute(query, (id,))
+            self._db.execute_proc('delete_user', (id,))
             self._db.commit()
             deleted = True
         except Exception as e:

@@ -26,7 +26,7 @@ class TestUserMapper(unittest.TestCase):
             'test@email.com',
             'testtest'
         )
-        result = self.mapper.add(data)
+        result = self.mapper.save(data)
         self.assertTrue(result)
 
     def test_edit_ok(self):
@@ -38,7 +38,7 @@ class TestUserMapper(unittest.TestCase):
             'test@email.com',
             'testtest'
         )
-        result = self.mapper.add(data)
+        result = self.mapper.save(data)
         self.assertTrue(result)
 
     def test_delete_ok(self):
@@ -52,13 +52,9 @@ class TestUserMapper(unittest.TestCase):
             result = self.mapper.find(data)
             self.assertEqual(len(result), 3)
 
-    def test_add_ng_when_invalid_value(self):
+    def test_save_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
-            self.mapper.add(None)
-
-    def test_edit_ng_when_invalid_value(self):
-        with self.assertRaises(ValueError):
-            self.mapper.edit(None)
+            self.mapper.save(None)
 
     def test_delete_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
