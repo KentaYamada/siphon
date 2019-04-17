@@ -9,7 +9,10 @@ bp = Blueprint('item', __name__, url_prefix='/api/items')
 
 @bp.route('/', methods=['GET'])
 def index():
-    option = ItemSearchOption(**request.args)
+    option = ItemSearchOption()
+    if request.args is not None:
+        option.category = request.args.get('category_id', type=int)
+        option.q = request.args.get('q', type=str)
     mapper = ItemMapper()
     items = mapper.find(option)
     res = ResponseBody()
