@@ -14,9 +14,9 @@ BEGIN
         i.name,
         i.unit_price
     FROM items AS i
-    WHERE i.category_id = p_category_id
+    WHERE (i.category_id = p_category_id OR p_category_id IS NULL)
       AND (
         p_keyword IS NULL OR
         p_keyword = '' OR
-        p.name LIKE '%' || p_keyword || '%');
+        i.name LIKE '%' || p_keyword || '%');
 END $$;
