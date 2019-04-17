@@ -23,7 +23,10 @@
                                     v-model="option.q">
                             </div>
                             <div class="control">
-                                <button type="reset" class="button is-medium">
+                                <button
+                                    type="reset"
+                                    class="button is-medium"
+                                    @click="handleReset()">
                                     <i class="fa fa-times-circle"></i>
                                     クリア
                                 </button>
@@ -57,7 +60,6 @@
                     <tr>
                         <th class="has-text-centered name-col">名前</th>
                         <th class="has-text-centered nickname-col">ニックネーム</th>
-                        <th class="has-text-centered email-col">メールアドレス</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -73,7 +75,6 @@
                         <tr v-for="user in getUsers">
                             <td class="name-col">{{ user.name }}</td>
                             <td class="nickname-col">{{ user.nickname }}</td>
-                            <td class="email-col">{{ user.email }}</td>
                             <td class="has-text-centered buttons-col">
                                 <button
                                     type="button"
