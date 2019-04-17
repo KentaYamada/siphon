@@ -1,6 +1,6 @@
 from flask import request, Blueprint
 from app.controller.response import ResponseBody
-from app.model.user import User
+from app.model.user import User, UserSearchOption
 from app.model.mapper.user_mapper import UserMapper
 
 
@@ -9,8 +9,11 @@ bp = Blueprint('user', __name__, url_prefix='/api/users')
 
 @bp.route('/', methods=['GET'])
 def index():
+    option = UserSearchOption()
+    if request.args is not None:
+        option.q = request.args.get('q', type=str)
     mapper = UserMapper()
-    users = mapper.find_by()
+    users = mapper.find(option)
     res = ResponseBody()
     res.set_success_response(200, {'users': users})
     return res

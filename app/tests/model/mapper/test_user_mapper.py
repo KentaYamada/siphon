@@ -46,11 +46,17 @@ class TestUserMapper(unittest.TestCase):
         result = self.mapper.delete(1)
         self.assertTrue(result)
 
-    def test_find_by_ok(self):
-            self.__init_data()
-            data = UserSearchOption()
-            result = self.mapper.find(data)
-            self.assertEqual(len(result), 3)
+    def test_find_ok_when_no_condition(self):
+        self.__init_data()
+        data = UserSearchOption()
+        result = self.mapper.find(data)
+        self.assertEqual(len(result), 3)
+
+    def test_find_ok_when_keyword_search(self):
+        self.__init_data()
+        data = UserSearchOption(q='太郎')
+        result = self.mapper.find(data)
+        self.assertEqual(len(result), 1)
 
     def test_save_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
