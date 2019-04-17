@@ -8,22 +8,14 @@
     max-height: 332px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-
-    .table-contents {
-    }
 }
 
 .table-header,
 .scrollable-table-area {
     .name-col,
     .nickname-col {
-        width: 20%;
+        width: 30%;
     }
-
-    .email-col {
-        width: 25%;
-    }
-
     .buttons-col {
         .fas {
             margin-right: 6px;
