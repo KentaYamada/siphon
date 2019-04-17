@@ -7,15 +7,16 @@ from app.model.mapper.item_mapper import ItemMapper
 class TestItemMapper(unittest.TestCase):
     def setUp(self):
         self.mapper = ItemMapper()
+        self.db = PgAdapter()
 
     def tearDown(self):
-        db = PgAdapter()
+        self.db = PgAdapter()
         query = """
             TRUNCATE TABLE items
             RESTART IDENTITY;
         """
-        db.execute(query)
-        db.commit()
+        self.db.execute(query)
+        self.db.commit()
 
     def test_add_ok(self):
         data = Item(None, 1, 'test', 500)
@@ -37,12 +38,24 @@ class TestItemMapper(unittest.TestCase):
         self.__init_data()
         data = ItemSearchOption(1)
         result = self.mapper.find(data)
-        self.assertEqual(len(result), 30)
+        self.assertEqual(len(result), 3)
 
     def test_find_when_empty_row(self):
         data = ItemSearchOption(1, 'No data')
         result = self.mapper.find(data)
         self.assertEqual(len(result), 0)
+
+    def test_find_when_keyword_search(self):
+        self.__init_data()
+        data = ItemSearchOption(None, 'パスタ')
+        result = self.mapper.find(data)
+        self.assertEqual(len(result), 2)
+
+    def test_find_when_coplex_search(self):
+        self.__init_data()
+        data = ItemSearchOption(3, 'パスタ')
+        result = self.mapper.find(data)
+        self.assertEqual(len(result), 1)
 
     def test_save_ng_when_invalid_value(self):
         with self.assertRaises(ValueError):
@@ -58,8 +71,5 @@ class TestItemMapper(unittest.TestCase):
             self.mapper.delete(-1)
 
     def __init_data(self):
-        for i in range(1, 3):
-            for j in range(1, 31):
-                item = Item(j, i, 'Item{0}'.format(j), j*100)
-                self.mapper.add(item)
-                # self.mapper.save(item)
+        self.db.execute_proc('create_test_data_items')
+        self.db.commit()
