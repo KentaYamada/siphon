@@ -79,13 +79,35 @@ class ItemMapper(BaseMapper):
     def find(self, option):
         if option is None or not isinstance(option, ItemSearchOption):
             raise ValueError()
+        data = (option.category_id, option.q)
+        rows = []
         try:
-            data = (option.category_id, option.q)
             rows = self._db.find_proc('find_items', data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
+            # todo: logging
             print(e)
         field_list = ['id', 'category_id', 'name', 'unit_price']
-        items = [{f: row[f] for f in field_list} for row in rows]
+        items = self.format_rows(rows, field_list)
+        return items
+
+    def find_by_category_ids(self, option):
+        if option is None or not isinstance(option, ItemSearchOption):
+            raise ValueError()
+        if option.category_ids is None:
+            raise ValueError()
+        if len(option.category_ids) < 1:
+            return []
+        data = (option.category_ids,)
+        rows = []
+        try:
+            rows = self._db.find_proc('find_items_by_category_ids', data)
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            # todo: logging
+            print(e)
+        field_list = ['id', 'name', 'unit_price']
+        items = self.format_rows(rows, field_list)
         return items

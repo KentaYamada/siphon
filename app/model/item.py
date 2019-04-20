@@ -84,8 +84,10 @@ class ItemSearchOption:
     def __init__(
         self,
         category_id=None,
+        category_ids=None,
         q='',
         **kwargs
     ):
         self.category_id = category_id
+        self.category_ids = category_ids
         self.q = q
