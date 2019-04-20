@@ -26,15 +26,17 @@ class CategoryMapper(BaseMapper):
     def find(self, option):
         if option is None or not isinstance(option, CategorySearchOption):
             raise ValueError()
+        data = (option.q,)
+        rows = []
         try:
-            rows = self._db.find_proc('find_categories', [option.q])
+            rows = self._db.find_proc('find_categories', data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             # todo: logging
             print(e)
-        field_list = ['id', 'name']
-        categories = [{f: row[f] for f in field_list} for row in rows]
+        fields = ['id', 'name']
+        categories = self.format_rows(rows, fields)
         return categories
 
     def delete(self, id):

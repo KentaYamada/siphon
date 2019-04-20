@@ -5,10 +5,10 @@ class BaseMapper:
     def __init__(self):
         self._db = PgAdapter()
 
-    def format_rows(self, rows, field_list):
-        if rows is None or field_list is None:
+    def format_rows(self, rows, fields):
+        if rows is None or fields is None:
             raise ValueError('Invalid argument')
-        if not isinstance(field_list, list):
+        if not isinstance(fields, list):
             raise ValueError('Invalid data type. arg:fields_list')
-        rows = [{f: row[f] for f in field_list} for row in rows]
+        rows = [{f: row[f] for f in fields} for row in rows]
         return rows

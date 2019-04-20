@@ -27,39 +27,6 @@ class ItemMapper(BaseMapper):
             saved = False
         return saved
 
-    def add(self, item):
-        if item is None:
-            raise ValueError()
-        if not isinstance(item, Item):
-            raise ValueError()
-        query = """
-            INSERT INTO items (
-                category_id,
-                name,
-                unit_price
-            ) VALUES (
-                %s,
-                %s,
-                %s
-            );
-        """
-        data = (
-            item.category_id,
-            item.name,
-            item.unit_price
-        )
-        saved = False
-        try:
-            self._db.execute(query, data)
-            self._db.commit()
-            saved = True
-        except Exception as e:
-            self._db.rollback()
-            # todo: logging
-            print(e)
-            saved = False
-        return saved
-
     def delete(self, id):
         if id is None:
             raise ValueError()
@@ -88,8 +55,8 @@ class ItemMapper(BaseMapper):
             self._db.rollback()
             # todo: logging
             print(e)
-        field_list = ['id', 'category_id', 'name', 'unit_price']
-        items = self.format_rows(rows, field_list)
+        fields = ['id', 'category_id', 'name', 'unit_price']
+        items = self.format_rows(rows, fields)
         return items
 
     def find_by_category_ids(self, option):

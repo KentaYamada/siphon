@@ -43,12 +43,14 @@ class UserMapper(BaseMapper):
     def find(self, option):
         if option is None or not isinstance(option, UserSearchOption):
             raise ValueError()
+        data = (option.q,)
+        rows = []
         try:
-            rows = self._db.find_proc('find_users_by', (option.q,))
+            rows = self._db.find_proc('find_users_by', data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             print(e)
-        field_list = ['id', 'name', 'nickname']
-        users = [{f: row[f] for f in field_list} for row in rows]
+        fields = ['id', 'name', 'nickname']
+        users = self.format_rows(rows, fields)
         return users
