@@ -108,6 +108,6 @@ class ItemMapper(BaseMapper):
             self._db.rollback()
             # todo: logging
             print(e)
-        field_list = ['id', 'name', 'unit_price']
+        field_list = ['id', 'category_id', 'name', 'unit_price']
         items = self.format_rows(rows, field_list)
         return items
