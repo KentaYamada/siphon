@@ -5,6 +5,7 @@ import {
 } from 'vuex';
 import _ from 'lodash';
 import { AxiosResponse } from 'axios';
+import { Item } from '@/entity/item';
 
 export default Vue.extend({
     props: {
@@ -14,7 +15,7 @@ export default Vue.extend({
     },
     data() {
         return {
-            item: {},
+            item: {} as Item,
             errors: {}
         };
     },

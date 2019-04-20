@@ -54,6 +54,13 @@ export default Vue.extend({
             this.fetchItems(this.option);
         },
         /**
+         * 検索オプションクリア
+         */
+        handleClearSerachOption(): void {
+            this.$data.option.q = '';
+            this.$data.option.category_id = null;
+        },
+        /**
          * 商品新規登録
          */
         handleNew(): void {

@@ -45,6 +45,9 @@ export default Vue.extend({
         handleSearch(): void {
             this.fetchUsers(this.option);
         },
+        handleReset(): void {
+            this.$data.option.q = '';
+        },
         /**
          * ユーザー新規登録
          */

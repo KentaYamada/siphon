@@ -47,6 +47,12 @@ export default Vue.extend({
             this.fetchCategories(this.option);
         },
         /**
+         * 検索オプションクリア
+         */
+        handleClearSerachOption(): void {
+            this.$data.option.q = '';
+        },
+        /**
          * 商品カテゴリ新規作成
          */
         handleNew(): void {

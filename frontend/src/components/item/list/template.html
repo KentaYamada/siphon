@@ -37,13 +37,16 @@
                                         v-model="option.q">
                                 </div>
                                 <div class="control">
-                                    <button type="reset" class="button is-medium">
+                                    <button
+                                        type="reset"
+                                        class="button is-medium"
+                                        @click="handleClearSerachOption()">
                                         <i class="fas fa-times-circle"></i>
                                         クリア
                                     </button>
                                 </div>
                             </div>
-                            <div class="field is-grouped">
+                            <div class="field is-grouped is-grouped-right">
                                 <div class="control">
                                     <button
                                         type="button"

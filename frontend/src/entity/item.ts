@@ -29,5 +29,5 @@ export interface Item {
  */
 export interface ItemSearchOption {
     q: string;
-    category_id?: number;
+    category_id?: number | null;
 }

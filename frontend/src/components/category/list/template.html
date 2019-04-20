@@ -24,12 +24,15 @@
                                         v-model="option.q">
                                 </div>
                                 <div class="control">
-                                    <button type="reset" class="button is-medium">
+                                    <button
+                                        type="reset"
+                                        class="button is-medium"
+                                        @click="handleClearSerachOption()">
                                         <i class="fa fa-backspace"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="field is-grouped">
+                            <div class="field is-grouped is-grouped-right">
                                 <div class="control">
                                     <button
                                         type="button"
