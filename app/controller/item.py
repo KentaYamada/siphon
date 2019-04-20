@@ -11,7 +11,7 @@ bp = Blueprint('item', __name__, url_prefix='/api/items')
 def index():
     option = ItemSearchOption()
     if request.args is not None:
-        option.category = request.args.get('category_id', type=int)
+        option.category_id = request.args.get('category_id', type=int)
         option.q = request.args.get('q', type=str)
     mapper = ItemMapper()
     items = mapper.find(option)
