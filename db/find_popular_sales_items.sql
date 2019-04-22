@@ -20,5 +20,6 @@ BEGIN
         si.item_name
     ORDER BY
         rank_no ASC,
-        si.item_name ASC;
+        si.item_name ASC
+    LIMIT 10;
 END $$;
