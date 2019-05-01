@@ -2,7 +2,7 @@ import json
 import unittest
 # from urllib.parse import urljoin
 from app import startup_app
-
+from app.model.pgadapter import PgAdapter
 
 # constant
 CONTENT_TYPE = 'application/json'
@@ -10,6 +10,11 @@ END_POINT = '/api/cashier/'
 
 
 class TestCashierApi(unittest.TestCase):
+    def tearDown(self):
+        db = PgAdapter()
+        db.execute_proc('cleanup_sales')
+        db.commit()
+
     @classmethod
     def setUpClass(cls):
         app = startup_app()
