@@ -1,10 +1,14 @@
-import datetime
+from calendar import TextCalendar
 from app.model.sales import Sales
-from app.model.monthly_sales import MonthlySales
+from app.model.daily_sales import DailySalesSearchOption
+from app.model.monthly_sales import MonthlySalesSearchOption
 from app.model.mapper.base_mapper import BaseMapper
 
 
 class SalesMapper(BaseMapper):
+    SATURDAY = 5
+    SUNDAY = 6
+
     def __init__(self):
         super().__init__()
 
@@ -40,7 +44,10 @@ class SalesMapper(BaseMapper):
                     item.quantity,
                     item.subtotal
                 )
-                affected_row = self._db.execute_proc('save_sales_item', item_data)
+                affected_row = self._db.execute_proc(
+                    'save_sales_item',
+                    item_data
+                )
                 if affected_row < 1:
                     self._db.rollback()
                     return False
@@ -69,91 +76,81 @@ class SalesMapper(BaseMapper):
             saved = False
         return saved
 
-    def find_daily_sales(self, sales_date):
-        if sales_date is None or not isinstance(sales_date, datetime.datetime):
+    def find_daily_sales(self, option):
+        if option is None or not isinstance(option, DailySalesSearchOption):
             raise ValueError()
-        query = """
-            SELECT
-                id,
-                sales_date,
-                total_price,
-                CASE
-                    WHEN discount_price > 0 THEN
-                        discount_rate
-                    WHEN discount_rate > 0 THEN
-                        discount_rate
-                    ELSE
-                        NULL
-                END AS discount,
-                CASE
-                    WHEN discount_price > 0 THEN
-                        total_price - discount_price
-                    WHEN discount_rate > 0 THEN
-                        total_price * (1 - (discount_rate * 1.0) / 100)
-                    ELSE
-                        total_price
-                END AS proceeds
-            FROM sales
-            WHERE sales_date <= %s
-              AND sales_date < %s
-            ORDER BY sales_date ASC;
-        """
         data = (
+            option.sales_date,
+            option.start_time,
+            option.end_time
         )
-        rows = None
+        rows = []
         try:
-            rows = self._db.find(query, data)
+            rows = self._db.find_proc('find_daily_sales', data)
             self._db.commit()
         except Exception as e:
             self._db.rollback()
+            # todo: logging
             print(e)
-        if rows is None or len(rows) != 0:
-            rows = []
-        return rows
+        fields = [
+            'sales_date',
+            'sales_time',
+            'total_price',
+            'discount_mode',
+            'discount',
+            'deposit',
+            'grand_total'
+        ]
+        daily_sales = self.format_rows(rows, fields)
+        return daily_sales
 
-    def find_monthly_sales(self, year, month):
-        if year is None or not isinstance(year, int):
-            raise ValueError('Invalid data type: year')
-        if month is None or not isinstance(month, int):
-            raise ValueError('Invalid data type: month')
-        if month < 1 or month > 12:
-            raise ValueError('Invalid period of month')
-        query = """
-            SELECT
-                s.sales_date,
-                to_char(s.sales_date, 'DD') as sales_day,
-                SUM(
-                    CASE
-                      WHEN s.discount_price > 0 THEN
-                        s.total_price - s.discount_price
-                      WHEN s.discount_rate > 0 THEN
-                        s.total_price * (1 - (s.discount_rate * 1.0) / 100)
-                      ELSE
-                        s.total_price
-                    END
-                ) AS proceeds
-            FROM sales AS s
-            WHERE sales_date >= %s
-              AND sales_date < %s
-            GROUP BY s.sales_date
-            ORDER BY s.sales_date ASC;
-        """
-        data = (
-            datetime.datetime(year, month, 1, 0, 0, 0),
-            datetime.datetime(year, month+1, 1, 0, 0, 0)
-        )
-        rows = None
+    # def find_monthly_sales(self, option):
+    #     if option is None or not isinstance(option, MonthlySalesSearchOption):
+    #         raise ValueError()
+    #     data = (
+    #         option.sales_date_from,
+    #         option.sales_date_to
+    #     )
+    #     rows = []
+    #     try:
+    #         rows = self._db.find_proc('find_monthly_sales', data)
+    #         self._db.commit()
+    #     except Exception as e:
+    #         self._db.rollback()
+    #         # todo: logging
+    #         print(e)
+    #     fields = ['sales_date', 'sales_day', 'total_price']
+    #     rows = self.format_rows(rows, fields)
+    #     if len(rows) > 0:
+    #         rows = self.__format_calendar(rows)
+    #     return rows
 
-        try:
-            rows = self._db.find(query, data)
-            self._db.commit()
-        except Exception as e:
-            self._db.rollback()
-            print(e)
+    # def __format_calendar(self, year, month, rows):
+    #     """ カレンダー形式のレスポンスに整形 """
+    #     # 日曜始まり
+    #     cl = TextCalendar(firstweekday=6)
+    #     # 週単位での日付と曜日を取得
+    #     weeks = cl.monthdays2calendar(year, month)
+    #     res = []
 
-        rows = [MonthlySales(
-            row['sales_date'],
-            row['sales_day'],
-            row['proceeds'])
-            for row in rows]
-        return rows
+    #     for week in weeks:
+    #         week_data = []
+    #         for day in week:
+    #             current_date, weekday = day
+    #             data = next(
+    #                 (row for row in rows if row['sales_day'] == current_date),
+    #                 None
+    #             )
+    #             is_saturday = True if weekday == self.SATURDAY else False
+    #             is_sunday = True if weekday == self.SUNDAY else False
+    #             sales_date = data['sales_date'] if data is not None else None
+    #             total_price = data['total_price'] if data is not None else None
+    #             week_data.append({
+    #                 'sales_date': sales_date,
+    #                 'sales_day': current_date,
+    #                 'total_price': total_price,
+    #                 'is_saturday': is_saturday,
+    #                 'is_sunday': is_sunday
+    #             })
+    #         res.append(week_data)
+    #     return res
