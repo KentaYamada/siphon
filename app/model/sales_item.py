@@ -125,3 +125,9 @@ class SalesItem(BaseModel):
             super()._add_validation_error('subtotal', '小計の計算値がマッチしません')
             return False
         return True
+
+
+class PopularSalesItemSearchOption:
+    def __init__(self, start_date, end_date, **kwargs):
+        self.start_date = start_date
+        self.end_date = end_date

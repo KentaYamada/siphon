@@ -1,64 +1,68 @@
+from datetime import datetime, timedelta
 import unittest
 from app.model.pgadapter import PgAdapter
+from app.model.sales_item import PopularSalesItemSearchOption
 from app.model.mapper.sales_item_mapper import SalesItemMapper
 
 
 class TestSalesItemMapper(unittest.TestCase):
     def setUp(self):
         self.mapper = SalesItemMapper()
+        self.db = PgAdapter()
 
     def tearDown(self):
-        db = PgAdapter()
-        query = """
-            TRUNCATE TABLE sales_items
-            RESTART IDENTITY;
-        """
-        db.execute(query)
-        db.commit()
+        self.db.execute_proc('cleanup_sales')
+        self.db.commit()
 
-    def test_find_by_sales_ids_ok(self):
-        self.__init_sales_items()
-        result = self.mapper.find_by_sales_ids([1, 2])
-        self.assertEqual(len(result), 20)
+    def test_find_daily_sales_items(self):
+        self.__init_daily_sales_data()
+        rows = self.mapper.find_daily_sales_items([1, 3])
+        self.assertNotEquals(0, len(rows))
 
-    def test_find_by_sales_ids_when_empty_row(self):
-        result = self.mapper.find_by_sales_ids([1])
-        self.assertEqual(len(result), 0)
+    def test_find_daily_sales_items_when_empty_row(self):
+        rows = self.mapper.find_daily_sales_items([4])
+        self.assertEquals(0, len(rows))
 
-    def test_find_by_sales_ids(self):
+    def test_find_daily_sales_items_when_invalid_arg(self):
         with self.assertRaises(ValueError):
-            self.mapper.find_by_sales_ids(None)
-            self.mapper.find_by_sales_ids('1')
-            self.mapper.cancel([1, 2, 3, -1])
+            self.mapper.find_daily_sales_items(None)
+            self.mapper.find_daily_sales_items('')
+            self.mapper.find_daily_sales_items(1)
+            self.mapper.find_daily_sales_items(True)
 
-    def __init_sales_items(self):
-        query = """
-            INSERT INTO sales_items (
-                sales_id,
-                item_no,
-                item_name,
-                unit_price,
-                quantity,
-                subtotal
-            ) VALUES (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            );
-        """
-        items = []
-        for i in range(1, 3):
-            for j in range(1, 11):
-                item = (
-                    i,
-                    j,
-                    'Test item{0}'.format(j+1),
-                    j*100,
-                    1,
-                    j*100)
-                items.append(item)
-        self.mapper._db.bulk_insert(query, items)
-        self.mapper._db.commit()
+    def test_find_popular_items(self):
+        self.__init_popular_sales_items()
+        # todo: 月初、月末
+        today = datetime.today().date()
+        option = PopularSalesItemSearchOption(today, today)
+        result = self.mapper.find_popular_items(option)
+        self.assertNotEquals(0, len(result))
+
+    def test_find_popular_items_when_no_data(self):
+        today = datetime.today().date()
+        option = PopularSalesItemSearchOption(today, today)
+        result = self.mapper.find_popular_items(option)
+        self.assertEquals(0, len(result))
+
+    def test_find_popular_items_when_empty_row(self):
+        self.__init_popular_sales_items()
+        # todo: 未登録な日付
+        today = datetime.today().date() - timedelta(days=1)
+        option = PopularSalesItemSearchOption(today, today)
+        result = self.mapper.find_popular_items(option)
+        self.assertEquals(0, len(result))
+
+    def test_find_popular_items_when_invalid_arg(self):
+        with self.assertRaises(ValueError):
+            self.mapper.find_popular_items(None)
+            self.mapper.find_popular_items('')
+            self.mapper.find_popular_items(1)
+            self.mapper.find_popular_items(True)
+
+    def __init_daily_sales_data(self):
+        self.db.execute_proc('create_test_data_daily_sales_items')
+        self.db.commit()
+
+    def __init_popular_sales_items(self):
+        self.db.execute_proc('create_test_data_popular_sales_items')
+        self.db.commit()
