@@ -74,7 +74,6 @@ class TestSales(unittest.TestCase):
             self.sales.deposit = v
             is_valid = self.sales.is_valid()
             has_error = 'deposit' in self.sales.validation_errors.keys()
-            print(has_error)
             self.assertFalse(is_valid, 'error: {}'.format(v))
             self.assertTrue(has_error)
 
