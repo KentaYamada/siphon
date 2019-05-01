@@ -179,8 +179,3 @@ class Sales(BaseModel):
             )
             return False
         return True
-
-    def save(self):
-        if not self.is_valid():
-            return False
-        return True

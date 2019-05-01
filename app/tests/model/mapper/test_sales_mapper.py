@@ -3,27 +3,18 @@ from datetime import datetime
 from app.model.pgadapter import PgAdapter
 from app.model.sales import Sales
 from app.model.sales_item import SalesItem
+from app.model.daily_sales import DailySalesSearchOption
 from app.model.mapper.sales_mapper import SalesMapper
 
 
 class TestSalesMapper(unittest.TestCase):
     def setUp(self):
         self.mapper = SalesMapper()
+        self.db = PgAdapter()
 
     def tearDown(self):
-        db = PgAdapter()
-        query = """
-            TRUNCATE TABLE sales
-            RESTART IDENTITY;
-        """
-        db.execute(query)
-        db.commit()
-        query2 = """
-            TRUNCATE TABLE sales_items
-            RESTART IDENTITY;
-        """
-        db.execute(query2)
-        db.commit()
+        self.db.execute_proc('cleanup_sales')
+        self.db.commit()
 
     def test_add_ok(self):
         items = self.__get_sales_items()
