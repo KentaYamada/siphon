@@ -57,6 +57,7 @@
                         <tr>
                             <th></th>
                             <th class="has-text-centered">商品</th>
+                            <th class="has-text-centered">売上数</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,8 +65,9 @@
                             <td colspan="7" class="has-text-centered">表示するデータがありません</td>
                         </tr>
                         <tr v-for="item in getPopularItems">
-                            <th class="has-text-centered">{{ item.rank }}</th>
+                            <th class="has-text-centered">{{ item.rank_no }}</th>
                             <td>{{ item.item_name }}</td>
+                            <td class="has-text-centered">{{ item.quantity }}</td>
                         </tr>
                     </tbody>
                 </table>

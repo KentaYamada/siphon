@@ -27,12 +27,9 @@ export default Vue.extend({
             'hasMonthlySales',
             'hasPopularItems'
         ]),
-        /**
-         * 売上年月
-         */
         currentMonth(): string {
             return moment(this.option.target).format('YYYY年MM月');
-        }
+        },
     },
     methods: {
         ...mapActions('dashboard', [
@@ -44,7 +41,6 @@ export default Vue.extend({
         handlePrevMonth(): void {
             this.option.target = moment(this.option.target).add(-1, 'M').toDate();
             this.fetchDashboardData(this.option);
-
         },
         /**
          * 次年月のデータ取得
