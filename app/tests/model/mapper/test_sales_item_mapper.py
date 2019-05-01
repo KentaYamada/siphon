@@ -1,11 +1,12 @@
+from calendar import monthrange
 from datetime import datetime, timedelta
-import unittest
+from unittest import TestCase
 from app.model.pgadapter import PgAdapter
 from app.model.sales_item import PopularSalesItemSearchOption
 from app.model.mapper.sales_item_mapper import SalesItemMapper
 
 
-class TestSalesItemMapper(unittest.TestCase):
+class TestSalesItemMapper(TestCase):
     def setUp(self):
         self.mapper = SalesItemMapper()
         self.db = PgAdapter()
@@ -34,7 +35,11 @@ class TestSalesItemMapper(unittest.TestCase):
         self.__init_popular_sales_items()
         # todo: 月初、月末
         today = datetime.today().date()
-        option = PopularSalesItemSearchOption(today, today)
+        _, last = monthrange(today.year, today.month)
+        start_date = datetime(today.year, today.month, 1).date()
+        end_date = datetime(today.year, today.month, last).date()
+        # option = PopularSalesItemSearchOption(today, today)
+        option = PopularSalesItemSearchOption(start_date, end_date)
         result = self.mapper.find_popular_items(option)
         self.assertNotEquals(0, len(result))
 

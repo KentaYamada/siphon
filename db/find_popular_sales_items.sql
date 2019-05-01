@@ -14,8 +14,8 @@ BEGIN
         SUM(si.quantity) AS quantity
     FROM sales AS s
     INNER JOIN sales_items AS si ON s.id = si.sales_id
-    WHERE s.sales_date <= p_start_date
-      AND s.sales_date >= p_end_date
+    WHERE s.sales_date >= p_start_date
+      AND s.sales_date <= p_end_date
     GROUP BY
         si.item_name
     ORDER BY
