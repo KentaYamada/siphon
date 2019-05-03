@@ -33,12 +33,10 @@ class TestSalesItemMapper(TestCase):
 
     def test_find_popular_items(self):
         self.__init_popular_sales_items()
-        # todo: 月初、月末
         today = datetime.today().date()
         _, last = monthrange(today.year, today.month)
         start_date = datetime(today.year, today.month, 1).date()
         end_date = datetime(today.year, today.month, last).date()
-        # option = PopularSalesItemSearchOption(today, today)
         option = PopularSalesItemSearchOption(start_date, end_date)
         result = self.mapper.find_popular_items(option)
         self.assertNotEquals(0, len(result))
