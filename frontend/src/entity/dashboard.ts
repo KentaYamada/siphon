@@ -12,7 +12,7 @@ export interface MonthlySales {
  * 人気商品
  */
 export interface PopularItem {
-    rank: number;
+    rank_no: number;
     item_name: string;
 }
 
