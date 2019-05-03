@@ -2,11 +2,6 @@
   <div id="app">
       <navigation/>
       <router-view/>
-      <footer class="footer">
-          <div class="content has-text-centered">
-              Siphon ~ cafe de GAMOYON ~ 
-          </div>
-      </footer>
   </div>
 </template>
 
