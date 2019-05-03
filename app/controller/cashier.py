@@ -20,8 +20,6 @@ def index():
     for category in categories:
         data = [i for i in items if category['id'] == i['category_id']]
         category['items'] = data
-    # 5x2の二次元配列へ変換
-    # categories = _to_dimention_array(categories, 2, 5)
     res = ResponseBody()
     res.set_success_response(200, {'categories': categories})
     return res
@@ -92,26 +90,4 @@ def _get_items(categories):
             items += registered_items
         else:
             c['disabled'] = True
-    # 1カテゴリあたり登録件数が30件未満の場合は、空データで埋め合わせ
-    # for c in categories:
-    #     registered_items = [r for r in rows if c['id'] == r['category_id']]
-    #     unregist_count = ItemMapper.MAX_ADDABLE_DATA - len(registered_items)
-    #     for i in range(0, unregist_count):
-    #         registered_items.append({
-    #             'id': None,
-    #             'category_id': c['id'],
-    #             'name': '',
-    #             'unit_price': None
-    #         })
-    #     items += registered_items
     return items
-
-
-def _to_dimention_array(arr, row, col):
-    """ 一次元配列から二次元配列へ変換 """
-    res = []
-    offset = 0
-    for i in range(0, row):
-        res.append(arr[offset:col+offset])
-        offset += col
-    return res
