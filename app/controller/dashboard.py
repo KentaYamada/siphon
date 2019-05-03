@@ -1,8 +1,9 @@
 from datetime import datetime
-from calendar import monthrange
+from calendar import monthrange, TextCalendar
 from flask import Blueprint
 from app.controller.response import ResponseBody
 from app.model.sales_item import PopularSalesItemSearchOption
+from app.model.monthly_sales import MonthlySalesSearchOption
 from app.model.mapper.sales_mapper import SalesMapper
 from app.model.mapper.sales_item_mapper import SalesItemMapper
 
@@ -28,11 +29,18 @@ def index(year, month):
 
 
 def __get_monthly_sales(year, month):
-    return []
+    # 月末日取得
+    _, last = monthrange(year, month)
+    option = MonthlySalesSearchOption(
+        sales_date_from=datetime(year, month, 1).date(),
+        sales_date_to=datetime(year, month, last).date()
+    )
+    mapper = SalesMapper()
+    return mapper.find_monthly_sales(year, month, option)
 
 
 def __get_popular_items(year, month):
-    # 月末/月初
+    # 月末日取得
     _, last = monthrange(year, month)
     option = PopularSalesItemSearchOption(
         start_date=datetime(year, month, 1).date(),

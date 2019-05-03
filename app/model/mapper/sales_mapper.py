@@ -1,3 +1,4 @@
+from datetime import datetime
 from calendar import TextCalendar
 from app.model.sales import Sales
 from app.model.daily_sales import DailySalesSearchOption
@@ -104,53 +105,53 @@ class SalesMapper(BaseMapper):
         daily_sales = self.format_rows(rows, fields)
         return daily_sales
 
-    # def find_monthly_sales(self, option):
-    #     if option is None or not isinstance(option, MonthlySalesSearchOption):
-    #         raise ValueError()
-    #     data = (
-    #         option.sales_date_from,
-    #         option.sales_date_to
-    #     )
-    #     rows = []
-    #     try:
-    #         rows = self._db.find_proc('find_monthly_sales', data)
-    #         self._db.commit()
-    #     except Exception as e:
-    #         self._db.rollback()
-    #         # todo: logging
-    #         print(e)
-    #     fields = ['sales_date', 'sales_day', 'total_price']
-    #     rows = self.format_rows(rows, fields)
-    #     if len(rows) > 0:
-    #         rows = self.__format_calendar(rows)
-    #     return rows
+    def find_monthly_sales(self, year, month, option):
+        if option is None or not isinstance(option, MonthlySalesSearchOption):
+            raise ValueError()
+        data = (
+            option.sales_date_from,
+            option.sales_date_to
+        )
+        rows = []
+        try:
+            rows = self._db.find_proc('find_monthly_sales', data)
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            # todo: logging
+            print(e)
+        fields = ['sales_date', 'sales_day', 'total_price']
+        rows = self.format_rows(rows, fields)
+        if len(rows) > 0:
+            rows = self.__format_calendar(year, month, rows)
+        return rows
 
-    # def __format_calendar(self, year, month, rows):
-    #     """ カレンダー形式のレスポンスに整形 """
-    #     # 日曜始まり
-    #     cl = TextCalendar(firstweekday=6)
-    #     # 週単位での日付と曜日を取得
-    #     weeks = cl.monthdays2calendar(year, month)
-    #     res = []
+    def __format_calendar(self, year, month, rows):
+        """ カレンダー形式のレスポンスに整形 """
+        # 日曜始まり
+        cl = TextCalendar(firstweekday=6)
+        # 週単位での日付と曜日を取得
+        weeks = cl.monthdays2calendar(year, month)
+        res = []
 
-    #     for week in weeks:
-    #         week_data = []
-    #         for day in week:
-    #             current_date, weekday = day
-    #             data = next(
-    #                 (row for row in rows if row['sales_day'] == current_date),
-    #                 None
-    #             )
-    #             is_saturday = True if weekday == self.SATURDAY else False
-    #             is_sunday = True if weekday == self.SUNDAY else False
-    #             sales_date = data['sales_date'] if data is not None else None
-    #             total_price = data['total_price'] if data is not None else None
-    #             week_data.append({
-    #                 'sales_date': sales_date,
-    #                 'sales_day': current_date,
-    #                 'total_price': total_price,
-    #                 'is_saturday': is_saturday,
-    #                 'is_sunday': is_sunday
-    #             })
-    #         res.append(week_data)
-    #     return res
+        for week in weeks:
+            week_data = []
+            for day in week:
+                current_date, weekday = day
+                data = next(
+                    (row for row in rows if row['sales_day'] == current_date),
+                    None
+                )
+                is_saturday = True if weekday == self.SATURDAY else False
+                is_sunday = True if weekday == self.SUNDAY else False
+                sales_date = data['sales_date'].strftime('%Y-%m-%d') if data is not None else None
+                total_price = int(data['total_price']) if data is not None else None
+                week_data.append({
+                    'sales_date': current_date,
+                    'amount': total_price,
+                    'is_saturday': is_saturday,
+                    'is_holiday': is_sunday,
+                    'daily_sales_url': ''
+                })
+            res.append(week_data)
+        return res

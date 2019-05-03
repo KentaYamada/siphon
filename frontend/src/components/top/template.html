@@ -37,13 +37,13 @@
                             <td colspan="7" class="has-text-centered">表示するデータがありません</td>
                         </tr>
                         <tr v-for="(week, index) in getMonthlySales">
-                            <td class="has-text-centered" v-for="item in week">
-                                <a href="#" class="day-link">
+                            <td class="has-text-centered" v-for="day in week">
+                                <a href="#" class="day-link" v-if="day.sales_date != 0">
                                     <div class="has-text-weight-bold"
-                                        v-bind:class="{ 'has-text-danger': item.is_holiday, 'has-text-info': item.is_satarday }">
-                                        {{ item.sales_date }}
+                                        v-bind:class="{ 'has-text-danger': day.is_holiday, 'has-text-info': day.is_saturday }">
+                                        {{ day.sales_date }}
                                     </div>
-                                    <div>{{ item.amount | numberWithDelimiter }}</div>
+                                    <div>{{ day.amount | numberWithDelimiter }}</div>
                                 </a>
                             </td>
                         </tr>
@@ -51,7 +51,7 @@
                 </table>
             </div>
             <div class="column">
-                <h4 class="has-text-centered is-size-4">人気商品Top10</h4>
+                <h4 class="has-text-centered is-size-4">人気商品トップ10</h4>
                 <table class="table is-bordered is-fullwidth">
                     <thead>
                         <tr>

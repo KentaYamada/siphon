@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import _ from 'lodash';
 import moment from 'moment';
 import {
     mapActions,
@@ -52,9 +53,10 @@ export default Vue.extend({
     },
     filters: {
         numberWithDelimiter(value: number): string {
-            if (!value) {
-                return '0';
+            if (_.isNull(value)) {
+                return '-'
             }
+
             return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
         }
     }

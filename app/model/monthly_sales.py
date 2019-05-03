@@ -35,3 +35,9 @@ class MonthlySales():
     def __get_weekday(cls, target_date):
         weekday = target_date.weekday()
         return MonthlySales.WEEKDAY[weekday]
+
+
+class MonthlySalesSearchOption:
+    def __init__(self, sales_date_from, sales_date_to):
+        self.sales_date_from = sales_date_from
+        self.sales_date_to = sales_date_to
