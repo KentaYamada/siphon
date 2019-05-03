@@ -8,12 +8,14 @@ import { MonthlySales, PopularItem } from '@/entity/dashboard';
 
 /** Auth state */
 export interface AuthState {
-    auth: Authrication
+    auth: Authrication;
 }
 
 /** Cashier state */
 export interface CashierState {
-    sales: Sales
+    sales: Sales;
+    categories: Category[];
+    items: Item[];
 }
 
 /** Category state */
@@ -29,7 +31,7 @@ export interface DailySalesState {
 /** Dashboard state */
 export interface DashboardState {
     monthly_sales: MonthlySales[];
-    popular_items: PopularItem[]
+    popular_items: PopularItem[];
 }
 
 /** Item state */

@@ -11,8 +11,8 @@ class Sales(BaseModel):
         total_price=None,
         discount_price=None,
         discount_rate=None,
-        inclusive_tax=None,
-        exclusive_tax=None,
+        inclusive_tax=0,
+        exclusive_tax=0,
         deposit=None,
         items=None,
         **kwargs

@@ -1,9 +1,12 @@
+import Vue from 'vue';
 import _ from 'lodash';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Sales, DISCOUNT_TYPES } from '@/entity/sales';
 import SalesItem from '@/entity/sales_item';
 import { Item } from '@/entity/item';
 import { CashierState } from '@/store/store_types';
+import { Category } from '@/entity/category';
+import category from './category';
 
 
 const ROOT_URL = '/api/cashier/';
@@ -15,7 +18,9 @@ const state: CashierState = {
         discount_rate: 0,
         deposit: 0,
         items: []
-    } as Sales
+    } as Sales,
+    categories: [],
+    items: []
 };
 
 const mutations = {
@@ -32,7 +37,27 @@ const mutations = {
         } as Sales;
     },
     /**
+     * 商品カテゴリセット
+     */
+    initCategories: (state: CashierState, categories: Category[]) => {
+        state.categories = categories;
+    },
+    /**
+     * 商品データセット
+     */
+    setItems: (state: CashierState, categoryId?: number) => {
+        const category = _.find(state.categories, (category: Category) => {
+            return category.id === categoryId;
+        });
+        const items = _.isUndefined(category) ? [] : category.items;
+
+        Vue.set(state, 'items', items);
+    },
+    /**
      * 商品追加
+     * 
+     * @param {CashierState} state
+     * @param {Item} selectedItem
      */
     addItem: (state: CashierState, selectedItem: Item) =>{
         const index = _.findIndex(state.sales.items, (item: SalesItem) => {
@@ -61,6 +86,7 @@ const mutations = {
     },
     /**
      * 商品削減
+     * 
      * @param {CashierState} state
      * @param {string} itemName
      */
@@ -88,6 +114,7 @@ const mutations = {
     },
     /**
      * 商品削除
+     * 
      * @param {CashierState} state 
      * @param {number} index
      */
@@ -153,9 +180,46 @@ const getters = {
     hasItems: (state: CashierState) => {
         return state.sales.items.length > 0;
     },
+    /**
+     * 商品選択データ取得
+     */
+    getSelectionItems: (state: CashierState) => {
+        return state.items;
+    },
+    /**
+     * 商品カテゴリ選択データ取得
+     */
+    getSelectionPanelData: (state: CashierState) => {
+        // 2 x 5の二次元配列にする
+        const row = 2;
+        const col = 5;
+        let categories = [];
+        let offset = 0;
+
+        for (let i = 0; i< row; i++) {
+            categories.push(_.slice(state.categories, offset, col+offset));
+            offset += col;
+        }
+
+        return categories;
+    }
 };
 
 export const actions = {
+    /**
+     * 商品選択で使うデータ取得
+     */
+    fetchSelectionItems: async (context: any) => {
+        return await axios.get(ROOT_URL)
+            .then((response: AxiosResponse<any>) => {
+                const categories = response.data.categories as Category[];
+                context.commit('initCategories', categories);
+
+                if (categories.length > 0) {
+                    context.commit('setItems', categories[0].id);
+                }
+            });
+    },
     /**
      * 売上登録
      * @param {any} context

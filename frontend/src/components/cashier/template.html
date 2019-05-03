@@ -114,24 +114,17 @@
             </div>
             <div class="column">
                 <nav class="panel">
-                    <p class="panel-tabs">
-                        <a class="is-active">Category 1</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
-                    </p>
-                    <p class="panel-tabs">
-                        <a>Category 1</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
-                        <a>Category X</a>
+                    <p class="panel-tabs" v-for="categories in getSelectionPanelData">
+                        <a
+                            v-for="category in categories"
+                            @click="handleSwitchItems(category.id)">
+                            {{ category.name }}
+                        </a>
                     </p>
                     <div class="panel-block">
                         <div class="scrollable-items-area">
                             <ul class="item-group">
-                                <li class="item" v-for="item in items">
+                                <li class="item" v-for="item in getSelectionItems">
                                     <div>
                                         {{ item.name }} (単価: {{ item.unit_price | numberWithDelimiter }})
                                     </div>

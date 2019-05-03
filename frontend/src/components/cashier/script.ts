@@ -5,22 +5,16 @@ import {
     mapMutations
 } from 'vuex';
 import _ from 'lodash';
-import { AxiosResponse } from 'axios';
 import { DISCOUNT_TYPES } from '@/entity/sales';
 import SalesItem  from '@/entity/sales_item';
-import { getDummyCashierPanel } from '@/entity/category';
 import { Item } from '@/entity/item';
 
 /**
  * 初期データ取得
  */
 const defaultData = (): any => {
-    const categories = getDummyCashierPanel();
-
     return {
-        categories: [],
         errors: {},
-        items: categories[0].items,
         saving: false,
         discountMode: DISCOUNT_TYPES.PRICE,
     };
@@ -32,17 +26,16 @@ export default Vue.extend({
         return _.extend({},  data);
     },
     mounted() {
-        this.fetchCategories();
+        this.fetchSelectionItems();
     },
     computed: {
         ...mapGetters('cashier', [
             'getSales',
-            'hasItems',
             'getCharge',
-            'getGrandTotalPrice'
-        ]),
-        ...mapGetters('category', [
-            'getCategories'
+            'getGrandTotalPrice',
+            'getSelectionItems',
+            'getSelectionPanelData',
+            'hasItems'
         ]),
         /**
          * 総合計
@@ -84,16 +77,24 @@ export default Vue.extend({
             'reduceItem',
             'deleteItem',
             'resetDiscountPrice',
-            'resetDiscountRate'
+            'resetDiscountRate',
+            'setItems'
         ]),
         ...mapActions('cashier', [
+            'fetchSelectionItems',
             'save',
         ]),
-        ...mapActions('category', [
-            'fetchCategories',
-        ]),
+        /**
+         * 商品カテゴリにひもづく商品表示
+         * 
+         * @param {number} categoryId
+         */
+        handleSwitchItems(categoryId: number): void {
+            this.setItems(categoryId);
+        },
         /**
          * 明細データ作成 or 数量追加
+         * 
          * @param {Item} item
          */
         handleIncreaseItem(item: Item): void {
@@ -102,17 +103,21 @@ export default Vue.extend({
         /**
          * 明細データ削除 or 数量を減らす
          *
+         * @param {string} itemName
          */
         handleDecreaseItem(itemName: string): void {
             this.reduceItem(itemName);
         },
         /**
          * 明細データ削除
+         * 
+         * @param {SalesItem} salesItem
+         * @param {number} index
          */
         handleDeleteItem(salesItem: SalesItem, index: number): void {
             this.$dialog.confirm({
                 title: '明細データ削除',
-                message: `${salesItem.item_name}を削除します。よろしいですか？`,
+                message: `『${salesItem.item_name}』を削除します。よろしいですか？`,
                 confirmText: '削除',
                 cancelText: 'キャンセル',
                 hasIcon: true,
@@ -169,7 +174,7 @@ export default Vue.extend({
             this.saving = true;
 
             this.save()
-                .then((response: AxiosResponse<any>) => {
+                .then(() => {
                     this.$toast.open({
                         message: '売上登録しました',
                         type: 'is-success'
@@ -201,6 +206,7 @@ export default Vue.extend({
         },
         /**
          * 明細データ削除確認画面表示
+         * 
          * @param {string} item_name
          * @param {number} index
          */
