@@ -65,7 +65,7 @@ const actions = {
     fetchDashboardData: async (context: any, option: DashboardSearchOption) => {
         const momentDate = moment(option.target);
         const year = momentDate.year();
-        const month = momentDate.month();
+        const month = momentDate.month()+1;
         const url = `${ROOT_URL}/${year}/${month}`;
 
         return await axios.get(url).then((response: AxiosResponse<any>) => {
