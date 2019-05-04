@@ -14,8 +14,8 @@ export interface Menu {
  * メニュー取得
  */
 export function getMenus(): Menu[] {
-    const today = moment();
-    const dailySalesUrl = `/sales/daily/${today.year()}/${today.month()+1}/${today.date()}`;
+    const today = moment().format('YYYY-MM-DD');
+    const dailySalesUrl = `/sales/daily?sales_date=${today}`;
 
     // 売上メニュー
     const salesMenu: Menu = {

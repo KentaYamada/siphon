@@ -38,13 +38,17 @@
                         </tr>
                         <tr v-for="(week, index) in getMonthlySales">
                             <td class="has-text-centered" v-for="day in week">
-                                <a href="#" class="day-link" v-if="day.sales_date != 0">
+                                <router-link
+                                    class="day-link"
+                                    :key="index"
+                                    :to="{ path: '/sales/daily' , query: { sales_day: day.sales_day }}"
+                                    v-if="day.sales_date != 0">
                                     <div class="has-text-weight-bold"
                                         v-bind:class="{ 'has-text-danger': day.is_holiday, 'has-text-info': day.is_saturday }">
                                         {{ day.sales_date }}
                                     </div>
                                     <div>{{ day.amount | numberWithDelimiter }}</div>
-                                </a>
+                                </router-link>
                             </td>
                         </tr>
                     </tbody>

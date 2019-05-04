@@ -2,7 +2,8 @@
  * 月間売上
  */
 export interface MonthlySales {
-    sales_date: Date | null;
+    sales_date: number;
+    sales_day: Date | null;
     amount: number | null;
     is_holiday: boolean;
     is_satarday: boolean;
