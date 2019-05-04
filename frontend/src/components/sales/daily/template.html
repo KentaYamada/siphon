@@ -18,14 +18,16 @@
                                 <div class="control">
                                     <b-datepicker
                                         placeholder="売上日"
-                                        icon="fas fa-calendar-day">
+                                        icon="fas fa-calendar-day"
+                                        >
                                     </b-datepicker>
                                 </div>
                                 <div class="control">
                                     <b-timepicker
                                         placeholder=""
                                         icon=""
-                                        editable>
+                                        editable
+                                        v-model="option.time_from">
                                     </b-timepicker>
                                 </div>
                                 <span>〜</span>
@@ -33,7 +35,8 @@
                                     <b-timepicker
                                         placeholder=""
                                         icon=""
-                                        editable>
+                                        editable
+                                        v-model="option.time_to">
                                     </b-timepicker>
                                 </div>
                             </div>

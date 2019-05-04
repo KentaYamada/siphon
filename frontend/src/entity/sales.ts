@@ -5,7 +5,7 @@ import SalesItem from '@/entity/sales_item';
  */
 export const enum DISCOUNT_TYPES {
     // 値引額
-    PRICE,
+    PRICE = 1,
     // 値引率
     RATE
 };

@@ -1,11 +1,11 @@
 <div class="daily-sales-item-area">
     <div class="card">
         <header class="card-header">
-            <p class="card-header-title">
+            <p class="card-header-title" :class="{ 'has-text-danger': dailySales.is_cancel }">
                 {{ dailySales.sales_date | concatDateTime(dailySales.sales_time) }}
             </p>
             <div class="card-header-icon">
-                <a href="#" class="has-text-danger" @click="handleCancel()">
+                <a href="#" class="has-text-danger" @click="handleCancel()" v-if="!dailySales.is_cancel">
                     <i class="fas fa-minus-circle"></i>
                     取消
                 </a>
@@ -42,9 +42,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="has-text-right" colspan="2">値引</th>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
-                            {{ dailySales.discount }}
+                        <th class="has-text-right" colspan="2">値引{{ discountUnit  }}</th>
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.discount > 0 }">
+                            {{ dailySales.discount | formatDiscount(dailySales.discount_mode) }}
                         </td>
                     </tr>
                     <tr>

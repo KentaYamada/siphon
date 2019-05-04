@@ -107,6 +107,8 @@ class SalesMapper(BaseMapper):
             'grand_total'
         ]
         daily_sales = self.format_rows(rows, fields)
+        for s in daily_sales:
+            s['is_cancel'] = True if s['grand_total'] < 0 else False
         return daily_sales
 
     def find_monthly_sales(self, year, month, option):

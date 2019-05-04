@@ -2,13 +2,13 @@ import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { ToastConfig } from 'buefy/types/components';
 import { DailySales } from '@/entity/daily_sales';
-
+import { DISCOUNT_TYPES } from '@/entity/sales';
 
 export default Vue.extend({
     data() {
         return {
-            isOpen: false,
-        };
+            isOpen: true
+        }
     },
     template: '<daily-sales-item/>',
     props: {
@@ -16,23 +16,36 @@ export default Vue.extend({
             required: true
         }
     },
+    computed: {
+        discountUnit(): string {
+            let unit_text = '';
+
+            switch(this.dailySales.discount_mode) {
+                case DISCOUNT_TYPES.PRICE:
+                    unit_text = '(円)';
+                break;
+                case DISCOUNT_TYPES.RATE:
+                    unit_text = '(％)';
+                break;
+                default:
+                    // Do nothing
+                break;
+            }
+            return unit_text;
+        }
+    },
     methods: {
         ...mapActions('daily_sales', [
             'cancelSales'
         ]),
-        handleClickHeader(): void {
-            this.isOpen = !this.isOpen;
-        },
         /**
          * 売上取消
          */
         handleCancel(): void {
             const message = `
             <div>売上を取り消します。よろしいですか？</div>
-            <small>Note: 取り消したデータを差し戻すことはできません</small>
-            `;
+            <small>注: 取り消したデータを差し戻すことはできません</small>`;
 
-            // todo: callback
             this.$dialog.confirm({
                 title: '売上取消',
                 message: message,
@@ -41,7 +54,7 @@ export default Vue.extend({
                 hasIcon: true,
                 type: 'is-danger',
                 onConfirm: () => {
-                    this._cancel((<DailySales>this.dailySales).sales_id);
+                    this._cancel((<DailySales>this.dailySales).id);
                 }
             });
         },
@@ -66,6 +79,18 @@ export default Vue.extend({
                     };
                     this.$toast.open(option);
                 });
+        }
+    },
+    filters: {
+        concatDateTime(date: string, time: string): string {
+            return `${date} ${time}`;
+        },
+        formatDiscount (value: number, mode: number): number {
+            if (mode === DISCOUNT_TYPES.PRICE) {
+                value *= -1;
+            }
+
+            return value;
         }
     }
 });

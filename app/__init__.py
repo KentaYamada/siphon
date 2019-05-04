@@ -4,6 +4,7 @@ from app.controller import category
 from app.controller import daily_sales
 from app.controller import dashboard
 from app.controller import item
+from app.controller import sales
 from app.controller import user
 from app.controller import view
 
@@ -19,6 +20,7 @@ def startup_app():
         daily_sales.bp,
         dashboard.bp,
         item.bp,
+        sales.bp,
         user.bp,
         view.bp
     ]
