@@ -15,7 +15,7 @@ export interface DailySales extends Sales {
  * 日次売上検索オプション
  */
 export interface DailySalesSearchOption {
-    sales_date?: Date | null,
+    sales_date?: string,
     time_from?: string,
     time_to?: string,
     q?: string

@@ -58,7 +58,7 @@
             </b-collapse>
             <div class="daily-sales-items">
                 <daily-sales-item
-                    v-for="item in dailySales"
+                    v-for="item in getDailySales"
                     :key="item.sales_id"
                     :dailySales="item" />
             </div>

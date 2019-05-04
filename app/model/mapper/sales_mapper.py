@@ -93,7 +93,11 @@ class SalesMapper(BaseMapper):
             self._db.rollback()
             # todo: logging
             print(e)
+        for row in rows:
+            row['sales_date'] = row['sales_date'].strftime('%Y年%m月%d日')
+            row['sales_time'] = row['sales_time'].strftime('%H:%M:%S')
         fields = [
+            'id',
             'sales_date',
             'sales_time',
             'total_price',
@@ -144,10 +148,14 @@ class SalesMapper(BaseMapper):
                 )
                 is_saturday = True if weekday == self.SATURDAY else False
                 is_sunday = True if weekday == self.SUNDAY else False
-                sales_date = data['sales_date'].strftime('%Y-%m-%d') if data is not None else None
-                total_price = int(data['total_price']) if data is not None else None
+                sales_day = None
+                total_price = None
+                if data is not None:
+                    sales_day = data['sales_date'].strftime('%Y-%m-%d')
+                    total_price = int(data['total_price'])
                 week_data.append({
                     'sales_date': current_date,
+                    'sales_day': sales_day,
                     'amount': total_price,
                     'is_saturday': is_saturday,
                     'is_holiday': is_sunday,

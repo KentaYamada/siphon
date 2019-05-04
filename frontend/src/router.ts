@@ -45,7 +45,7 @@ const router = new Router({
       component: Cashier,
     },
     {
-      path: '/sales/daily/:year/:month/:day',
+      path: '/sales/daily',
       name: 'dailySales',
       component: DailySales,
     },

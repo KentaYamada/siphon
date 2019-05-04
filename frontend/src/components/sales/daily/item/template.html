@@ -1,20 +1,17 @@
 <div class="daily-sales-item-area">
-    <b-collapse class="card">
-        <header class="card-header" slot="trigger" slot-scope="props" role="button">
-            <p class="card-header-title" :class="{ 'has-text-danger': dailySales.is_cancel }">
-                {{ dailySales.sales_date }}
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                {{ dailySales.sales_date | concatDateTime(dailySales.sales_time) }}
             </p>
-            <a class="card-header-icon" @click="handleClickHeader()">
-                <b-icon :icon="isOpen ? 'angle-down' : 'angle-up'"></b-icon>
-            </a>
-        </header>
-        <section class="card-content">
-            <div class="cancel-btn-area" v-show=!dailySales.is_cancel>
-                <a class="has-text-danger" @click="handleCancel()">
+            <div class="card-header-icon">
+                <a href="#" class="has-text-danger" @click="handleCancel()">
                     <i class="fas fa-minus-circle"></i>
                     取消
                 </a>
-            </div>
+            </div>     
+        </header>
+        <section class="card-content">
             <table class="table is-bordered is-striped is-fullwidth">
                 <thead>
                     <tr>
@@ -24,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in dailySales.sales_items" :key="item.id">
+                    <tr v-for="item in dailySales.items" :key="item.id">
                         <td>
                             <div>{{ item.item_name }}</div>
                             <div class="has-text-right">{{ item.unit_price }}</div>
@@ -33,7 +30,7 @@
                             {{ item.quantity }}
                         </td>
                         <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
-                            {{ item.unit_price * item.quantity }}
+                            {{ item.subtotal }}
                         </td>
                     </tr>
                 </tbody>
@@ -53,11 +50,11 @@
                     <tr>
                         <th class="has-text-right" colspan="2">総合計</th>
                         <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
-                            {{ dailySales.grand_total_price }}
+                            {{ dailySales.grand_total }}
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </section>
-    </b-collapse>
+    </div>
 </div>

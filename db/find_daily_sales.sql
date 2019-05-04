@@ -4,13 +4,14 @@ CREATE OR REPLACE FUNCTION find_daily_sales(
     p_sales_time_end time without time zone
 )
 RETURNS TABLE(
+    id integer,
     sales_date date,
     sales_time time without time zone,
     total_price integer,
     discount_mode integer,
     discount integer,
-    deposit integer,
-    grand_total integer
+    grand_total integer,
+    deposit integer
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -18,6 +19,7 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT
+        s.id,
         s.sales_date,
         s.sales_time,
         s.total_price,
@@ -41,7 +43,7 @@ BEGIN
             s.total_price - s.discount_price
           WHEN s.discount_rate > 0 THEN
             (s.total_price * (1 - (s.discount_rate * 1.0) / 100))::integer
-          ELSE 0
+          ELSE s.total_price
         END AS grand_total,
         s.deposit
     FROM sales AS s

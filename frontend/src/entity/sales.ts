@@ -14,6 +14,7 @@ export const enum DISCOUNT_TYPES {
  * 売上モデル
  */
 export interface Sales {
+    id?: number;
     total_price: number;
     discount_price: number;
     discount_rate: number;
