@@ -1,4 +1,6 @@
 import json
+from app.model.user import User
+from app.model.mapper.user_mapper import UserMapper
 from app.tests.controller.base import BaseApiTestCase
 
 
@@ -37,5 +39,11 @@ class TestAuth(BaseApiTestCase):
         self.assertEqual(403, res.status_code)
 
     def init_data(self):
-        self.db.execute_proc('create_test_data_users')
-        self.db.commit()
+        user = User(
+            name='Test taro',
+            nickname='tarosan',
+            email='test.taro@email.com',
+            password='tarosan'
+        )
+        mapper = UserMapper()
+        mapper.save(user)

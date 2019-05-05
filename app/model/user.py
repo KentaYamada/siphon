@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash
 from app.model.base import BaseModel
 
 
@@ -65,7 +66,7 @@ class User(BaseModel):
         if not value:
             super()._add_validation_error('password', 'パスワードは必須入力です')
         else:
-            self.__password = value
+            self.__password = generate_password_hash(value)
 
 
 class UserSearchOption:

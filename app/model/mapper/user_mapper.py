@@ -58,7 +58,7 @@ class UserMapper(BaseMapper):
     def find_auth_user(self, user):
         if user is None or not isinstance(user, User):
             raise ValueError()
-        data = (user.email, user.password)
+        data = (user.email,)
         row = None
         try:
             row = self._db.find_one_proc('find_auth_user', data)
@@ -70,6 +70,7 @@ class UserMapper(BaseMapper):
         fields = [
             'id',
             'name',
+            'nickname',
             'email',
             'password'
         ]

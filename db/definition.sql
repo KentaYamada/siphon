@@ -53,5 +53,5 @@ CREATE TABLE users (
     email text NOT NULL,
     password text NOT NULL,
     PRIMARY KEY(id),
-    UNIQUE(password)
+    UNIQUE(email, password)
 );

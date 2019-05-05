@@ -1,4 +1,4 @@
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from flask import request, Blueprint
 from app.controller.response import ResponseBody
 from app.model.user import User
@@ -16,12 +16,7 @@ def login():
     if not request.json.keys() >= {'email', 'password'}:
         res.set_fail_response(400)
         return res
-
-    hashed_password = request.json.get('password')
-    user = User(
-        email=request.json.get('email'),
-        password=hashed_password
-    )
+    user = User(email=request.json.get('email'))
     mapper = UserMapper()
     auth_user = None
     try:
@@ -32,11 +27,24 @@ def login():
         res.set_fail_response(500)
     if auth_user is None:
         res.set_fail_response(403)
-    else:
-        res.set_success_response(200)
+        return res
+    verify_pw = check_password_hash(
+        auth_user['password'],
+        request.json.get('password')
+    )
+    if not verify_pw:
+        print('invalid pw')
+        res.set_fail_response(403)
+        return res
+    # todo: generate jwt token
+    res.set_success_response(200)
     return res
 
 
 @bp.route('/logout', methods=['POST'])
 def logout():
     pass
+
+
+def verify_password(user, password):
+    return check_password_hash(user['password'], password)
