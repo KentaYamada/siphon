@@ -80,21 +80,3 @@ def delete(id):
     else:
         res.set_success_response(404)
     return res
-
-
-@bp.route('/authoricate', methods=['POST'])
-def authoricate():
-    res = ResponseBody()
-
-    if request.json is None:
-        res.set_fail_response(400, message='空のリクエストデータです')
-        return res
-
-    mapper = UserMapper()
-    can_login = mapper.authoricate(**request.json)
-
-    if can_login:
-        res.set_success_response(200, message='ログインしました。')
-    else:
-        res.set_fail_response(401, message='ログインに失敗しました。')
-    return res

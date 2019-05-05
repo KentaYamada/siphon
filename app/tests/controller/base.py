@@ -10,6 +10,13 @@ class BaseApiTestCase(TestCase):
     def setUp(self):
         self.db = PgAdapter()
         self.endpoint = ''
+        self.teardown_query = ''
+
+    def tearDown(self):
+        if self.teardown_query:
+            self.db.execute(self.teardown_query)
+            self.db.commit()
+        self.db = None
 
     @classmethod
     def setUpClass(cls):

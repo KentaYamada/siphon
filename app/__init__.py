@@ -1,4 +1,5 @@
 from flask import Flask
+from app.controller import auth
 from app.controller import cashier
 from app.controller import category
 from app.controller import daily_sales
@@ -15,6 +16,7 @@ def startup_app():
     # URL末尾のスラッシュを含めなくて良いようにする
     app.url_map.strict_slashes = False
     blueprints = [
+        auth.bp,
         cashier.bp,
         category.bp,
         daily_sales.bp,
