@@ -33,11 +33,10 @@ def login():
         request.json.get('password')
     )
     if not verify_pw:
-        print('invalid pw')
         res.set_fail_response(403)
         return res
-    # todo: generate jwt token
-    res.set_success_response(200)
+    auth_token = User.generate_auth_token(auth_user['id'])
+    res.set_success_response(201, {'auth_token': auth_token.decode()})
     return res
 
 
