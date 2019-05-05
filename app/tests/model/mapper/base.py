@@ -12,7 +12,7 @@ class BaseMapperTestCase(TestCase):
         if self.teardown_query:
             self.db.execute(self.teardown_query)
             self.db.commit()
-            self.db = None
+        self.db = None
 
     def init_data(self):
         raise NotImplementedError()
