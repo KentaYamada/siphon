@@ -54,3 +54,27 @@ class UserMapper(BaseMapper):
         fields = ['id', 'name', 'nickname']
         users = self.format_rows(rows, fields)
         return users
+
+    def find_auth_user(self, user):
+        if user is None or not isinstance(user, User):
+            raise ValueError()
+        data = (user.email, user.password)
+        row = None
+        try:
+            row = self._db.find_one_proc('find_auth_user', data)
+            self._db.commit()
+        except Exception as e:
+            # todo: logging
+            print(e)
+            self._db.rollback()
+        fields = [
+            'id',
+            'name',
+            'email',
+            'password'
+        ]
+        if row is not None:
+            auth_user = self.format_row(row, fields)
+        else:
+            auth_user = None
+        return auth_user
