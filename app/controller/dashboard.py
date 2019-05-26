@@ -1,7 +1,7 @@
 from datetime import datetime
-from calendar import monthrange, TextCalendar
+from calendar import monthrange
 from flask import Blueprint
-from app.controller.response import ResponseBody
+from app.libs.api_response import ApiResponse
 from app.model.sales_item import PopularSalesItemSearchOption
 from app.model.monthly_sales import MonthlySalesSearchOption
 from app.model.mapper.sales_mapper import SalesMapper
@@ -13,19 +13,12 @@ bp = Blueprint('dashboard', __name__, url_prefix='/api/dashboard')
 
 @bp.route('/<int:year>/<int:month>', methods=['GET'])
 def index(year, month):
-    body = ResponseBody()
-    try:
-        monthly_sales = __get_monthly_sales(year, month)
-        items = __get_popular_items(year, month)
-        body.set_success_response(
-            200,
-            {'monthly_sales': monthly_sales, 'popular_items': items}
-        )
-    except Exception as e:
-        # todo: logging
-        print(e)
-        body.set_fail_response(500)
-    return body
+    monthly_sales = __get_monthly_sales(year, month)
+    items = __get_popular_items(year, month)
+    return ApiResponse(
+        200,
+        data={'monthly_sales': monthly_sales, 'popular_items': items}
+    )
 
 
 def __get_monthly_sales(year, month):

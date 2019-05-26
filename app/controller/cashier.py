@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import request, Blueprint
-from app.controller.response import ResponseBody
+from werkzeug.exceptions import BadRequest, Conflict
+from app.libs.api_response import ApiResponse
 from app.model.sales import Sales
 from app.model.sales_item import SalesItem
 from app.model.category import CategorySearchOption
@@ -20,24 +21,21 @@ def index():
     for category in categories:
         data = [i for i in items if category['id'] == i['category_id']]
         category['items'] = data
-    res = ResponseBody()
-    res.set_success_response(200, {'categories': categories})
-    return res
+
+    return ApiResponse(200, data={'categories': categories})
 
 
 @bp.route('/', methods=['POST'])
 def add():
-    res = ResponseBody()
+    request_data = request.get_json()
+    if request_data is None:
+        raise BadRequest()
+    if request_data['items'] is None or len(request_data['items']) < 1:
+        raise BadRequest(description='売上明細データがセットされていません')
 
-    if request.json is None:
-        res.set_fail_response(400)
-        return res
-
-    if request.json['items'] is None or len(request.json['items']) < 1:
-        res.set_fail_response(400, message='売上明細データがセットされていません')
-        return res
-
-    items = [SalesItem(item_no=i, **item) for i, item in enumerate(request.json['items'], 1)]
+    items = []
+    for i, item in enumerate(request_data['items'], 1):
+        items.append(SalesItem(item_no=i, **item))
     del request.json['items']
     now_date = datetime.now().date()
     now_time = datetime.now().time()
@@ -50,17 +48,17 @@ def add():
     )
 
     if not sales.is_valid():
-        res.set_fail_response(400, sales.validation_errors)
-        return res
+        raise BadRequest(
+            description='保存エラー。エラー内容を確認してください。',
+            response=sales.validation_errors
+        )
 
     mapper = SalesMapper()
     saved = mapper.add(sales)
+    if not saved:
+        raise Conflict()
 
-    if saved:
-        res.set_success_response(201)
-    else:
-        res.set_fail_response(409)
-    return res
+    return ApiResponse(201, message='保存しました')
 
 
 def _get_categories():

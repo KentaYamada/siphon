@@ -1,4 +1,6 @@
 from flask import Flask
+from werkzeug.exceptions import BadRequest, Conflict, Forbidden, NotFound, InternalServerError, Unauthorized
+from app.libs.error_handler import api_error_handler
 from app.controller import auth
 from app.controller import cashier
 from app.controller import category
@@ -15,6 +17,8 @@ def startup_app():
 
     # URL末尾のスラッシュを含めなくて良いようにする
     app.url_map.strict_slashes = False
+
+    # register blueprints
     blueprints = [
         auth.bp,
         cashier.bp,
@@ -29,4 +33,13 @@ def startup_app():
 
     for bp in blueprints:
         app.register_blueprint(bp)
+
+    # register error handlers
+    app.register_error_handler(BadRequest, api_error_handler)
+    app.register_error_handler(Conflict, api_error_handler)
+    app.register_error_handler(Forbidden, api_error_handler)
+    app.register_error_handler(InternalServerError, api_error_handler)
+    app.register_error_handler(NotFound, api_error_handler)
+    app.register_error_handler(Unauthorized, api_error_handler)
+
     return app
