@@ -8,6 +8,7 @@ CREATE TABLE sales (
     inclusive_tax integer NOT NULL,
     exclusive_tax integer NOT NULL,
     deposit integer NOT NULL,
+    canceled boolean NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -54,4 +55,19 @@ CREATE TABLE users (
     password text NOT NULL,
     PRIMARY KEY(id),
     UNIQUE(email, password)
+);
+
+CREATE TABLE tokens (
+    id serial NOT NULL,
+    user_id integer NOT NULL,
+    token text NOT NULL,
+    expired date NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(user_id)
+);
+
+CREATE TABLE black_lists(
+    id serial NOT NULL,
+    token text NOT NULL,
+    PRIMARY KEY(id)
 );
