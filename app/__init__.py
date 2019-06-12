@@ -1,5 +1,14 @@
 from flask import Flask
-from werkzeug.exceptions import BadRequest, Conflict, Forbidden, NotFound, InternalServerError, Unauthorized
+from flask_jwt_extended import JWTManager
+from werkzeug.exceptions import (
+    BadRequest,
+    Conflict,
+    Forbidden,
+    NotFound,
+    InternalServerError,
+    Unauthorized
+)
+from app.config import get_config
 from app.libs.error_handler import api_error_handler
 from app.controller import auth
 from app.controller import cashier
@@ -10,6 +19,9 @@ from app.controller import item
 from app.controller import sales
 from app.controller import user
 from app.controller import view
+
+
+jwt = None
 
 
 def startup_app():
@@ -41,5 +53,12 @@ def startup_app():
     app.register_error_handler(InternalServerError, api_error_handler)
     app.register_error_handler(NotFound, api_error_handler)
     app.register_error_handler(Unauthorized, api_error_handler)
+
+    # todo: configの読み込み箇所ここ？
+    app.config.from_object('app.config.DevelopmentConfig')
+
+    # 一旦仮で
+    global jwt
+    jwt = JWTManager(app)
 
     return app

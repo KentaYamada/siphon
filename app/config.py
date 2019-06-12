@@ -42,6 +42,7 @@ class TestConfig(BaseConfig):
         'user': 'kenta',
         'password': 'kenta'
     }
+    JWT_SECRET_KEY = 'testing'
 
 
 class DevelopmentConfig(BaseConfig):
@@ -53,6 +54,7 @@ class DevelopmentConfig(BaseConfig):
         'user': 'kenta',
         'password': 'kenta'
     }
+    JWT_SECRET_KEY = 'development'
 
 
 def get_config():
