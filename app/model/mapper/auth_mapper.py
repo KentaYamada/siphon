@@ -1,8 +1,21 @@
+from datetime import datetime
 from app.model.token import Token
 from app.model.mapper.base_mapper import BaseMapper
 
 
 class AuthMapper(BaseMapper):
+    def find_logged_in_user(self, token):
+        if token is None or not isinstance(token, Token):
+            raise ValueError()
+        try:
+            user = self._db.find_one_proc('find_logged_in_user', (token,))
+            self._db.commit()
+        except Exception as e:
+            self._db.rollback()
+            user = None
+            print(e)
+        return user
+
     def save_token(self, token):
         if token is None or not isinstance(token, Token):
             raise ValueError()
@@ -21,17 +34,15 @@ class AuthMapper(BaseMapper):
             saved = False
         return saved
 
-    def delete_token(self, user_id):
-        if user_id is None or not isinstance(user_id, int):
-            raise ValueError()
-        if user_id <= 0:
-            raise ValueError('Invalid value')
+    def dispose_token(self, token):
+        if not token or not isinstance(token, str):
+            raise ValueError('Invalid argument')
         try:
-            self._db.execute_proc('delete_token', (user_id,))
+            self._db.execute_proc('dispose_token', (token,))
             self._db.commit()
-            deleted = True
+            disposed = True
         except Exception as e:
             self._db.rollback()
-            deleted = False
-        return deleted
-
+            disposed = False
+            print(e)
+        return disposed

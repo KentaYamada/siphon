@@ -1,3 +1,4 @@
+from flask_jwt_extended import create_access_token
 from datetime import datetime, timedelta
 from app.model.base import BaseModel
 
@@ -36,3 +37,8 @@ class Token(BaseModel):
             super()._add_validation_error('token', 'トークンのデータ型文字列です')
         else:
             self.__token = value
+
+    @classmethod
+    def generate_auth_token(cls, user_id):
+        # todo: composite identity
+        return create_access_token(identity=user_id)

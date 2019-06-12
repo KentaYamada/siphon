@@ -1,6 +1,4 @@
-import jwt
-from datetime import datetime, timedelta
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.model.base import BaseModel
 
 
@@ -71,13 +69,8 @@ class User(BaseModel):
             self.__password = generate_password_hash(value)
 
     @classmethod
-    def generate_auth_token(cls, user_id):
-        payload = {
-            'exp': datetime.now() + timedelta(days=7),
-            'iat': datetime.now(),
-            'sub': user_id
-        }
-        return jwt.encode(payload, 'secret', algorithm='HS256')
+    def verify_password(cls, request_password, user_password):
+        return check_password_hash(user_password, request_password)
 
 
 class UserSearchOption:

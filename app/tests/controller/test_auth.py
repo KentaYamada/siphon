@@ -36,7 +36,7 @@ class TestAuth(BaseApiTestCase):
             content_type=self.CONTENT_TYPE,
             data=data
         )
-        self.assertEqual(403, res.status_code)
+        self.assertEqual(401, res.status_code)
 
     def init_data(self):
         user = User(
