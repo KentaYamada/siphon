@@ -1,11 +1,10 @@
-from datetime import datetime
 from app.model.token import Token
 from app.model.mapper.base_mapper import BaseMapper
 
 
 class AuthMapper(BaseMapper):
     def find_logged_in_user(self, token):
-        if token is None or not isinstance(token, Token):
+        if token is None or not isinstance(token, str):
             raise ValueError()
         try:
             user = self._db.find_one_proc('find_logged_in_user', (token,))
