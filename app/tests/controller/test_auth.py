@@ -8,9 +8,15 @@ class TestAuth(BaseApiTestCase):
     def setUp(self):
         super().setUp()
         self.endpoint = 'api/auth'
-        self.teardown_query = """
-            TRUNCATE TABLE users RESTART IDENTITY;
-        """
+
+    def tearDown(self):
+        queries = [
+            'TRUNCATE TABLE users RESTART IDENTITY;',
+            'TRUNCATE TABLE tokens RESTART IDENTITY;'
+        ]
+        for query in queries:
+            self.db.execute(query)
+        self.db.commit()
 
     def test_login(self):
         self.init_data()
