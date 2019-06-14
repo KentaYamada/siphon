@@ -67,15 +67,5 @@ class UserMapper(BaseMapper):
             # todo: logging
             print(e)
             self._db.rollback()
-        fields = [
-            'id',
-            'name',
-            'nickname',
-            'email',
-            'password'
-        ]
-        if row is not None:
-            auth_user = self.format_row(row, fields)
-        else:
-            auth_user = None
-        return auth_user
+        fields = ['id', 'name', 'nickname', 'email', 'password']
+        return self.format_row(row, fields) if row is not None else None
