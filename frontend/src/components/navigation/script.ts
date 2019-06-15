@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { getMenus } from '@/entity/menu';
+import { mapGetters } from 'vuex';
 
 /**
  * ナビゲーションメニュー
@@ -15,9 +16,9 @@ export default Vue.extend({
         };
     },
     computed: {
-        isLoggedIn(): boolean {
-            return true;
-        }
+        ...mapGetters('auth', [
+            'isLoggedIn'
+        ])
     },
     methods: {
         toggleNav(): void {
@@ -25,6 +26,12 @@ export default Vue.extend({
         },
         handleCloseNav(): void {
             this.showNav = false;
+        },
+        /**
+         * @event logout button click event
+         */
+        handleLogout(): void {
+            console.log('logout event run')
         }
     }
 });

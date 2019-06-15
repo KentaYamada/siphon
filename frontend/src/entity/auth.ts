@@ -5,4 +5,3 @@ export interface Authrication {
     email: string;
     password: string;
 }
-

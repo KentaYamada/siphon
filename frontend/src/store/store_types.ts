@@ -9,6 +9,9 @@ import { MonthlySales, PopularItem } from '@/entity/dashboard';
 /** Auth state */
 export interface AuthState {
     auth: Authrication;
+    is_logged_in: boolean;
+    auth_token: string;
+    user_id?: number | null;
 }
 
 /** Cashier state */

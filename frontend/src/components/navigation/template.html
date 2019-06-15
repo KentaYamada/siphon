@@ -1,4 +1,4 @@
-<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation" v-if="isLoggedIn">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">cafe de GAMOYON</a>
         <a role="button"
@@ -33,7 +33,7 @@
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
-                <button class="button is-light">
+                <button class="button is-light" @click="handleLogout()">
                     <i class="fas fa-door-open"></i>
                     ログアウト
                 </button>
