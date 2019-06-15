@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { getMenus } from '@/entity/menu';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { ToastConfig } from 'buefy/types/components';
+
 
 /**
  * ナビゲーションメニュー
@@ -21,6 +23,9 @@ export default Vue.extend({
         ])
     },
     methods: {
+        ...mapActions('auth', [
+            'logout'
+        ]),
         toggleNav(): void {
             this.showNav = !this.showNav;
         },
@@ -31,7 +36,24 @@ export default Vue.extend({
          * @event logout button click event
          */
         handleLogout(): void {
-            console.log('logout event run')
+            this.logout()
+                .then(() => {
+                    this.onLogoutSuccess();
+                })
+                .catch(() => {
+                    this.onLogoutFailed();
+                });
+        },
+        onLogoutSuccess(): void {
+            const option = {
+                message: 'ログアウトしました',
+                type: 'is-success'
+            } as ToastConfig;
+            this.$toast.open(option);
+            this.$router.push('/login');
+        },
+        onLogoutFailed(): void {
+
         }
     }
 });

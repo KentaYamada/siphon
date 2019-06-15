@@ -11,7 +11,6 @@ const REFLESH_TOKEN_URL = `${ROOT_URL}/reflesh`;
 
 const state: AuthState = {
     auth: {
-        //user_id: null,
         email: '',
         password: '',
     } as Authrication,
@@ -75,12 +74,15 @@ const actions = {
      */
     logout: async (context: any) => {
         const data = {
-            auth_token: <AuthState>context.state.auth_token
+            token: <AuthState>context.state.auth_token
         };
-
-        context.commit('initialize');
-
-        return await axios.post(LOGOUT_URL, data);
+        
+        return await axios.post(LOGOUT_URL, data)
+            .then((res: AxiosResponse) => {
+                axios.defaults.headers.common['Authoricate'] = '';
+                context.commit('initialize');
+                return Promise.resolve(res);
+            });
     }
 };
 
