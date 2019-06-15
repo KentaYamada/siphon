@@ -104,11 +104,12 @@ class SalesMapper(BaseMapper):
             'discount_mode',
             'discount',
             'deposit',
-            'grand_total'
+            'grand_total',
+            'canceled'
         ]
         daily_sales = self.format_rows(rows, fields)
-        for s in daily_sales:
-            s['is_cancel'] = True if s['grand_total'] < 0 else False
+        for d in daily_sales:
+            d['is_red'] = True if d['grand_total'] < 0 else False
         return daily_sales
 
     def find_monthly_sales(self, year, month, option):
@@ -125,7 +126,7 @@ class SalesMapper(BaseMapper):
         except Exception as e:
             self._db.rollback()
             # todo: logging
-            print(e)
+            # print(e)
         fields = ['sales_date', 'sales_day', 'total_price']
         rows = self.format_rows(rows, fields)
         if len(rows) > 0:

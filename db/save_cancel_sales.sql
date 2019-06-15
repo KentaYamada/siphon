@@ -8,6 +8,12 @@ AS $$
 DECLARE
     cancel_sales_id integer;
 BEGIN
+    -- 取り消し元データを取消済にする
+    UPDATE sales SET
+        canceled = true
+    WHERE id = p_id;
+
+    -- 取消データ作成
     INSERT INTO sales (
         sales_date,
         sales_time,
@@ -16,7 +22,8 @@ BEGIN
         discount_rate,
         inclusive_tax,
         exclusive_tax,
-        deposit
+        deposit,
+        canceled
     )
     SELECT
         s.sales_date,
@@ -26,7 +33,8 @@ BEGIN
         s.discount_rate,
         s.inclusive_tax,
         s.exclusive_tax,
-        s.deposit * (-1)
+        s.deposit * (-1),
+        true
     FROM sales AS s
     WHERE s.id = p_id;
 

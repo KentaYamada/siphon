@@ -1,11 +1,11 @@
 <div class="daily-sales-item-area">
     <div class="card">
         <header class="card-header">
-            <p class="card-header-title" :class="{ 'has-text-danger': dailySales.is_cancel }">
+            <p class="card-header-title" :class="{ 'has-text-danger': dailySales.canceled }">
                 {{ dailySales.sales_date | concatDateTime(dailySales.sales_time) }}
             </p>
             <div class="card-header-icon">
-                <a href="#" class="has-text-danger" @click="handleCancel()" v-if="!dailySales.is_cancel">
+                <a href="#" class="has-text-danger" @click="handleCancel()" v-if="!dailySales.canceled">
                     <i class="fas fa-minus-circle"></i>
                     取消
                 </a>
@@ -26,10 +26,10 @@
                             <div>{{ item.item_name }}</div>
                             <div class="has-text-right">{{ item.unit_price }}</div>
                         </td>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
                             {{ item.quantity }}
                         </td>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
                             {{ item.subtotal }}
                         </td>
                     </tr>
@@ -37,7 +37,7 @@
                 <tfoot>
                     <tr>
                         <th class="has-text-right" colspan="2">合計</th>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
                             {{ dailySales.total_price }}
                         </td>
                     </tr>
@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                         <th class="has-text-right" colspan="2">総合計</th>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_cancel }">
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
                             {{ dailySales.grand_total }}
                         </td>
                     </tr>

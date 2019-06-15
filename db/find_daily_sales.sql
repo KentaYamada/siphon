@@ -11,7 +11,8 @@ RETURNS TABLE(
     discount_mode integer,
     discount integer,
     grand_total integer,
-    deposit integer
+    deposit integer,
+    canceled boolean
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -45,7 +46,8 @@ BEGIN
             (s.total_price * (1 - (s.discount_rate * 1.0) / 100))::integer
           ELSE s.total_price
         END AS grand_total,
-        s.deposit
+        s.deposit,
+        s.canceled
     FROM sales AS s
     WHERE s.sales_date = p_sales_date
       AND (s.sales_time >= p_sales_time_start OR p_sales_time_start IS NULL)

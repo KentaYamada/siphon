@@ -35,18 +35,15 @@ export default Vue.extend({
         DailySalesItem
     },
     computed: {
-        ...mapGetters('daily_sales', [
-            'getDailySales',
-            'hasItems'
-        ]),
         title(): string {
             return `${moment().format('YYYY年MM月DD日')}の売上`;
         },
+        ...mapGetters('daily_sales', [
+            'getDailySales',
+            'hasItems'
+        ])
     },
     methods: {
-        ...mapActions('daily_sales', [
-            'fetchDailySales'
-        ]),
         /**
          * 売上検索
          */
@@ -61,6 +58,9 @@ export default Vue.extend({
             this.$data.option.time_from = '';
             this.$data.option.time_to = '';
             this.$data.option.q = '';
-        }
+        },
+        ...mapActions('daily_sales', [
+            'fetchDailySales'
+        ])
     }
 });

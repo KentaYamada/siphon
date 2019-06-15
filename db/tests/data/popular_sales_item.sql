@@ -15,10 +15,11 @@ BEGIN
         discount_rate,
         inclusive_tax,
         exclusive_tax,
-        deposit
+        deposit,
+        canceled
     ) VALUES
-    (CURRENT_DATE, CURRENT_TIME::time, 800, 0, 0, 0, 0, 800),
-    (CURRENT_DATE, CURRENT_TIME::time, 1900, 0, 0, 0, 0, 1900);
+    (CURRENT_DATE, CURRENT_TIME::time, 800, 0, 0, 0, 0, 800, false),
+    (CURRENT_DATE, CURRENT_TIME::time, 1900, 0, 0, 0, 0, 1900, false);
 
 
     INSERT INTO sales_items (

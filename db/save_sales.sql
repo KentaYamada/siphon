@@ -21,7 +21,8 @@ BEGIN
         discount_rate,
         inclusive_tax,
         exclusive_tax,
-        deposit
+        deposit,
+        canceled
     ) VALUES (
         p_sales_date,
         p_sales_time,
@@ -30,6 +31,7 @@ BEGIN
         p_discount_rate,
         p_inclusive_tax,
         p_exclusive_tax,
-        p_deposit
+        p_deposit,
+        false
     );
 END $$;

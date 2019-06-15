@@ -9,6 +9,7 @@ export interface DailySales extends Sales {
     total_price: number;
     discount_unit: string;
     grand_total: number;
+    canceled: boolean;
 }
 
 /**
