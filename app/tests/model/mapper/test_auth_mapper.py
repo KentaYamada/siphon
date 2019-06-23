@@ -7,9 +7,6 @@ class TestAuthMapper(BaseMapperTestCase):
     def setUp(self):
         super().setUp()
         self.mapper = AuthMapper()
-        self.teardown_query = """
-            TRUNCATE TABLE tokens RESTART IDENTITY;
-        """
 
     def tearDown(self):
         queries = [
@@ -48,6 +45,26 @@ class TestAuthMapper(BaseMapperTestCase):
             self.mapper.dispose_token(None)
             self.mapper.dispose_token(1)
             self.mapper.dispose_token(False)
+
+    def test_get_is_blacklist(self):
+        self.db.execute_proc('create_test_data_black_lists')
+        self.db.commit()
+        result = self.mapper.get_is_blacklist('hoge')
+        self.assertTrue(result)
+
+    def test_get_is_blacklist_when_no_record(self):
+        self.db.execute_proc('create_test_data_black_lists')
+        self.db.commit()
+        result = self.mapper.get_is_blacklist('white')
+        self.assertFalse(result)
+
+    def test_get_is_blacklist_when_invalid_argument(self):
+        with self.assertRaises(ValueError):
+            self.mapper.get_is_blacklist(None)
+            self.mapper.get_is_blacklist('')
+            self.mapper.get_is_blacklist('1')
+            self.mapper.get_is_blacklist(1)
+            self.mapper.get_is_blacklist(True)
 
     def init_data(self):
         # see /db/test/data/token.sql

@@ -15,6 +15,19 @@ class AuthMapper(BaseMapper):
             print(e)
         return user
 
+    def get_is_blacklist(self, token):
+        if token is None or not isinstance(token, str):
+            raise ValueError()
+        is_blacklist = False
+        try:
+            row = self._db.find_one_proc('find_blacklist', (token,))
+            self._db.commit()
+            is_blacklist = True if row['hits'] > 0 else False
+        except Exception as e:
+            self._db.rollback()
+            raise e
+        return is_blacklist
+
     def save_token(self, token):
         if token is None or not isinstance(token, Token):
             raise ValueError()
