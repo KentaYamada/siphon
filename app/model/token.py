@@ -1,4 +1,4 @@
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from datetime import datetime, timedelta
 from app.model.base import BaseModel
 
@@ -42,3 +42,8 @@ class Token(BaseModel):
     def generate_auth_token(cls, user_id):
         # todo: composite identity
         return create_access_token(identity=user_id)
+
+    @classmethod
+    def get_reflesh_token(cls, user_id):
+        # todo: composite identity
+        return create_refresh_token(identity=user_id)
