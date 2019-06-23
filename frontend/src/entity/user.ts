@@ -2,7 +2,7 @@
  * User entity
  */
 export interface User {
-    id?: number;
+    id: number | null;
     name: string;
     nickname: string;
     email: string;

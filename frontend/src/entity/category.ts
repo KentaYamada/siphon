@@ -2,7 +2,7 @@ import { Item } from '@/entity/item';
 
 
 export interface Category {
-    id?: number;
+    id: number | null;
     name: string;
     items?: Item[] | null;
 }
