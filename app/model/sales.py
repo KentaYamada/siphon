@@ -166,7 +166,12 @@ class Sales(BaseModel):
                 '合計金額以上の値引額が設定されています'
             )
             return False
-        if self.deposit < self.total_price:
+        grand_total = self.total_price
+        if self.discount_price > 0:
+            grand_total -= self.discount_price
+        if self.discount_rate > 0:
+            grand_total = grand_total * (1 - self.discount_rate / 100)
+        if self.deposit < grand_total:
             super()._add_validation_error(
                 'deposit',
                 '預かり金が合計金額より少ないです'
