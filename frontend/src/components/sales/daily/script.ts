@@ -14,15 +14,13 @@ import { DailySalesSearchOption } from '@/entity/daily_sales';
  */
 export default Vue.extend({
     data() {
+        const params = this.$route.query;
         const option: DailySalesSearchOption = {
-            sales_date: '',
-            time_from: '',
-            time_to: '',
+            sales_date: params.sales_date as string,
+            time_from: null,
+            time_to: null,
             q: ''
         };
-
-        const params = this.$route.query;
-        option.sales_date = params.sales_date as string;
 
         return {
             option
@@ -36,7 +34,8 @@ export default Vue.extend({
     },
     computed: {
         title(): string {
-            return `${moment().format('YYYY年MM月DD日')}の売上`;
+            const sales_date = moment(this.option.sales_date);
+            return `${sales_date.format('YYYY年MM月DD日')}の売上`;
         },
         ...mapGetters('daily_sales', [
             'getDailySales',

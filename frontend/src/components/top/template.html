@@ -41,7 +41,7 @@
                                 <router-link
                                     class="day-link"
                                     :key="index"
-                                    :to="{ path: '/sales/daily' , query: { sales_day: day.sales_day }}"
+                                    :to="{ path: '/sales/daily' , query: { sales_date: day.sales_day }}"
                                     v-if="day.sales_date != 0">
                                     <div class="has-text-weight-bold"
                                         v-bind:class="{ 'has-text-danger': day.is_holiday, 'has-text-info': day.is_saturday }">
