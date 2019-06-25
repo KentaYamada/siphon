@@ -39,6 +39,12 @@ def login():
         # todo: error response
         raise Unauthorized(description='Invalid password')
 
+    # ログイン済の場合は、トークンを返す
+    token = __get_token(auth_user['id'])
+    if token:
+        data = {'logged_in': True, 'auth_token': token}
+        return ApiResponse(200, data=data)
+
     auth_token = Token.generate_auth_token(auth_user['id'])
     token = Token(auth_user['id'], auth_token)
     saved = __save_token(token)
@@ -97,3 +103,8 @@ def reflesh():
 def __save_token(token):
     mapper = AuthMapper()
     return mapper.save_token(token)
+
+
+def __get_token(user_id):
+    mapper = AuthMapper()
+    return mapper.find_logged_in_user_token(user_id)
