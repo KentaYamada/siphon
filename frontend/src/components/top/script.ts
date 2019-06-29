@@ -51,13 +51,4 @@ export default Vue.extend({
             this.fetchDashboardData(this.option);
         }
     },
-    filters: {
-        numberWithDelimiter(value: number): string {
-            if (_.isNull(value)) {
-                return '-'
-            }
-
-            return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-        }
-    }
 });

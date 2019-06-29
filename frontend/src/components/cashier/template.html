@@ -23,13 +23,13 @@
                             <tr v-for="(s, index) in getSales.items"> 
                                 <td class="item-col">
                                     <div>{{ s.item_name }}</div>
-                                    <div class="has-text-right">{{ s.price }}</div>
+                                    <div class="has-text-right">{{ s.price | toNumWithDelimiter}}</div>
                                 </td>
                                 <td class="has-text-right amount-col">
-                                    {{ s.quantity | numberWithDelimiter }}
+                                    {{ s.quantity | toNumWithDelimiter }}
                                 </td>
                                 <td class="has-text-right subtotal-col">
-                                    {{ s.subtotal | numberWithDelimiter }}
+                                    {{ s.subtotal | toNumWithDelimiter }}
                                 </td>
                                 <td class="has-text-centered button-cols">
                                     <button
@@ -83,7 +83,7 @@
                         <tr>
                             <th class="has-text-right">合計</th>
                             <td class="has-text-right">
-                                {{ total_price | numberWithDelimiter }}
+                                {{ total_price | toNumWithDelimiter }}
                             </td>
                         </tr>
                         <tr>
@@ -106,7 +106,7 @@
                         <tr>
                             <th class="has-text-right">おつり</th>
                             <td class="has-text-right">
-                                {{ getCharge | numberWithDelimiter }}
+                                {{ getCharge | toNumWithDelimiter }}
                             </td>
                         </tr>
                     </tbody>
@@ -126,7 +126,7 @@
                             <ul class="item-group">
                                 <li class="item" v-for="item in getSelectionItems">
                                     <div>
-                                        {{ item.name }} (単価: {{ item.unit_price | numberWithDelimiter }})
+                                        {{ item.name }} (単価: {{ item.unit_price | toNumWithDelimiter }})
                                     </div>
                                     <div class="has-text-right">
                                         <button

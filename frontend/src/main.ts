@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
+import _ from 'lodash';
+// import axios, { AxiosResponse } from 'axios';
 import App from './App.vue';
 import router from './router';
+import filters from './filters';
 import store from '@/store';
-// import axios, { AxiosResponse } from 'axios';
 import './registerServiceWorker';
 import 'buefy/dist/buefy.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -11,10 +13,21 @@ import '@fortawesome/fontawesome-free/css/fontawesome.css';
 
 Vue.config.productionTip = false;
 
-// Buefy
+// Import Buefy
 Vue.use(Buefy, {
     defaultIconPack: 'fas',
 });
+
+// Register filters
+_.forEach(filters, (filter: Function, key: string) => {
+  Vue.filter(key, filter);
+});
+
+new Vue({
+  router,
+  store,
+  render: (h) => h(App),
+}).$mount('#app');
 
 // todo: module化
 /*axios.interceptors.response.use((config: AxiosResponse) => {
@@ -34,9 +47,3 @@ Vue.use(Buefy, {
 
     return Promise.reject(error);
 });*/
-
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount('#app');

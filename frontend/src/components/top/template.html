@@ -47,7 +47,7 @@
                                         v-bind:class="{ 'has-text-danger': day.is_holiday, 'has-text-info': day.is_saturday }">
                                         {{ day.sales_date }}
                                     </div>
-                                    <div>{{ day.amount | numberWithDelimiter }}</div>
+                                    <div>{{ day.amount | toNumWithDelimiter('-') }}</div>
                                 </router-link>
                             </td>
                         </tr>
@@ -71,7 +71,7 @@
                         <tr v-for="item in getPopularItems">
                             <th class="has-text-centered">{{ item.rank_no }}</th>
                             <td>{{ item.item_name }}</td>
-                            <td class="has-text-centered">{{ item.quantity }}</td>
+                            <td class="has-text-centered">{{ item.quantity | toNumWithDelimiter }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -137,14 +137,4 @@ export default Vue.extend({
                 });
         }
     },
-    filters: {
-        // todo: register global filter
-        numberWithDelimiter(value: number): string {
-            if (!value) {
-                // todo: lodash or native??
-                return '0';
-            }
-            return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-        }
-    }
 });

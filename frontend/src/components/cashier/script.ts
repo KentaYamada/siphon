@@ -26,6 +26,7 @@ export default Vue.extend({
         return _.extend({},  data);
     },
     mounted() {
+        this.initialize();
         this.fetchSelectionItems();
     },
     computed: {
@@ -228,9 +229,4 @@ export default Vue.extend({
             });
         }
     },
-    filters: {
-        numberWithDelimiter(value: number): string {
-            return value ? value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,') : '0';
-        }
-    }
 });

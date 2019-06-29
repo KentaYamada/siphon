@@ -26,19 +26,19 @@
                             <div>{{ item.item_name }}</div>
                             <div class="has-text-right">{{ item.unit_price }}</div>
                         </td>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
-                            {{ item.quantity }}
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_red }">
+                            {{ item.quantity | toNumWithDelimiter }}
                         </td>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
-                            {{ item.subtotal }}
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_red }">
+                            {{ item.subtotal | toNumWithDelimiter }}
                         </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th class="has-text-right" colspan="2">合計</th>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
-                            {{ dailySales.total_price }}
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_red }">
+                            {{ dailySales.total_price | toNumWithDelimiter }}
                         </td>
                     </tr>
                     <tr>
@@ -49,8 +49,8 @@
                     </tr>
                     <tr>
                         <th class="has-text-right" colspan="2">総合計</th>
-                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.canceled }">
-                            {{ dailySales.grand_total }}
+                        <td class="has-text-right" :class="{ 'has-text-danger': dailySales.is_red }">
+                            {{ dailySales.grand_total | toNumWithDelimiter }}
                         </td>
                     </tr>
                 </tfoot>
