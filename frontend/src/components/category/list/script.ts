@@ -115,18 +115,23 @@ export default Vue.extend({
          * @param category 
          */
         _onDelete(category: Category): void {
+            let option: ToastConfig;
             this.delete(category.id)
                 .then(() => {
-                    const option: ToastConfig = {
+                    option = {
                         message: '削除しました',
                         type: 'is-success'
                     };
                     this.$toast.open(option);
                     this.fetchCategories();
                 })
-                .catch((error: any) => {
-
+                .catch(() => {
+                    option = {
+                        message: '削除できませんでした',
+                        type: 'is-danger'
+                    };
+                    this.$toast.open(option);
                 });
-        }
+        },
     }
 });

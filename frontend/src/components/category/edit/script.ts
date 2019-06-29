@@ -40,24 +40,31 @@ export default Vue.extend({
                     this.$emit('save-success', response.data.message);
                 })
                 .catch((error: any) => {
-                    const response = error.response;
-                    let message = '';
-
-                    if (!_.isUndefined(response)) {
-                        message = response.data.message;
-
-                        if (!_.isEmpty(response.data.errors)) {
-                            this.errors =  _.extend({}, response.data.errors);
-                        }
-                    } else {
-                        message = 'システムエラー発生';
-                    }
-
-                    this.$toast.open({
-                        message: message,
-                        type: 'is-danger'
-                    });
+                    this._onSaveFailure(error);
                 });
+        },
+        /**
+         * 保存失敗時のエラーハンドラ
+         * @param error 
+         */
+        _onSaveFailure(error: any): void {
+            const response = error.response;
+            let message = '';
+
+            if (!_.isUndefined(response)) {
+                message = response.data.message;
+
+                if (!_.isEmpty(response.data.errors)) {
+                    this.errors =  _.extend({}, response.data.errors);
+                }
+            } else {
+                message = 'システムエラー発生';
+            }
+
+            this.$toast.open({
+                message: message,
+                type: 'is-danger'
+            });
         }
     }
 });
