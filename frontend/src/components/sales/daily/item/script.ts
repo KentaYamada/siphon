@@ -13,7 +13,8 @@ export default Vue.extend({
     template: '<daily-sales-item/>',
     props: {
         dailySales: {
-            required: true
+            required: true,
+            type: Object
         }
     },
     computed: {
@@ -91,6 +92,6 @@ export default Vue.extend({
             }
 
             return value;
-        }
+        },
     }
 });

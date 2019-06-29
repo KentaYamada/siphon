@@ -15,8 +15,12 @@ import { DailySalesSearchOption } from '@/entity/daily_sales';
 export default Vue.extend({
     data() {
         const params = this.$route.query;
+        const salesDate = moment(
+            params.sales_date as string,
+            'YYYY-MM-DD'
+        ).toDate();
         const option: DailySalesSearchOption = {
-            sales_date: params.sales_date as string,
+            sales_date: salesDate,
             time_from: null,
             time_to: null,
             q: ''
@@ -54,8 +58,8 @@ export default Vue.extend({
          */
         handleClearConditions(): void {
             this.$data.option.sales_date = null;
-            this.$data.option.time_from = '';
-            this.$data.option.time_to = '';
+            this.$data.option.time_from = null;
+            this.$data.option.time_to = null;
             this.$data.option.q = '';
         },
         ...mapActions('daily_sales', [

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { DailySales, DailySalesSearchOption } from '@/entity/daily_sales';
 import { DailySalesState } from '@/store/store_types';
@@ -40,8 +41,23 @@ const actions = {
      * 日次売上取得APIリクエスト
      */
     fetchDailySales: async (context: any, option: DailySalesSearchOption) => {
+        let params: any = {};
+        params.sales_date = moment(option.sales_date).format('YYYY-MM-DD');
+        
+        if (!_.isNull(option.time_from)) {
+            params.time_from = moment(option.time_from).format('HH:mm:ss');
+        }
+
+        if (!_.isNull(option.time_to)) {
+            params.time_to = moment(option.time_to).format('HH:mm:ss');
+        }
+
+        if (!_.isEmpty(option.q)) {
+            params.q = option.q;
+        }
+        
         return await axios
-            .get(ROOT_URL, { params: option })
+            .get(ROOT_URL, { params: params })
             .then((response: AxiosResponse) => {
                 context.commit('setDailySales', response.data.daily_sales);
             });
