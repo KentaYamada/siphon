@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import _ from 'lodash';
 import axios, { AxiosResponse } from 'axios';
 import { Category, CategorySerachOption } from '@/entity/category';
@@ -15,7 +16,7 @@ const mutations = {
      * 商品カテゴリリストセット
      */
     setCategories: (state: CategoryState, categories: Category[]) => {
-        state.categories = categories;
+        Vue.set(state, 'categories', [...categories]);
     }
 }
 
@@ -26,6 +27,9 @@ const getters = {
      */
     getCategories: (state: CategoryState) => {
         return state.categories;
+    },
+    getCategoryLength: (state: CategoryState) => {
+        return state.categories.length;
     },
     /**
      * 商品カテゴリ検索 or 新規商品カテゴリ取得

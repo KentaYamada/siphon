@@ -9,5 +9,4 @@ export interface Category {
 
 export interface CategorySerachOption {
     q: string;
-    with_items: boolean;
 }

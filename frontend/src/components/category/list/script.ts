@@ -18,8 +18,7 @@ import {
 export default Vue.extend({
     data() {
         const option: CategorySerachOption = {
-            q: '',
-            with_items: false
+            q: ''
         }
 
         return {
@@ -71,8 +70,8 @@ export default Vue.extend({
          */
         handleDelete(category: Category): void {
             const message = `
-                <div>${category.name}を削除しますか？<div>
-                <small>Note:削除したデータを元に戻すことはできません</small>`;
+                <div>『${category.name}』を削除しますか？<div>
+                <small>＊削除したデータを元に戻すことはできません</small>`;
             const option: DialogConfig = {
                 title: '商品カテゴリ削除',
                 message: message,
