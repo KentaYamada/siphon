@@ -62,8 +62,5 @@ class CategoryMapper(BaseMapper):
             self._db.commit()
         except Exception as e:
             self._db.rollback()
-            print(e)
-        if row_count <= self.MAX_ADDABLE_ROW:
-            return True
-        else:
-            return False
+            raise e
+        return row_count >= self.MAX_ADDABLE_ROW

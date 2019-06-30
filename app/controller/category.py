@@ -36,6 +36,9 @@ def add():
         )
 
     mapper = CategoryMapper()
+    if mapper.is_upper_limit():
+        raise BadRequest(description='商品カテゴリの登録数は10件までです')
+
     saved = mapper.save(category)
     if not saved:
         raise Conflict()
