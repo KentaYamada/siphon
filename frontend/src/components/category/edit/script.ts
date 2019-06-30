@@ -55,7 +55,7 @@ export default Vue.extend({
                 message = response.data.message;
 
                 if (!_.isEmpty(response.data.errors)) {
-                    this.errors =  _.extend({}, response.data.errors);
+                    this.errors = _.extend({}, response.data.errors);
                 }
             } else {
                 message = 'システムエラー発生';
