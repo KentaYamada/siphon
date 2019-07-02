@@ -44,6 +44,10 @@ class CategoryMapper(BaseMapper):
             raise ValueError()
         if not isinstance(id, int) or id <= 0:
             raise ValueError()
+
+        has_row = self._db.has_row('categories', id)
+        if not has_row:
+            return False
         try:
             self._db.execute_proc('delete_category', (id,))
             self._db.commit()
