@@ -8,6 +8,8 @@ import {
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
+import _ from 'lodash';
+import { AxiosError} from 'axios';
 import ItemEdit from '@/components/item/edit/ItemEdit.vue';
 import {
     Item,
@@ -79,8 +81,8 @@ export default Vue.extend({
          */
         handleDelete(item: Item): void {
             const message = `
-                <div>${item.name}を削除しますか？<div>
-                <small>Note:削除したデータを元に戻すことはできません</small>`;
+                <div>『${item.name}』を削除しますか？<div>
+                <small>＊削除したデータを元に戻すことはできません</small>`;
             const option: DialogConfig = {
                 title: '商品削除',
                 message: message,
@@ -124,16 +126,26 @@ export default Vue.extend({
          * @param item 
          */
         _onDelete(item: Item): void {
+            let option: ToastConfig;
+
             this.delete(item.id)
                 .then(() => {
-                    const option: ToastConfig = {
+                    option = {
                         message: '削除しました',
                         type: 'is-success'
                     };
                     this.$toast.open(option);
-                    this.fetchItems();
+                    this.fetchItems(this.option);
                 })
-                .catch((error: any) => {
+                .catch((error: AxiosError) => {
+                    let message = _.isUndefined(error.response) ?
+                        '削除できませんでした' :
+                        error.response.data.message;
+                    option = {
+                        message: message,
+                        type: 'is-danger'
+                    };
+                    this.$toast.open(option);
                 });
         }
     },

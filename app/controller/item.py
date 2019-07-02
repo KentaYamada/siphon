@@ -68,6 +68,6 @@ def delete(id):
     mapper = ItemMapper()
     deleted = mapper.delete(id)
     if not deleted:
-        raise NotFound()
+        raise NotFound(description='リクエストデータはすでに削除されたか、または存在しません。')
 
     return ApiResponse(204, '削除しました')

@@ -32,6 +32,9 @@ class ItemMapper(BaseMapper):
             raise ValueError()
         if not isinstance(id, int) or id <= 0:
             raise ValueError()
+        has_row = self._db.has_row('items', id)
+        if not has_row:
+            return False
         try:
             self._db.execute_proc('delete_item', (id,))
             self._db.commit()
