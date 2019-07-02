@@ -115,7 +115,7 @@ export default Vue.extend({
                             type:'is-success'
                         };
                         this.$toast.open(option);
-                        this.fetchItems();
+                        this.fetchItems(this.option);
                     }
                 }
             };
