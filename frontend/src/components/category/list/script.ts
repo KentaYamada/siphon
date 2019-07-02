@@ -8,6 +8,8 @@ import {
     ToastConfig,
     DialogConfig
 } from 'buefy/types/components';
+import _ from 'lodash';
+import { AxiosError } from 'axios';
 import CategoryEdit from '@/components/category/edit/CategoryEdit.vue';
 import {
     Category,
@@ -124,13 +126,20 @@ export default Vue.extend({
                     this.$toast.open(option);
                     this.fetchCategories();
                 })
-                .catch(() => {
+                .catch((error: AxiosError) => {
+                    let message = '削除できませんでした';
+
+                    if (!_.isUndefined(error.response)) {
+                        message = error.response.data.message;
+                    }
+
                     option = {
-                        message: '削除できませんでした',
+                        message: message,
                         type: 'is-danger'
                     };
+
                     this.$toast.open(option);
-                });
+                 });
         },
     }
 });
