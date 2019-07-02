@@ -85,6 +85,16 @@ class PgAdapter():
         self.__cur.execute('SELECT LASTVAL();')
         return self.__cur.fetchone()['lastval']
 
+    def has_row(self, tablename, id):
+        query = """
+            SELECT COUNT(id) AS rowcount FROM {0} WHERE id = %s;
+        """.format(tablename)
+        data = (id,)
+        self.__create_cursor()
+        self.__cur.execute(query, data)
+        row = self.__cur.fetchone()
+        return True if row['rowcount'] == 1 else False
+
     def bulk_insert(self, query, values):
         """ run bulk insert values """
         if not query:

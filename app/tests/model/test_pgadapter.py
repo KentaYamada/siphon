@@ -1,109 +1,106 @@
-import unittest
 import psycopg2
+from unittest import TestCase
 from app.model.pgadapter import PgAdapter
 
 
-class TestPgAdapterTest(unittest.TestCase):
-    def setUp(self):
-        self.__db = PgAdapter()
+class TestPgAdapterTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.db = PgAdapter()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.db = None
 
     def tearDown(self):
-        self.__db.execute('TRUNCATE TABLE cars RESTART IDENTITY;')
-        self.__db.execute('TRUNCATE TABLE car_makers RESTART IDENTITY;')
-        self.__db.commit()
+        self.db.execute_proc('cleanup_pgadapter')
+        self.db.commit()
+        self.db = None
 
-    def test_add_success(self):
-        affected = self.__db.execute_proc(
-            'save_car_maker',
-            (None, 'alfa romeo'))
-        self.__db.commit()
-        self.assertEqual(1, affected)
+    def test_add(self):
+        data = (None, 'alfa romeo')
+        result = self.db.execute_proc('save_car_maker', data)
+        self.db.commit()
+        self.assertEqual(1, result)
 
-    def test_edit_success(self):
-        # modify data
-        self.init_test_data()
-        affected = self.__db.execute_proc('save_car_maker', (1, 'Toyota'))
-        self.__db.commit()
-        # fetch modified data
-        row = self.__db.find_one_proc('find_car_makers_by', ('Toyota',))
-        self.__db.commit()
-        self.assertEqual(1, affected)
-        self.assertEqual('Toyota', row['name'])
+    def test_edit(self):
+        self.init_data()
+        data = (1, 'Toyota autmobile')
+        result = self.db.execute_proc('save_car_maker', data)
+        self.db.commit()
+        self.assertEqual(1, result)
+        row = self.db.find_one_proc('find_car_makers_by', ('Toyota',))
+        self.db.commit()
+        self.assertEqual('Toyota autmobile', row['name'])
 
-    def test_fetch_last_row_id(self):
-        # init data
-        self.init_test_data()
-        self.__db.execute_proc('save_car_maker', (None, 'test'))
-        # fetch last row id
-        last_id = self.__db.fetch_last_row_id()
-        self.__db.commit()
-        self.assertEqual(4, last_id)
+    def test_delete(self):
+        self.init_data()
+        data = (1,)
+        result = self.db.execute_proc('delete_car_maker', data)
+        self.db.commit()
+        self.assertEqual(1, result)
 
     def test_find_proc_success(self):
-        self.init_test_data()
-        rows = self.__db.find_proc('find_car_makers_by', ('toyota',))
-        self.__db.commit()
+        self.init_data()
+        rows = self.db.find_proc('find_car_makers_by', ('toyota',))
+        self.db.commit()
         self.assertEqual(1, len(rows))
         self.assertEqual('toyota', rows[0]['name'])
 
     def test_fetch_rowcount(self):
-        self.init_test_data()
-        # check car makers row count
-        expected = self.__db.fetch_rowcount('car_makers')
-        self.__db.commit()
-        self.assertEqual(3, expected)
-        # check cars row count
-        expected = self.__db.fetch_rowcount('cars')
-        self.__db.commit()
-        self.assertEqual(9, expected)
+        self.init_data()
+        result = self.db.fetch_rowcount('car_makers')
+        self.db.commit()
+        self.assertEqual(3, result)
 
-    def test_command_is_empty(self):
-        with self.assertRaises(ValueError):
-            self.__db.execute_proc('', ('test',))
-            self.__db.execute_proc(None, ('test',))
-            self.__db.find('', ('test',))
-            self.__db.find(None, ('test',))
-            self.__db.find_one('', ('test',))
-            self.__db.find_one(None, ('test',))
-            self.__db.execute('', ('test',))
-            self.__db.execute(None, ('test',))
-            self.__db.fetch_rowcount('')
-            self.__db.fetch_rowcount(None)
-            self.__db.bulk_insert('', [])
-            self.__db.bulk_insert(None, [])
-            self.__db.bulk_insert('test', None)
-            self.__db.bulk_insert('test', [])
-        self.__db.rollback()
+    def test_fetch_last_row_id(self):
+        self.db.execute_proc('save_car_maker', (None, 'test'))
+        result = self.db.fetch_last_row_id()
+        self.db.commit()
+        self.assertEqual(1, result)
 
-    def test_run_invalid_command(self):
+    def test_has_row(self):
+        self.init_data()
+        data = (1,)
+        result = self.db.has_row('car_makers', data)
+        self.db.commit()
+        self.assertTrue(result)
+
+    def test_has_no_row(self):
+        self.init_data()
+        data = (999,)
+        result = self.db.has_row('car_makers', data)
+        self.db.commit()
+        self.assertFalse(result)
+
+    def test_invalid_command(self):
         with self.assertRaises(psycopg2.ProgrammingError):
-            self.__db.execute_proc('invalid command', (None, 'test'))
-            self.__db.find('invalid command', (None,))
-            self.__db.find_one('invalid command', (None,))
-            self.__db.execute('invalid command')
-            self.__db.bulk_insert('invalid command', ([]))
-            self.__db.fetch_rowcount('invalid table name')
-        self.__db.rollback()
+            self.db.execute_proc('invalid command', (None, 'test'))
+            self.db.find('invalid command', (None,))
+            self.db.find_one('invalid command', (None,))
+            self.db.execute('invalid command')
+            self.db.bulk_insert('invalid command', ([]))
+            self.db.fetch_rowcount('invalid table name')
+        self.db.rollback()
 
-    def init_test_data(self):
-        car_makers = [
-            ('toyota',),
-            ('nissan',),
-            ('honda',)
-        ]
-        cars = [
-            (1, 'カローラ'),
-            (1, 'クレスタ'),
-            (1, '86'),
-            (2, 'スカイライン'),
-            (2, 'フェアレディZ'),
-            (2, 'マーチ'),
-            (3, 'Civic'),
-            (3, 'S2000'),
-            (3, 'フリード')
-        ]
-        query1 = 'INSERT INTO car_makers (name) VALUES (%s);'
-        query2 = 'INSERT INTO cars (maker_id, name) VALUES (%s, %s);'
-        self.__db.bulk_insert(query1, car_makers)
-        self.__db.bulk_insert(query2, cars)
-        self.__db.commit()
+    def test_empty_command(self):
+        with self.assertRaises(ValueError):
+            self.db.execute_proc('', ('test',))
+            self.db.execute_proc(None, ('test',))
+            self.db.find('', ('test',))
+            self.db.find(None, ('test',))
+            self.db.find_one('', ('test',))
+            self.db.find_one(None, ('test',))
+            self.db.execute('', ('test',))
+            self.db.execute(None, ('test',))
+            self.db.fetch_rowcount('')
+            self.db.fetch_rowcount(None)
+            self.db.bulk_insert('', [])
+            self.db.bulk_insert(None, [])
+            self.db.bulk_insert('test', None)
+            self.db.bulk_insert('test', [])
+        self.db.rollback()
+
+    def init_data(self):
+        self.db.execute_proc('create_test_data_pgadapter')
+        self.db.commit()
