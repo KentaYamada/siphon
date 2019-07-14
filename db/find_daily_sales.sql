@@ -26,23 +26,23 @@ BEGIN
         s.total_price,
         CASE
           -- 値引額
-          WHEN s.discount_price > 0 THEN 1
+          WHEN s.discount_price != 0 THEN 1
           -- 値引率
-          WHEN s.discount_rate > 0 THEN 2
+          WHEN s.discount_rate != 0 THEN 2
           -- 値引なし
           ELSE 0
         END AS discount_mode,
         CASE
-          WHEN s.discount_price > 0 THEN
+          WHEN s.discount_price != 0 THEN
             s.discount_price
-          WHEN s.discount_rate > 0 THEN
+          WHEN s.discount_rate != 0 THEN
             s.discount_rate
           ELSE 0
         END AS discount,
         CASE
-          WHEN s.discount_price > 0 THEN
+          WHEN s.discount_price != 0 THEN
             s.total_price - s.discount_price
-          WHEN s.discount_rate > 0 THEN
+          WHEN s.discount_rate != 0 THEN
             (s.total_price * (1 - (s.discount_rate * 1.0) / 100))::integer
           ELSE s.total_price
         END AS grand_total,
