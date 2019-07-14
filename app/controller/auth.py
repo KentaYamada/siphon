@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request, Blueprint
 from werkzeug.exceptions import (
     BadRequest,
@@ -15,7 +16,7 @@ from app.model.mapper.user_mapper import UserMapper
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
-@bp.route('/', methods=['POST'])
+@bp.route('/login', methods=['POST'])
 def login():
     request_data = request.get_json()
     if request_data is None:
@@ -107,4 +108,5 @@ def __save_token(token):
 
 def __get_token(user_id):
     mapper = AuthMapper()
-    return mapper.find_logged_in_user_token(user_id)
+    access_date = datetime.now().date()
+    return mapper.find_logged_in_user_token(user_id, access_date)

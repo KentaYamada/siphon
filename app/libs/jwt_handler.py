@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 from flask import request
 from flask_jwt_extended import verify_jwt_in_request
@@ -27,11 +28,12 @@ def user_loader_handler(identity):
         user_loader_callback_loader callback function
     """
     access_token = __get_request_token()
+    today = datetime.now().date()
     if access_token is None:
         return None
     mapper = AuthMapper()
-    user = mapper.find_logged_in_user_token(identity)
-    return identity if user else None
+    user = mapper.find_token_by(access_token, today)
+    return identity if user is not None else None
 
 
 def user_loader_error_handler(identity):

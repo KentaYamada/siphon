@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
 import category from '@/store/category';
 import item from '@/store/item';
 import user from '@/store/user';
@@ -19,5 +20,8 @@ export default new Vuex.Store({
     dashboard,
     auth,
     daily_sales
-  }
+  },
+  plugins: [
+      createPersistedState(),
+  ]
 });

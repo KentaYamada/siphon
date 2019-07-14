@@ -7,7 +7,6 @@ import { AuthState } from '@/store/store_types';
 const ROOT_URL = '/api/auth';
 const LOGIN_URL = `${ROOT_URL}/login`;
 const LOGOUT_URL = `${ROOT_URL}/logout`;
-const REFLESH_TOKEN_URL = `${ROOT_URL}/reflesh`;
 
 const state: AuthState = {
     auth: {
@@ -50,6 +49,12 @@ const getters = {
         return state.auth;
     },
     /**
+     * Get auth token string.
+     */
+    getAuthToken: (state: AuthState): string => {
+        return state.auth_token;
+    },
+    /**
      * ログインしているかどうか
      */
     isLoggedIn: (state: AuthState): boolean => {
@@ -62,7 +67,7 @@ const actions = {
      * Request auth
      */
     login: async (context: any) => {
-        return await axios.post(ROOT_URL, context.state.auth)
+        return await axios.post(LOGIN_URL, context.state.auth)
             .then((res: AxiosResponse) => {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.auth_token}`;
                 context.commit('setAccessToken', res.data.auth_token);

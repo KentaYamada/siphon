@@ -15,19 +15,35 @@ class AuthMapper(BaseMapper):
             print(e)
         return user
 
-    def find_logged_in_user_token(self, user_id):
+    def find_logged_in_user_token(self, user_id, access_date):
         if user_id is None or not isinstance(user_id, int):
             raise ValueError()
         try:
             row = self._db.find_one_proc(
                 'find_logged_in_user_token',
-                (user_id,)
+                (user_id, access_date)
             )
             self._db.commit()
         except Exception as e:
             self._db.rollback()
             row = None
         return row['token'] if row is not None else ''
+
+    def find_token_by(self, token, access_date):
+        if not token or not isinstance(token, str):
+            raise ValueError('Invalid argument: token')
+        if access_date is None:
+            raise ValueError('Invalid argument: access_date')
+        data = (token, access_date)
+        try:
+            row = self._db.find_one_proc('find_token_by', data)
+            self._db.commit()
+        except Exception as e:
+            # todo: logging
+            self._db.rollback()
+            row = None
+        fields = ['user_id', 'token']
+        return self.format_row(row, fields) if row is not None else None
 
     def has_blacklist(self, token):
         if token is None or not isinstance(token, str):

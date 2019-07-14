@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
 import _ from 'lodash';
-// import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import App from './App.vue';
 import router from './router';
 import filters from './filters';
@@ -27,23 +27,39 @@ new Vue({
   router,
   store,
   render: (h) => h(App),
+  created: () => {
+    if (store.getters['auth/isLoggedIn']) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters['auth/getAuthToken']}`;
+    }
+  }
 }).$mount('#app');
 
-// todo: module化
-/*axios.interceptors.response.use((config: AxiosResponse) => {
+
+
+axios.interceptors.response.use((config: AxiosResponse) => {
   return config;
-}, (error: any) => {
+}, (error: AxiosError) => {
     const response = error.response;
 
-    if (response && response.status === 400 && response.data.is_retry) {
-      // request reflesh access token
-      const data = {'auth_token': ''};
-      axios.post('/api/auth/reflesh', data)
-          .then(() => {
+    if (response && response.status === 401) {
+        if (response.data.refleshing) {
+          // request reflesh token
+          const token = axios.defaults.headers.common.Authorization.split(' ')[1];
+          const data = {
+            token: token
+          };
+          axios.post('/api/auth/reflesh', data).then((res: AxiosResponse) => {
               // retry original request
-              axios.request(error.config);
+              const retryRequest = error.config;
+              retryRequest.headers.Authorization = `Bearer ${res.data.auth_token}`;
+              axios.request(retryRequest);
           });
+        } else {
+          // toast??
+          store.commit('auth/initialize');
+          router.push('/login');
+        }
     }
 
     return Promise.reject(error);
-});*/
+});
