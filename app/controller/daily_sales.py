@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 from werkzeug.exceptions import BadRequest
 from app.libs.api_response import ApiResponse
+from app.libs.jwt_handler import api_required
 from app.libs.datetime_formatter import format_date, format_time
 from app.model.daily_sales import DailySalesSearchOption
 from app.model.mapper.sales_mapper import SalesMapper
@@ -11,6 +12,7 @@ bp = Blueprint('daily_sales', __name__, url_prefix='/api/sales/daily')
 
 
 @bp.route('/', methods=['GET'])
+@api_required
 def index():
     request_query = request.args
     if request_query is None:

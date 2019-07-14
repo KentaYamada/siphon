@@ -46,25 +46,25 @@ class TestAuthMapper(BaseMapperTestCase):
             self.mapper.dispose_token(1)
             self.mapper.dispose_token(False)
 
-    def test_get_is_blacklist(self):
+    def test_has_blacklist(self):
         self.db.execute_proc('create_test_data_black_lists')
         self.db.commit()
-        result = self.mapper.get_is_blacklist('hoge')
+        result = self.mapper.has_blacklist('hoge')
         self.assertTrue(result)
 
-    def test_get_is_blacklist_when_no_record(self):
+    def test_has_blacklist_when_no_record(self):
         self.db.execute_proc('create_test_data_black_lists')
         self.db.commit()
-        result = self.mapper.get_is_blacklist('white')
+        result = self.mapper.has_blacklist('white')
         self.assertFalse(result)
 
-    def test_get_is_blacklist_when_invalid_argument(self):
+    def test_has_blacklist_when_invalid_argument(self):
         with self.assertRaises(ValueError):
-            self.mapper.get_is_blacklist(None)
-            self.mapper.get_is_blacklist('')
-            self.mapper.get_is_blacklist('1')
-            self.mapper.get_is_blacklist(1)
-            self.mapper.get_is_blacklist(True)
+            self.mapper.has_blacklist(None)
+            self.mapper.has_blacklist('')
+            self.mapper.has_blacklist('1')
+            self.mapper.has_blacklist(1)
+            self.mapper.has_blacklist(True)
 
     def init_data(self):
         # see /db/test/data/token.sql

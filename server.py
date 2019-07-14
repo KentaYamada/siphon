@@ -6,5 +6,4 @@ if __name__ == '__main__':
     # set development env
     environ['APP_TYPE'] = 'development'
     app = startup_app()
-    app.config.from_object('app.config.DevelopmentConfig')
     app.run()

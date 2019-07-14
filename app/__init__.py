@@ -10,6 +10,11 @@ from werkzeug.exceptions import (
 )
 from app.config import get_config
 from app.libs.error_handler import api_error_handler
+from app.libs.jwt_handler import (
+    user_loader_handler,
+    user_loader_error_handler,
+    token_in_blacklist_handler
+)
 from app.controller import auth
 from app.controller import cashier
 from app.controller import category
@@ -21,16 +26,26 @@ from app.controller import user
 from app.controller import view
 
 
-jwt = None
-
-
 def startup_app():
     app = Flask(__name__)
 
+    # Setup basic config.
+    config = get_config()
+    app.config.from_object(config)
+
+    # Setup flask optional configs
     # URL末尾のスラッシュを含めなくて良いようにする
     app.url_map.strict_slashes = False
 
-    # register blueprints
+    # Register error handlers
+    app.register_error_handler(BadRequest, api_error_handler)
+    app.register_error_handler(Unauthorized, api_error_handler)
+    app.register_error_handler(Forbidden, api_error_handler)
+    app.register_error_handler(NotFound, api_error_handler)
+    app.register_error_handler(Conflict, api_error_handler)
+    app.register_error_handler(InternalServerError, api_error_handler)
+
+    # Register blueprints
     blueprints = [
         auth.bp,
         cashier.bp,
@@ -46,19 +61,12 @@ def startup_app():
     for bp in blueprints:
         app.register_blueprint(bp)
 
-    # register error handlers
-    app.register_error_handler(BadRequest, api_error_handler)
-    app.register_error_handler(Conflict, api_error_handler)
-    app.register_error_handler(Forbidden, api_error_handler)
-    app.register_error_handler(InternalServerError, api_error_handler)
-    app.register_error_handler(NotFound, api_error_handler)
-    app.register_error_handler(Unauthorized, api_error_handler)
-
-    # todo: configの読み込み箇所ここ？
-    app.config.from_object('app.config.DevelopmentConfig')
-
-    # 一旦仮で
-    global jwt
+    # Setup JWT
     jwt = JWTManager(app)
+
+    # Register JWT handlers
+    jwt.user_loader_callback_loader(user_loader_handler)
+    jwt.user_loader_error_loader(user_loader_error_handler)
+    jwt.token_in_blacklist_loader(token_in_blacklist_handler)
 
     return app

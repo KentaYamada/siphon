@@ -2,6 +2,7 @@ from datetime import datetime
 from calendar import monthrange
 from flask import Blueprint
 from app.libs.api_response import ApiResponse
+from app.libs.jwt_handler import api_required
 from app.model.sales_item import PopularSalesItemSearchOption
 from app.model.monthly_sales import MonthlySalesSearchOption
 from app.model.mapper.sales_mapper import SalesMapper
@@ -12,6 +13,7 @@ bp = Blueprint('dashboard', __name__, url_prefix='/api/dashboard')
 
 
 @bp.route('/<int:year>/<int:month>', methods=['GET'])
+@api_required
 def index(year, month):
     monthly_sales = __get_monthly_sales(year, month)
     items = __get_popular_items(year, month)

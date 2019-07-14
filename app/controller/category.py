@@ -1,7 +1,15 @@
 from flask import request, Blueprint
-from werkzeug.exceptions import BadRequest, Conflict, NotFound
+from werkzeug.exceptions import (
+    BadRequest,
+    Conflict,
+    NotFound
+)
 from app.libs.api_response import ApiResponse
-from app.model.category import Category, CategorySearchOption
+from app.libs.jwt_handler import api_required
+from app.model.category import (
+    Category,
+    CategorySearchOption
+)
 from app.model.mapper.category_mapper import CategoryMapper
 
 
@@ -9,6 +17,7 @@ bp = Blueprint('category', __name__, url_prefix='/api/categories')
 
 
 @bp.route('/', methods=['GET'])
+@api_required
 def index():
     option = CategorySearchOption()
     if request.args is not None:
@@ -23,6 +32,7 @@ def index():
 
 
 @bp.route('/', methods=['POST'])
+@api_required
 def add():
     request_data = request.get_json()
     if request_data is None:
@@ -47,6 +57,7 @@ def add():
 
 
 @bp.route('/<int:id>', methods=['PUT'])
+@api_required
 def edit(id):
     request_data = request.get_json()
     if request_data is None:
@@ -68,6 +79,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
+@api_required
 def delete(id):
     mapper = CategoryMapper()
     deleted = mapper.delete(id)

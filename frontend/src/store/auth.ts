@@ -64,7 +64,7 @@ const actions = {
     login: async (context: any) => {
         return await axios.post(ROOT_URL, context.state.auth)
             .then((res: AxiosResponse) => {
-                axios.defaults.headers.common['Authoricate'] = `Bearer ${res.data.auth_token}`;
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.auth_token}`;
                 context.commit('setAccessToken', res.data.auth_token);
                 return Promise.resolve(res);
             });
@@ -79,7 +79,7 @@ const actions = {
         
         return await axios.post(LOGOUT_URL, data)
             .then((res: AxiosResponse) => {
-                axios.defaults.headers.common['Authoricate'] = '';
+                axios.defaults.headers.common['Authorization'] = '';
                 context.commit('initialize');
                 return Promise.resolve(res);
             });

@@ -1,6 +1,11 @@
 from flask import request, Blueprint
-from werkzeug.exceptions import BadRequest, Conflict, NotFound
+from werkzeug.exceptions import (
+    BadRequest,
+    Conflict,
+    NotFound
+)
 from app.libs.api_response import ApiResponse
+from app.libs.jwt_handler import api_required
 from app.model.item import Item, ItemSearchOption
 from app.model.mapper.item_mapper import ItemMapper
 
@@ -9,6 +14,7 @@ bp = Blueprint('item', __name__, url_prefix='/api/items')
 
 
 @bp.route('/', methods=['GET'])
+@api_required
 def index():
     option = ItemSearchOption()
     if request.args is not None:
@@ -22,6 +28,7 @@ def index():
 
 
 @bp.route('/', methods=['POST'])
+@api_required
 def add():
     request_data = request.get_json()
     if request_data is None:
@@ -43,6 +50,7 @@ def add():
 
 
 @bp.route('/<int:id>', methods=['PUT'])
+@api_required
 def edit(id):
     request_data = request.get_json()
     if request_data is None:
@@ -64,6 +72,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
+@api_required
 def delete(id):
     mapper = ItemMapper()
     deleted = mapper.delete(id)

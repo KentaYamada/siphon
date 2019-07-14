@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import request, Blueprint
 from werkzeug.exceptions import BadRequest, Conflict
 from app.libs.api_response import ApiResponse
+from app.libs.jwt_handler import api_required
 from app.model.sales import Sales
 from app.model.sales_item import SalesItem
 from app.model.category import CategorySearchOption
@@ -15,6 +16,7 @@ bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
 
 
 @bp.route('/', methods=['GET'])
+@api_required
 def index():
     categories = _get_categories()
     items = _get_items(categories)
@@ -26,6 +28,7 @@ def index():
 
 
 @bp.route('/', methods=['POST'])
+@api_required
 def add():
     request_data = request.get_json()
     if request_data is None:

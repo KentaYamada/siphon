@@ -1,6 +1,11 @@
 from flask import request, Blueprint
-from werkzeug.exceptions import BadRequest, Conflict, NotFound
+from werkzeug.exceptions import (
+    BadRequest,
+    Conflict,
+    NotFound
+)
 from app.libs.api_response import ApiResponse
+from app.libs.jwt_handler import api_required
 from app.model.user import User, UserSearchOption
 from app.model.mapper.user_mapper import UserMapper
 
@@ -9,6 +14,7 @@ bp = Blueprint('user', __name__, url_prefix='/api/users')
 
 
 @bp.route('/', methods=['GET'])
+@api_required
 def index():
     option = UserSearchOption()
     if request.args is not None:
@@ -21,6 +27,7 @@ def index():
 
 
 @bp.route('/', methods=['POST'])
+@api_required
 def add():
     request_data = request.get_json()
     if request_data is None:
@@ -42,6 +49,7 @@ def add():
 
 
 @bp.route('/<int:id>', methods=['PUT'])
+@api_required
 def edit(id):
     request_data = request.get_json()
     if request_data is None:
@@ -63,6 +71,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
+@api_required
 def delete(id):
     mapper = UserMapper()
     deleted = mapper.delete(id)

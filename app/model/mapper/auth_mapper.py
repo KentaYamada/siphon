@@ -29,7 +29,7 @@ class AuthMapper(BaseMapper):
             row = None
         return row['token'] if row is not None else ''
 
-    def get_is_blacklist(self, token):
+    def has_blacklist(self, token):
         if token is None or not isinstance(token, str):
             raise ValueError()
         is_blacklist = False
