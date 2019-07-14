@@ -41,7 +41,7 @@ class TestCategoryApi(unittest.TestCase):
     def test_index_keyword_search(self):
         self.__init_data()
         query_string = urlencode({'q': 'セット'})
-        #todo: strict_slashes = false
+        # todo: strict_slashes = false
         url = '/api/categories?{0}'.format(query_string)
         res = TestCategoryApi.client.get(
             url,
@@ -49,14 +49,6 @@ class TestCategoryApi(unittest.TestCase):
         body = json.loads(res.data)
         self.assertEqual(200, res.status_code)
         self.assertEqual(2, len(body['categories']))
-
-    def test_index_with_items(self):
-        data = json.dumps({'with_items': True})
-        res = TestCategoryApi.client.get(
-            END_POINT,
-            content_type=CONTENT_TYPE,
-            data=data)
-        self.assertEqual(200, res.status_code)
 
     def test_add_ok(self):
         data = json.dumps({
@@ -107,6 +99,7 @@ class TestCategoryApi(unittest.TestCase):
         self.assertEqual(400, res.status_code)
 
     def test_delete_ok(self):
+        self.__init_data()
         url = urljoin(END_POINT, '1')
         res = TestCategoryApi.client.delete(url)
         self.assertEqual(204, res.status_code)
