@@ -35,7 +35,6 @@ new Vue({
 }).$mount('#app');
 
 
-
 axios.interceptors.response.use((config: AxiosResponse) => {
   return config;
 }, (error: AxiosError) => {
@@ -49,9 +48,18 @@ axios.interceptors.response.use((config: AxiosResponse) => {
             token: token
           };
           axios.post('/api/auth/reflesh', data).then((res: AxiosResponse) => {
+              const token = res.data.auth_token;
+
+              // update token
+              store.commit('auth/setAccessToken', token);
+
+              // update global request header
+              axios.defaults.headers.common.Authorization= `Bearer ${token}`;
+
               // retry original request
               const retryRequest = error.config;
-              retryRequest.headers.Authorization = `Bearer ${res.data.auth_token}`;
+              retryRequest.headers.Authorization = `Bearer ${token}`;
+              
               axios.request(retryRequest);
           });
         } else {
