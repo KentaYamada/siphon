@@ -48,4 +48,4 @@ class SalesItemMapper(BaseMapper):
             print(e)
         fields = ['rank_no', 'item_name', 'quantity']
         sales_items = self.format_rows(rows, fields)
-        return sales_items
+        return list(filter(lambda x: x['quantity'] > 0, sales_items))
