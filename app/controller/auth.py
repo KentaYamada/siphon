@@ -30,14 +30,13 @@ def login():
     user = User(email=request_data['email'])
     auth_user = mapper.find_auth_user(user)
     if auth_user is None:
-        raise Unauthorized()
+        raise Unauthorized(description='User not found.')
 
     verify_pw = User.verify_password(
         request_data['password'],
         auth_user['password']
     )
     if not verify_pw:
-        # todo: error response
         raise Unauthorized(description='Invalid password')
 
     # ログイン済の場合は、トークンを返す
