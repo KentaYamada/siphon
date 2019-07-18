@@ -1,0 +1,42 @@
+<div class="modal-card">
+    <header class="modal-card-head">
+        <p class="modal-card-title">
+            <i class="fas fa-tag"></i>
+            商品カテゴリ設定
+        </p>
+    </header>
+    <section class="modal-card-body">
+        <form>
+            <div class="field">
+                <label class="label">
+                    <small class="has-text-danger">※</small>
+                    カテゴリ名:
+                </label>
+                <div class="control">
+                    <input
+                        type="text"
+                        class="input"
+                        v-model="category.name">
+                </div>
+                <small class="help is-danger" v-for="error in errors.name">
+                    {{ error }}
+                </small>
+            </div>
+        </form>
+    </section>
+    <footer class="modal-card-foot buttons is-right">
+        <button
+            type="button"
+            class="button"
+            @click="$parent.close()">
+            閉じる
+        </button>
+        <button
+            type="button"
+            class="button is-info"
+            @click="handleSave">
+            <i class="fas fa-save"></i>
+            保存
+        </button>
+    </footer>
+</div>

@@ -1,0 +1,47 @@
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation" v-if="isLoggedIn">
+    <div class="navbar-brand">
+        <router-link :to="{path: '/'}" class="navbar-item">
+            <i class="fas fa-mug-hot"></i>
+            Cafe de GAMOYON
+        </router-link>
+        <a role="button"
+            class="navbar-burger burger"
+            aria-label="menu"
+            data-target="nav-groups"
+            @click="toggleNav()">
+            <span area-hidden="true"></span>
+            <span></span>
+            <span></span>
+        </a>
+    </div>
+    <div id="nav-groups" class="navbar-menu" :class="{ 'is-active': showNav }">
+        <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable" v-for="m in menu">
+                <a class="navbar-link is-arrowless">
+                    <i class="fas" :class="m.icon"></i>
+                    {{m.title}}
+                </a>
+                <div class="navbar-dropdown">
+                    <router-link
+                        v-for="s in m.submenu"
+                        v-bind:key="s.title"
+                        :to="{path: s.url}"
+                        class="navbar-item"
+                        @click.native="handleCloseNav()">
+                            <i class="fas" :class="s.icon"></i>
+                            {{s.title}}
+                    </router-link>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <button class="button is-light" @click="handleLogout()">
+                    <i class="fas fa-door-open"></i>
+                    ログアウト
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+

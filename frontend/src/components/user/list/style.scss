@@ -1,0 +1,28 @@
+.table-header {
+    margin-top: 10px;
+    /* todo: don't use important */
+    margin-bottom: 0 !important;
+}
+
+.scrollable-table-area {
+    max-height: 332px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-header,
+.scrollable-table-area {
+    .name-col,
+    .nickname-col {
+        width: 30%;
+    }
+    .buttons-col {
+        .fas {
+            margin-right: 6px;
+        }
+
+        .button.is-info {
+            margin-right: 4px;
+        }
+    }
+}

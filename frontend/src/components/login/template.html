@@ -1,0 +1,35 @@
+<div class="container has-text-centered">
+    <div class="column is-4 is-offset-4">
+        <div class="box">
+            <h3 class="title">Siphon</h3>
+            <p class="subtitle">Cafe de GAMOYON</p>
+            <form>
+                <div class="field">
+                    <label class="label has-text-left">メールアドレス</label>
+                    <div class="control">
+                        <input
+                            type="text"
+                            class="input is-large"
+                            placeholder="例)example@email.com"
+                            v-model="getAuth.email">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label has-text-left">パスワード</label>
+                    <div class="control">
+                        <input
+                            type="password"
+                            class="input is-large"
+                            v-model="getAuth.password">
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="button is-block is-info is-large is-fullwidth"
+                    @click="handleLogin()">
+                    ログイン
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="container daily-sales-list">
+    <div class="columns">
+        <div class="column is-10 is-offset-1">
+            <b-collapse class="card is-size-4">
+                <header class="card-header" slot="trigger" slot-scope="props">
+                    <p class="card-header-title">
+                        <i class="fas fa-calendar-day"></i>
+                        {{ title }}
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon :icon="props.open ? 'angle-down' : 'angle-up'"></b-icon>
+                    </a>
+                </header>
+                <section class="card-content">
+                    <div class="content">
+                        <form>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <b-datepicker
+                                        placeholder="売上日"
+                                        icon="fas fa-calendar-day"
+                                        v-model="option.sales_date"
+                                        >
+                                    </b-datepicker>
+                                </div>
+                                <div class="control">
+                                    <b-timepicker
+                                        placeholder=""
+                                        icon=""
+                                        editable
+                                        v-model="option.time_from">
+                                    </b-timepicker>
+                                </div>
+                                <span>〜</span>
+                                <div class="control">
+                                    <b-timepicker
+                                        placeholder=""
+                                        icon=""
+                                        editable
+                                        v-model="option.time_to">
+                                    </b-timepicker>
+                                </div>
+                            </div>
+                            <div class="field is-grouped is-grouped-centered">
+                                <div class="control">
+                                    <button type="button" class="button is-info" @click="handleSearch()">
+                                        <i class="fas fa-search"></i>
+                                        検索
+                                    </button>
+                                </div>
+                                <div class="control">
+                                    <button type="button" class="button" @click="handleClearConditions()">
+                                        <i class="fas fa-times-circle"></i>
+                                        リセット
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </b-collapse>
+            <div class="daily-sales-items">
+                <daily-sales-item
+                    v-for="item in getDailySales"
+                    :key="item.sales_id"
+                    :dailySales="item" />
+            </div>
+        </div>
+    </div>
+</div>

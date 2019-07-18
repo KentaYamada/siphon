@@ -1,0 +1,119 @@
+<div class="container">
+    <div class="columns">
+        <div class="column is-8 is-offset-2">
+            <b-collapse class="card is-size-4">
+                <header class="card-header" slot="trigger" slot-scope="props">
+                    <p class="card-header-title">
+                        <i class="fas fa-coffee"></i>
+                        商品
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon :icon="props.open ? 'angle-down' : 'angle-up'">
+                        </b-icon>
+                    </a>
+                </header>
+                <section class="card-content">
+                    <div class="content">
+                        <form class="search-form">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <b-select
+                                        size="is-medium"
+                                        placeholder="商品カテゴリ"
+                                        v-model="option.category_id">
+                                        <option
+                                            v-for="c in getCategories"
+                                            :value="c.id"
+                                            :key="c.id">
+                                            {{ c.name }}
+                                        </option>
+                                    </b-select>
+                                </div>
+                                <div class="control is-expanded">
+                                    <input
+                                        type="text"
+                                        class="input is-medium"
+                                        placeholder="例) GAMOYONカレー"
+                                        v-model="option.q">
+                                </div>
+                                <div class="control">
+                                    <button
+                                        type="reset"
+                                        class="button is-medium"
+                                        @click="handleClearSerachOption()">
+                                        <i class="fas fa-times-circle"></i>
+                                        クリア
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="field is-grouped is-grouped-right">
+                                <div class="control">
+                                    <button
+                                        type="button"
+                                        class="button is-info is-medium"
+                                        @click="handleSearch()">
+                                        <i class="fa fa-search"></i>
+                                        検索
+                                    </button>
+                                </div>
+                                <div class="control">
+                                    <button
+                                        type="button"
+                                        class="button is-success is-medium"
+                                        @click="handleNew()">
+                                        <i class="fa fa-plus"></i>
+                                        新規作成
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </b-collapse>
+            <table class="table is-bordered is-striped is-size-5 is-fullwidth table-header">
+                <thead>
+                    <tr>
+                        <th class="has-text-centered name-col">商品</th>
+                        <th class="has-text-centered price-col">単価</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="scrollable-table-area is-size-5">
+                <table class="table is-fullwidth is-bordered is-striped table-contents">
+                    <tbody>
+                        <tr v-show="!hasItems">
+                            <td class="has-text-centered">
+                                表示するデータがありません
+                            </td>
+                        </tr>
+                        <tr v-for="item in getItems">
+                            <td class=" name-col">
+                                {{ item.name }}
+                            </td>
+                            <td class="has-text-right price-col">
+                                {{ item.unit_price | toNumWithDelimiter }}
+                            </td>
+                            <td class="has-text-centered buttons-col">
+                                <button
+                                    type="button"
+                                    class="button is-info is-medium"
+                                    @click="handleEdit(item)">
+                                    <i class="fas fa-edit"></i>
+                                    編集
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button is-danger is-medium"
+                                    @click="handleDelete(item)">
+                                    <i class="fas fa-trash-alt"></i>
+                                    削除
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

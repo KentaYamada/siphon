@@ -1,0 +1,18 @@
+.daily-sales-list {
+    .columns {
+        margin-top: 0.2rem;
+
+        .card-header-title {
+            .fas {
+                margin-right: 6px;
+            }
+        }
+
+        .daily-sales-items {
+            margin-top: 20px;
+            max-height: 420px;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+}

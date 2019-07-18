@@ -1,0 +1,44 @@
+.container {
+    .columns {
+        margin-top: 0.2rem;
+    }
+    .search-form {
+        .button {
+            .fas {
+                margin-right: 6px;
+            }
+        }
+    }
+    
+    .table-header {
+        margin-top: 10px;
+        margin-bottom: 0px !important;
+    }
+    
+    .scrollable-table-area {
+        max-height: 331px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    
+        .table-contents {
+            .buttons-col {
+                .button.is-info {
+                    margin-right: 10px;
+                }
+                .fas {
+                    margin-right: 6px;
+                }
+            }
+        }
+    }
+    
+    .table-header,
+    .table-contents {
+        .name-col {
+            width: 40%;
+        }
+        .price-col {
+            width: 15%;
+        }
+    }
+}
