@@ -1,0 +1,49 @@
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="title">
+                            消費税率設定
+                        </p>
+                        <form class="tax-edit-form">
+                            <div class="field">
+                                <label class="label">通常税率</label>
+                                <div class="control">
+                                    <input type="text" class="input has-text-right">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">軽減税率</label>
+                                <div class="control">
+                                    <input type="text" class="input has-text-right">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">適用開始日</label>
+                                <div class="control">
+                                    <b-datepicker icon="fas fa-calendar-day"></b-datepicker>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">税タイプ</label>
+                                <input type="radio" name="tax-type" id="type-include" class="tax-type-button" value="1">
+                                <label for="type-include" class="radio tax-type-label">内税</label>
+                                <input type="radio" name="tax-type" id="type-exclude" class="tax-type-button" value="1">
+                                <label for="type-exclude" class="radio tax-type-label">外税</label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="button is-info is-medium">
+                                    <i class="fas fa-save"></i>
+                                    保存
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
