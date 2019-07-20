@@ -3,6 +3,7 @@ from app.model.base import BaseModel
 
 class TaxRate(BaseModel):
     def __init__(self, rate, reduced_rate, start_date, tax_type, **kwargs):
+        super().__init__()
         self.rate = rate
         self.reduced_rate = reduced_rate
         self.start_date = start_date
@@ -51,7 +52,7 @@ class TaxRate(BaseModel):
             super()._add_validation_error('tax_type', '税タイプ必須入力です')
         elif not isinstance(value, int):
             super()._add_validation_error('tax_type', '税タイプは整数をセットしてください')
-        elif value in (1, 2):
+        elif value not in (1, 2):
             super()._add_validation_error('tax_type', '無効な税タイプです')
         else:
             self.__tax_type = value
