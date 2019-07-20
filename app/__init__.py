@@ -22,6 +22,7 @@ from app.controller import daily_sales
 from app.controller import dashboard
 from app.controller import item
 from app.controller import sales
+from app.controller import tax_rate
 from app.controller import user
 from app.controller import view
 
@@ -54,6 +55,7 @@ def startup_app():
         dashboard.bp,
         item.bp,
         sales.bp,
+        tax_rate.bp,
         user.bp,
         view.bp
     ]
