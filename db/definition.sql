@@ -60,11 +60,11 @@ CREATE TABLE users (
 CREATE TABLE tax_rates (
     id serial NOT NULL,
     rate integer NOT NULL,
-    reduced_rate NOT NULL,
+    reduced_rate integer NOT NULL,
     start_date date NOT NULL,
     end_date date NOT NULL,
     tax_type integer NOT NULL,
-    PRAIMARY KEY(id),
+    PRIMARY KEY(id),
     UNIQUE(start_date)
 );
 
