@@ -34,6 +34,7 @@ export function getMenus(): Menu[] {
         submenu: [
             {title: '商品カテゴリ', icon: 'fa-tag', url: '/categories', submenu: null},
             {title: '商品', icon: 'fa-coffee', url: '/items', submenu: null},
+            {title: '消費税', icon: 'fa-yen-sign', url: '/tax', submenu: null},
             {title: 'ユーザー', icon: 'fa-users', url: '/users', submenu: null}
         ]
     };

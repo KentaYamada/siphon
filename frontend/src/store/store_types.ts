@@ -5,6 +5,8 @@ import { Item } from '@/entity/item';
 import { User } from '@/entity/user';
 import { DailySales } from '@/entity/daily_sales';
 import { MonthlySales, PopularItem } from '@/entity/dashboard';
+import { TaxRate } from '@/entity/tax_rate';
+
 
 /** Auth state */
 export interface AuthState {
@@ -40,6 +42,11 @@ export interface DashboardState {
 /** Item state */
 export interface ItemState {
     items: Item[];
+}
+
+/** TaxRate state */
+export interface TaxRateState {
+    tax_rate: TaxRate;
 }
 
 /** User state */
