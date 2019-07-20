@@ -26,7 +26,7 @@ class TaxRateMapper(BaseMapper):
     def find_current_tax_rate(self):
         data = (datetime.now().date(),)
         try:
-            row = self._db.find_proc('find_current_tax_rate', data)
+            row = self._db.find_one_proc('find_current_tax_rate', data)
             self._db.commit()
         except Exception as e:
             # todo: logger
