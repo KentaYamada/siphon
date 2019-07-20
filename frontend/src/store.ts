@@ -8,6 +8,8 @@ import cashier from '@/store/cashier';
 import dashboard from '@/store/dashboard';
 import auth from '@/store/auth';
 import daily_sales from '@/store/daily_sales';
+import tax_rate from '@/store/tax_rate';
+
 
 Vue.use(Vuex);
 
@@ -19,7 +21,8 @@ export default new Vuex.Store({
     cashier,
     dashboard,
     auth,
-    daily_sales
+    daily_sales,
+    tax_rate,
   },
   plugins: [
       createPersistedState(),
