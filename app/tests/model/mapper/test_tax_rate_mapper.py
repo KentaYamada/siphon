@@ -13,7 +13,7 @@ class TestTaxRateMapper(BaseMapperTestCase):
         """
 
     def test_save(self):
-        data = TaxRate(10, 8, datetime.now().date, 1)
+        data = TaxRate(10, 8, datetime.now().date(), 1)
         result = self.mapper.save(data)
         self.assertTrue(result)
 
