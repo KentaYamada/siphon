@@ -39,7 +39,7 @@ class TaxRate(BaseModel):
         elif value < 1:
             super()._add_validation_error('reduced_rate', '軽減税率は1%以上セットしてください')
         else:
-            self.__rreduced_ate = value
+            self.__reduced_rate = value
 
     @property
     def tax_type(self):
@@ -56,4 +56,3 @@ class TaxRate(BaseModel):
             super()._add_validation_error('tax_type', '無効な税タイプです')
         else:
             self.__tax_type = value
-
