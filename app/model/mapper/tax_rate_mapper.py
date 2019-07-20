@@ -32,5 +32,8 @@ class TaxRateMapper(BaseMapper):
             # todo: logger
             self._db.rollback()
             row = None
-        fields = ['rate', 'reduced_rate', 'tax_type']
-        return row if row is None else self.format_row(row, fields)
+        fields = ['rate', 'reduced_rate', 'start_date', 'tax_type']
+        if row is not None:
+            row['start_date'] = row['start_date'].strftime('%Y/%m/%d')
+            row = self.format_row(row, fields)
+        return row
