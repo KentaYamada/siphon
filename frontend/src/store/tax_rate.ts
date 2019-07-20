@@ -26,6 +26,8 @@ const mutations = {
                 tax_type: TAX_TYPES.INCLUDE
             } as TaxRate;
         } else {
+            // convert date string to date object
+            taxRate.start_date = moment(taxRate.start_date).toDate();
             state.tax_rate = taxRate;
         }
     }
