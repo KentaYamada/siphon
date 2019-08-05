@@ -1,81 +1,140 @@
-.box {
-    margin-top: 1.2rem;
-}
-.sales-items-area {
-    padding-top: 0.15rem;
-}
+/* お会計エリア */
+.cashing-area {
+    .cash-header {
+        font-weight: bold;
+        letter-spacing: 4px;
+        margin-bottom: 6px;
+        text-align: center;
+    }
+    .sales-items {
+        height: 220px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
 
-.scrollable-table-area {
-    height: 260px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-}
+        .sales-item-category {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .sales-item {
+            border-top: 1px solid #ddd;
+            padding-top: 12px;
+            padding-bottom: 12px;
 
-.table-header {
-    margin-top: 10px;
-    margin-bottom: 0px !important;
-}
-
-.table-contents {
-    .button-cols {
-        .button-minus {
-            margin-right: 6px;
+            .item-name {
+                display: inline-block;
+                font-weight: bold;
+                padding-top: 4px;
+            }
+            .item-points {
+                display: inline-block;
+                margin-right: 8px;
+                padding-top: 6px;
+            }
         }
     }
-}
+    .cash-footer {
+        .footer-item {
+            border-top: 1px solid #ddd;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-top: 2px;
 
-.table-footer {
-    .input-col {
-        padding-top: 1.0em;
-    }
-    .is-borderless {
-        border: none;
-    }
-}
+            .footer-label-container {
+                width: 80%;
+                text-align: right;
 
-.table-header,
-.table-contents {
-    .item-col {
-        width: 20%;
-    }
-    .amount-col,
-    .subtotal-col {
-        width: 15%;
-    }
-    .button-cols {
-        width: 20%;
-    }
-}
-
-
-.scrollable-items-area {
-    height: 310px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-
-    .item-group {
-        list-style: none;
-        text-align: left;
-
-        .item {
-            border: 1px solid #dbdbdb;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            margin-right: 6px;
-            padding: 6px;
-
-            .button {
-                margin-right: 6px;
+                .footer-label {
+                    font-weight: bold;
+                    border-right: 1px solid #ddd;
+                    padding-right: 5px;
+                    letter-spacing: 2px;
+                }
             }
         }
     }
 }
+/* 商品選択エリア */
+.item-selection-area {
+    margin-bottom: 8px;
 
-.option-buttons {
-    padding: 0.6rem;
+    .categories {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
 
-    .fas {
-        margin-right: 6px;
+        .category-button {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px 12px;
+            margin-top: 6px;
+            margin-right: 6px;
+            text-align: center;
+            width: 96px;
+
+            .category-name {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 100%;
+            }
+        }
+    }
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: 216px;
+        margin-top: 12px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+
+        .item-button {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding-top: 8px;
+            padding-bottom: 6px;
+            padding-left: 12px;
+            padding-right: 4px;
+            margin-top: 6px;
+            margin-right: 6px;
+            width: 165px;
+
+            .item-name {
+                font-weight: bold;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .price {
+                font-weight: bold;
+                text-align: right;
+                margin-top: -6px;
+                margin-bottom: 6px;
+            }
+        }
+    }
+}
+/* 会計操作エリア */
+.cash-operations {
+    .pad-buttons {
+        margin-bottom: 6px;
+
+        > :not(:first-child) {
+            margin-left: 4px;
+        }
+        .pad-button {
+            width: 60px;
+        }
+        .pad-button-zero {
+            width: 124px;
+        }
+    }
+    .operation-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    .option-button {
+        width: 106px;
     }
 }

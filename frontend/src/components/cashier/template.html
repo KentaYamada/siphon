@@ -1,184 +1,503 @@
-<div class="container">
-    <div class="box">
-        <div class="columns">
-            <div class="column is-6 sales-items-area">
-                <table class="table is-bordered is-striped is-fullwidth table-header">
-                    <thead>
-                        <tr>
-                            <th class="has-text-centered item-col">商品</th>
-                            <th class="has-text-centered amount-col">数量</th>
-                            <th class="has-text-centered subtotal-col">小計</th>
-                            <th class="button-cols"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <div class="scrollable-table-area">
-                    <table class="table is-bordered is-striped is-fullwidth table-contents">
-                        <tbody>
-                            <tr v-show="!hasItems">
-                                <td colspan="4" class="has-text-centered">
-                                    明細データがありません
-                                </td>
-                            </tr>
-                            <tr v-for="(s, index) in getSales.items"> 
-                                <td class="item-col">
-                                    <div>{{ s.item_name }}</div>
-                                    <div class="has-text-right">{{ s.price | toNumWithDelimiter}}</div>
-                                </td>
-                                <td class="has-text-right amount-col">
-                                    {{ s.quantity | toNumWithDelimiter }}
-                                </td>
-                                <td class="has-text-right subtotal-col">
-                                    {{ s.subtotal | toNumWithDelimiter }}
-                                </td>
-                                <td class="has-text-centered button-cols">
-                                    <button
-                                        type="button"
-                                        class="button is-info is-outlined button-minus"
-                                        @click="handleDecreaseItem(s.item_name)">
-                                        <i class="fas fa-minus-circle"></i>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="button is-danger is-outlined"
-                                        @click="handleDeleteItem(s)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <table class="table is-bordered is-striped is-fullwidth table-footer">
-                    <tbody>
-                        <tr>
-                            <th class="has-text-right input-col">
-                                値引({{ discountUnit }})
-                            </th>
-                            <td class="has-text-right">
-                                <div class="field">
-                                    <div class="control" v-show="isDiscountPrice">
-                                        <input
-                                            type="number"
-                                            class="input has-text-right is-borderless"
-                                            v-model.number="getSales.discount_price"
-                                            min="0">
-                                        <p class="help is-danger" v-for="error in errors.discount_price">
-                                            {{ error }}
-                                        </p>
-                                    </div>
-                                    <div class="control" v-show="isDiscountRate">
-                                        <input
-                                            type="number"
-                                            class="input has-text-right is-borderless"
-                                            v-model.number="getSales.discount_rate"
-                                            min="0">
-                                        <p class="help is-danger" v-for="error in errors.discount_rate">
-                                            {{ error }}
-                                        </p>
-                                    </div>
+<section class="section">
+    <div class="columns">
+        <div class="column is-5">
+            <div class="box cashing-area">
+                <h4 class="cash-header">
+                    <i class="fas fa-cash-register"></i>
+                    <span>お会計</span>
+                </h4>
+                <form>
+                    <ul class="sales-items">
+                        <li class="sales-item-category">
+                            <p>
+                                <i class="fas fa-utensils"></i>
+                                <span>イートイン</span>
+                            </p>
+                        </li>
+                        <li class="sales-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left">
+                                    <span class="item-name">
+                                        Siphon Coffee
+                                    </span>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="has-text-right">合計</th>
-                            <td class="has-text-right">
-                                {{ total_price | toNumWithDelimiter }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="has-text-right input-col">お預り</th>
-                            <td class="has-text-right">
-                                <div class="field">
-                                    <div class="control">
-                                        <input
-                                            type="number"
-                                            class="input has-text-right is-borderless"
-                                            v-model.number="getSales.deposit"
-                                            min="0">
-                                        <p class="help is-danger" v-for="error in errors.deposit">
-                                            {{ error }}
-                                        </p>
+                                <div class="is-pulled-right">
+                                    <div class="item-points">
+                                        <span>500</span>
+                                        <span>x</span>
+                                        <span>1</span>
                                     </div>
+                                    <button type="button" class="button is-info">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="button is-warning">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="button is-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="has-text-right">おつり</th>
-                            <td class="has-text-right">
-                                {{ getCharge | toNumWithDelimiter }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </li>
+                        <li class="sales-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left">
+                                    <span class="item-name">
+                                        Siphon Coffee
+                                    </span>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="item-points">
+                                        <span>500</span>
+                                        <span>x</span>
+                                        <span>1</span>
+                                    </div>
+                                    <button type="button" class="button is-info">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="button is-warning">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="button is-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="sales-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left">
+                                    <span class="item-name">
+                                        Siphon Coffee
+                                    </span>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="item-points">
+                                        <span>500</span>
+                                        <span>x</span>
+                                        <span>1</span>
+                                    </div>
+                                    <button type="button" class="button is-info">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="button is-warning">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="button is-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="sales-item-category">
+                            <p>
+                                <i class="fas fa-gift"></i>
+                                <span>テイクアウト</span>
+                            </p>
+                        </li>
+                        <li class="sales-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left">
+                                    <span class="item-name">
+                                        Ultimate NewYork cheese cake
+                                    </span>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="sales-item-price-container">
+                                        <span>450</span>
+                                        <span>x</span>
+                                        <span>1</span>
+                                    </div>
+                                    <button type="button" class="button is-info">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="button is-warning">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="button is-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="sales-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left">
+                                    <span class="item-name">
+                                        Ultimate NewYork cheese cake
+                                    </span>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="sales-item-price-container">
+                                        <span>450</span>
+                                        <span>x</span>
+                                        <span>1</span>
+                                    </div>
+                                    <button type="button" class="button is-info">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    <button type="button" class="button is-warning">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="button is-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="cash-footer">
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">小計</p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">1,350円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">値引</p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">0円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">
+                                        イートイン
+                                        <small>
+                                            (10%)
+                                            <i class="fas fa-question-circle"></i>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">0円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">
+                                        テイクアウト
+                                        <small>
+                                            (8%)
+                                            <i class="fas fa-question-circle"></i>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">0円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">合計</p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">1,350円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">お預かり</p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">1,350円</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="footer-item">
+                            <div class="is-clearfix">
+                                <div class="is-pulled-left footer-label-container">
+                                    <p class="footer-label">おつり</p>
+                                </div>
+                                <div class="is-pulled-right">
+                                    <div class="has-text-right">0円</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
             </div>
-            <div class="column">
-                <nav class="panel">
-                    <p class="panel-tabs" v-for="categories in getSelectionPanelData">
-                        <a
-                            v-for="category in categories"
-                            @click="handleSwitchItems(category.id)">
-                            {{ category.name }}
+        </div>
+        <div class="column">
+            <div class="box item-selection-area">
+                <ul class="categories">
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">
+                            Hogeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
                         </a>
-                    </p>
-                    <div class="panel-block">
-                        <div class="scrollable-items-area">
-                            <ul class="item-group">
-                                <li class="item" v-for="item in getSelectionItems">
-                                    <div>
-                                        {{ item.name }} (単価: {{ item.unit_price | toNumWithDelimiter }})
-                                    </div>
-                                    <div class="has-text-right">
-                                        <button
-                                            type="button"
-                                            class="button is-info is-outlined"
-                                            @click="handleIncreaseItem(item)">
-                                            <i class="fas fa-plus-circle"></i>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="button is-danger is-outlined"
-                                            @click="handleDecreaseItem(item.name)">
-                                            <i class="fas fa-minus-circle"></i>
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                    <li class="category-button">
+                        <a class="category-name has-text-dark">カテゴリ</a>
+                    </li>
+                </ul>
+                <ul class="items">
+                    <li class="item-button">
+                        <div class="item-name">
+                            Hogeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                        </div>
+                        <div class="price">
+                            <small>500円</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                            <small>(500)</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                            <small>(500)</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="item-button">
+                        <div class="item-name">
+                            Siphon Coffee 
+                            <small>(500)</small>
+                        </div>
+                        <div class="has-text-right">
+                            <button type="button" class="button is-info">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" class="button is-danger">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="box cash-operations">
+                <div class="is-clearfix">
+                    <div class="is-pulled-left">
+                        <div class="pad-buttons">
+                            <button type="button" class="button pad-button">7</button>
+                            <button type="button" class="button pad-button">8</button>
+                            <button type="button" class="button pad-button">9</button>
+                        </div>
+                        <div class="pad-buttons">
+                            <button type="button" class="button pad-button">4</button>
+                            <button type="button" class="button pad-button">5</button>
+                            <button type="button" class="button pad-button">6</button>
+                            <button type="button" class="button is-warning pad-button">C</button>
+                        </div>
+                        <div class="pad-buttons">
+                            <button type="button" class="button pad-button">1</button>
+                            <button type="button" class="button pad-button">2</button>
+                            <button type="button" class="button pad-button">3</button>
+                            <button type="button" class="button is-danger pad-button">AC</button>
+                        </div>
+                        <div class="pad-buttons">
+                            <button type="button" class="button pad-button-zero">0</button>
+                            <button type="button" class="button pad-button">00</button>
+                            <button type="button" class="button is-success pad-button">預</button>
                         </div>
                     </div>
-                </nav>
-                <div class="box option-buttons">
-                    <div class="buttons is-centered">
-                        <button
-                            type="button"
-                            class="button is-warning is-large"
-                            @click="handleClearSales()">
-                            <i class="fas fa-exclamation-circle"></i>
-                            AC
-                        </button>
-                        <button
-                            type="button"
-                            class="button is-info is-large"
-                            @click="handleChangeDiscountPrice()">
-                            ¥割
-                        </button>
-                        <button
-                            type="button"
-                            class="button is-info is-large"
-                            @click="handleChangeDiscountRate">
-                            %割
-                        </button>
-                        <button
-                            type="button"
-                            class="button is-danger is-large"
-                            v-bind:disabled="saving"
-                            @click="handleSave()">
-                            <i class="fas fa-cash-register"></i>
-                            決済
-                        </button>
+                    <div class="is-pulled-right">
+                        <p class="operation-title">消費税</p>
+                        <div class="buttons has-addons">
+                            <button type="button" class="button option-button is-info">イートイン</button>
+                            <button type="button" class="button option-button">テイクアウト</button>
+                        </div>
+                        <p class="operation-title">値引</p>
+                        <div class="buttons has-addons">
+                            <button type="button" class="button option-button">¥割</button>
+                            <button type="button" class="button option-button">%割</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
