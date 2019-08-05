@@ -30,6 +30,14 @@
                 margin-right: 8px;
                 padding-top: 6px;
             }
+
+            .sales-item-operations {
+                display: inline-block;
+
+                > :not(:last-child) {
+                    margin-right: 4px;
+                }
+            }
         }
     }
     .cash-footer {
@@ -110,6 +118,13 @@
                 text-align: right;
                 margin-top: -6px;
                 margin-bottom: 6px;
+            }
+            .item-operations {
+                text-align: right;
+
+                > :first-child {
+                    margin-right: 4px;
+                }
             }
         }
     }
