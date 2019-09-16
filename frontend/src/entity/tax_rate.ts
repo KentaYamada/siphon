@@ -24,6 +24,6 @@ export enum TAX_OPTIONS {
 export interface TaxRate {
     rate: number;
     reduced_rate: number;
-    start_date: Date;
+    start_date?: Date;
     tax_type: TAX_TYPES;
 };

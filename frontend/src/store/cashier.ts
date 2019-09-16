@@ -3,12 +3,13 @@ import axios, { AxiosResponse } from 'axios';
 import { Sales, DISCOUNT_TYPES } from '@/entity/sales';
 import { SalesItem, TargetItem } from '@/entity/sales_item';
 import { Category } from '@/entity/category';
-import { TAX_OPTIONS } from '@/entity/tax_rate';
-import { CashierState } from '@/store/store_types';
 import { Item } from '@/entity/item';
+import { TaxRate, TAX_OPTIONS, TAX_TYPES } from '@/entity/tax_rate';
+import { CashierState } from '@/store/store_types';
 
 
 const ROOT_URL = '/api/cashier/';
+
 
 /**
  * 該当する売上明細データのインデックス取得
@@ -43,7 +44,12 @@ const state: CashierState = {
         items: []
     } as Sales,
     categories: [],
-    items: []
+    items: [],
+    tax_rate: {
+        rate: 0,
+        reduced_rate: 0,
+        tax_type: TAX_TYPES.INCLUDE
+    }
 };
 
 const mutations = {
@@ -162,6 +168,12 @@ const mutations = {
         state.items = _.isUndefined(category) ? [] : <Item[]>category.items;
     },
     /**
+     * 消費税データセット
+     */
+    setTaxRate: (state: CashierState, taxRate: TaxRate): void => {
+        state.tax_rate = taxRate;
+    },
+    /**
      * 値引額初期化
      */
     resetDiscountPrice: (state: CashierState) => {
@@ -273,6 +285,8 @@ const actions = {
             if (categories.length > 0) {
                 context.commit('setItems', categories[0].id);
             }
+
+            context.commit('setTaxRate', response.data.tax_rate);
         });
     },
     /**

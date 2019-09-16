@@ -21,6 +21,7 @@ export interface CashierState {
     sales: Sales;
     categories: Category[];
     items: Item[];
+    tax_rate: TaxRate;
 }
 
 /** Category state */
