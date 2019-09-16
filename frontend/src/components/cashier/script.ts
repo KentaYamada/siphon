@@ -2,51 +2,56 @@ import Vue from 'vue';
 import {
     mapActions,
     mapGetters,
-    mapMutations
+    mapMutations,
+    mapState,
 } from 'vuex';
 import _ from 'lodash';
 import { DISCOUNT_TYPES } from '@/entity/sales';
-import SalesItem  from '@/entity/sales_item';
+import { TAX_OPTIONS } from '@/entity/tax_rate';
+import { SalesItem, TargetItem } from '@/entity/sales_item';
 import { Item } from '@/entity/item';
+import { AxiosError } from 'axios';
 
-/**
- * 初期データ取得
- */
+
 const defaultData = (): any => {
     return {
         errors: {},
         saving: false,
+        isFocusedDposit: false,
+        isFocusedDiscount: false,
         discountMode: DISCOUNT_TYPES.PRICE,
+        taxOption: TAX_OPTIONS.NORMAL,
     };
-};
+}
+
 
 export default Vue.extend({
     data() {
-        let data = defaultData();
-        return _.extend({},  data);
+        return _.extend({}, defaultData());
     },
     mounted() {
         this.initialize();
         this.fetchSelectionItems();
     },
     computed: {
+        ...mapState('cashier', [
+            'sales',
+            'categories',
+        ]),
         ...mapGetters('cashier', [
-            'getSales',
-            'getCharge',
-            'getGrandTotalPrice',
-            'getSelectionItems',
-            'getSelectionPanelData',
+            'grandTotalPrice',
+            'charge',
+            'normalTaxSalesItems',
+            'reducedTaxSalesItems',
+            'hasSalesItems',
+            'hasNormalTaxSalesItems',
+            'hasReducedTaxSalesItems',
+            'currentItems',
             'hasItems'
         ]),
-        /**
-         * 総合計
-         */
-        total_price(): number {
-            return this.getGrandTotalPrice(this.discountMode);
+        grand_total_price(): number {
+            return this.grandTotalPrice(this.discountMode);
         },
-        /**
-         * 値引単位
-         */
         discountUnit(): string {
             let unit = '';
 
@@ -69,164 +74,188 @@ export default Vue.extend({
         },
         isDiscountRate(): boolean {
             return this.discountMode === DISCOUNT_TYPES.RATE;
-        }
+        },
+        isNormalTax(): boolean {
+            return this.taxOption === TAX_OPTIONS.NORMAL;
+        },
+        isReducedTax(): boolean {
+            return this.taxOption == TAX_OPTIONS.REDUCED;
+        },
     },
     methods: {
         ...mapMutations('cashier', [
             'initialize',
-            'addItem',
-            'reduceItem',
-            'deleteItem',
+            'addSalesItem',
+            'deleteSalesItem',
+            'increaseSalesItem',
+            'decreaseSalesItem',
+            'setDeposit',
+            'setDiscountPrice',
+            'setDiscountRate',
+            'setItems',
             'resetDiscountPrice',
             'resetDiscountRate',
-            'setItems'
         ]),
         ...mapActions('cashier', [
             'fetchSelectionItems',
             'save',
         ]),
         /**
-         * 商品カテゴリにひもづく商品表示
-         * 
-         * @param {number} categoryId
+         * 明細 or 数量追加
+         * @event
+         * @param item 
+         */
+        handleAddSalesItem(item: Item): void {
+            const data = {
+                item: item,
+                tax_option: this.taxOption,
+            } as TargetItem;
+
+            this.addSalesItem(data);
+        },
+        /**
+         * 明細データ削除
+         * @event
+         * @param salesItem 
+         * @param index 
+         */
+        handleDeleteSalesItem(salesItem: SalesItem): void {
+            const confirmOption = {
+                title: '明細データ削除',
+                message: `『${salesItem.name}』を削除します。よろしいですか？`,
+                confirmText: '削除',
+                cancelText: 'キャンセル',
+                hasIcon: true,
+                type: 'is-danger',
+                onConfirm: () => {
+                    const data = {
+                        item: salesItem,
+                        tax_option: this.taxOption,
+                    } as TargetItem;
+
+                    this.deleteItem(data);
+                    this.$toast.open({
+                        message: '削除しました。',
+                        type: 'is-success'
+                    });
+                }
+            };
+            this.$dialog.confirm(confirmOption);
+        },
+        /**
+         * 明細数量を増やす
+         * @event
+         * @param index 
+         */
+        handleIncreaseSalesItem(salesItem: SalesItem): void {
+            const data = {
+                item: salesItem,
+                tax_option: this.taxOption
+            } as TargetItem;
+
+            this.increaseSalesItem(data);
+        },
+        /**
+         * 明細数量を減らす
+         * @event
+         * @param itemName 
+         */
+        handleDecreaseSalesItem(salesItem: SalesItem): void {
+            const data = {
+                item: salesItem,
+                tax_option: this.taxOption
+            } as TargetItem;
+
+            this.decreaseSalesItem(data);
+        },
+        /**
+         * フォーカスしてるinputの値クリア
+         * @event
+         */
+        handleClearInput(): void {
+            if (this.isFocusedDposit) {
+                this.setDeposit(0);
+            }
+        },
+        /**
+         * 商品切替イベント
+         * @event
          */
         handleSwitchItems(categoryId: number): void {
             this.setItems(categoryId);
         },
         /**
-         * 明細データ作成 or 数量追加
-         * 
-         * @param {Item} item
+         * 通常税率モードへ切替
+         * @event
          */
-        handleIncreaseItem(item: Item): void {
-            this.addItem(item);
+        handleSwitchNormalTax(): void {
+            this.taxOption = TAX_OPTIONS.NORMAL;
         },
         /**
-         * 明細データ削除 or 数量を減らす
-         *
-         * @param {string} itemName
+         * 軽減税率モードへ切替
+         * @event
          */
-        handleDecreaseItem(itemName: string): void {
-            this.reduceItem(itemName);
+        handleSwitchReducedTax(): void {
+            this.taxOption = TAX_OPTIONS.REDUCED;
         },
         /**
-         * 明細データ削除
-         * 
-         * @param {SalesItem} salesItem
-         * @param {number} index
+         * 値引額モードへ切替
+         * @event
          */
-        handleDeleteItem(salesItem: SalesItem, index: number): void {
-            this.$dialog.confirm({
-                title: '明細データ削除',
-                message: `『${salesItem.item_name}』を削除します。よろしいですか？`,
-                confirmText: '削除',
-                cancelText: 'キャンセル',
-                hasIcon: true,
-                type: 'is-danger',
-                onConfirm: () => {
-                    this.deleteItem(index);
-                    this.$toast.open({
-                        message: '削除しました。',
-                        type: 'is-success'
-                    });
-                }
-            });
-        },
-        /**
-         * 入力中の売上データリセットイベント
-         */
-        handleClearSales(): void {
-            this.$dialog.confirm({
-                title: '売上データクリア',
-                message: '入力中の売上データをクリアします。よろしいですか？',
-                confirmText: 'クリア',
-                cancelText: 'キャンセル',
-                hasIcon: true,
-                type: 'is-warning',
-                onConfirm: () => {
-                    this.initialize();
-                    _.assign(this.$data, defaultData());
-
-                    this.$toast.open({
-                        message: 'クリアしました',
-                        type: 'is-success'
-                    });
-                }
-            });
-        },
-        /**
-         * 値引額切替イベント
-         */
-        handleChangeDiscountPrice(): void {
+        handleSwitchDiscountPrice(): void {
             this.resetDiscountRate();
             this.discountMode = DISCOUNT_TYPES.PRICE;
         },
         /**
-         * 値引率切替イベント
+         * 値引率モードへ切替
+         * @event
          */
-        handleChangeDiscountRate(): void {
+        handleSwitchDiscountRate(): void {
             this.resetDiscountPrice();
             this.discountMode = DISCOUNT_TYPES.RATE;
         },
         /**
-         * 決済ボタンクリックイベント
+         * 数値ボタンクリック
+         * @event
+         * @param value 
+         */
+        handleClickNumpad(value: number): void {
+
+        },
+        /**
+         * 売上登録
+         * @event
          */
         handleSave(): void {
-            this.saving = true;
-
             this.save()
                 .then(() => {
-                    this.$toast.open({
-                        message: '売上登録しました',
-                        type: 'is-success'
-                    });
-
-                    this.initialize();
-                    _.assign(this.$data, this.$options.data);
+                    this._saveSuccess();
                 })
-                .catch((error: any) => {
-                    const response = error.response;
-                    let message = '';
-
-                    if (!_.isEmpty(response.data.message)) {
-                        message = response.data.message;
-                    }
-
-                    if (!_.isEmpty(response.data.errors)) {
-                        this.errors = _.extend({}, response.data.errors);
-                    }
-
-                    this.$toast.open({
-                        message: message,
-                        type: 'is-danger'
-                    });
+                .catch((error: AxiosError) => {
+                    this._saveFailure(error.response);
                 })
                 .finally(() => {
-                    this.saving = false;
+
                 });
         },
         /**
-         * 明細データ削除確認画面表示
-         * 
-         * @param {string} item_name
-         * @param {number} index
+         * 登録成功時のcallback
          */
-        _showDeleteConfirm(item_name: string, index: number): void {
-            this.$dialog.confirm({
-                title: '明細データ削除',
-                message: `${item_name}を削除します。よろしいですか？`,
-                confirmText: '削除',
-                cancelText: 'キャンセル',
-                hasIcon: true,
-                type: 'is-danger',
-                onConfirm: () => {
-                    this.sales.deleteItem(index);
-                    this.$toast.open({
-                        message: '削除しました。',
-                        type: 'is-success'
-                    });
-                }
-            });
-        }
-    },
+        _saveSuccess(): void {
+            const option = {
+                message: '売上登録しました',
+                type: 'is-success',
+            };
+            this.$toast.open(option);
+
+            this.initialize();
+            _.assign(this.$data, this.$options.data);
+        },
+        /**
+         * 登録失敗時のcallback
+         * @param error 
+         */
+        _saveFailure(error: any) {
+        },
+    }
 });
