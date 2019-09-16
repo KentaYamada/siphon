@@ -1,4 +1,4 @@
-import SalesItem from '@/entity/sales_item';
+import { SalesItem } from '@/entity/sales_item';
 
 /**
  * 値引種別
@@ -18,6 +18,8 @@ export interface Sales {
     total_price: number;
     discount_price: number;
     discount_rate: number;
+    normal_tax_price: number;
+    reduced_tax_price: number;
     inclusive_tax?: number;
     exclusive_tax?: number;
     deposit: number;
