@@ -10,6 +10,7 @@ from app.model.item import ItemSearchOption
 from app.model.mapper.category_mapper import CategoryMapper
 from app.model.mapper.item_mapper import ItemMapper
 from app.model.mapper.sales_mapper import SalesMapper
+from app.model.mapper.tax_rate_mapper import TaxRateMapper
 
 
 bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
@@ -20,11 +21,17 @@ bp = Blueprint('cashier', __name__, url_prefix='/api/cashier')
 def index():
     categories = _get_categories()
     items = _get_items(categories)
+    tax_rate = _get_tax_rate()
+
     for category in categories:
         data = [i for i in items if category['id'] == i['category_id']]
         category['items'] = data
 
-    return ApiResponse(200, data={'categories': categories})
+    data = {
+        'categories': categories,
+        'tax_rate': tax_rate
+    }
+    return ApiResponse(200, data=data)
 
 
 @bp.route('/', methods=['POST'])
@@ -92,3 +99,11 @@ def _get_items(categories):
         else:
             c['disabled'] = True
     return items
+
+
+def _get_tax_rate():
+    mapper = TaxRateMapper()
+    data = mapper.find_current_tax_rate()
+    if data is not None:
+        del data['start_date']
+    return data
