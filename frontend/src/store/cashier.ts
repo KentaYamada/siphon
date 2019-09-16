@@ -1,21 +1,44 @@
-import Vue from 'vue';
 import _ from 'lodash';
 import axios, { AxiosResponse } from 'axios';
 import { Sales, DISCOUNT_TYPES } from '@/entity/sales';
-import SalesItem from '@/entity/sales_item';
-import { Item } from '@/entity/item';
-import { CashierState } from '@/store/store_types';
+import { SalesItem, TargetItem } from '@/entity/sales_item';
 import { Category } from '@/entity/category';
-import category from './category';
+import { TAX_OPTIONS } from '@/entity/tax_rate';
+import { CashierState } from '@/store/store_types';
+import { Item } from '@/entity/item';
 
 
 const ROOT_URL = '/api/cashier/';
+
+/**
+ * 該当する売上明細データのインデックス取得
+ * @param salesItems 
+ * @param targetItem 
+ */
+const findSalesItemIndex = (salesItems: SalesItem[], targetItem: TargetItem): number => {
+    return _.findIndex(salesItems, (salesItem: SalesItem) => {
+        return (salesItem.name == targetItem.item.name) &&
+            (salesItem.tax_option === targetItem.tax_option);
+    });
+};
+
+/**
+ * 小計計算
+ * @param state 
+ */
+const calcTotalPrice = (salesItems: SalesItem[]): number  => {
+    return _.sumBy(salesItems, (item: SalesItem) => {
+        return item.subtotal;
+    });
+};
 
 const state: CashierState = {
     sales: {
         total_price: 0,
         discount_price: 0,
         discount_rate: 0,
+        normal_tax_price: 0,
+        reduced_tax_price: 0,
         deposit: 0,
         items: []
     } as Sales,
@@ -32,97 +55,111 @@ const mutations = {
             total_price: 0,
             discount_price: 0,
             discount_rate: 0,
+            normal_tax_price: 0,
+            reduced_tax_price: 0,
             deposit: 0,
             items: []
         } as Sales;
     },
     /**
-     * 商品カテゴリセット
+     * 売上明細追加
      */
-    initCategories: (state: CashierState, categories: Category[]) => {
-        state.categories = categories;
-    },
-    /**
-     * 商品データセット
-     */
-    setItems: (state: CashierState, categoryId?: number) => {
-        const category = _.find(state.categories, (category: Category) => {
-            return category.id === categoryId;
-        });
-        const items = _.isUndefined(category) ? [] : category.items;
-
-        Vue.set(state, 'items', items);
-    },
-    /**
-     * 商品追加
-     * 
-     * @param {CashierState} state
-     * @param {Item} selectedItem
-     */
-    addItem: (state: CashierState, selectedItem: Item) =>{
-        const index = _.findIndex(state.sales.items, (item: SalesItem) => {
-            return selectedItem.name === item.item_name;
-        });
+    addSalesItem: (state: CashierState, targetItem: TargetItem): void => {
+        const index = findSalesItemIndex(state.sales.items, targetItem);
 
         if (index > -1) {
-            state.sales.items[index].quantity += 1;
-
-            const quantity = state.sales.items[index].quantity;
-            const price = state.sales.items[index].unit_price;
-            state.sales.items[index].subtotal = quantity * price;
+            const salesItem = state.sales.items[index];
+            salesItem.quantity += 1;
+            salesItem.subtotal = salesItem.quantity * salesItem.unit_price;
         } else {
-            const salesItem: SalesItem = {
-                item_name: selectedItem.name,
-                unit_price: selectedItem.unit_price,
+            const salesItem = {
+                name: targetItem.item.name,
+                unit_price: targetItem.item.unit_price,
                 quantity: 1,
-                subtotal: selectedItem.unit_price
-            };
+                subtotal: targetItem.item.unit_price,
+                tax_option: targetItem.tax_option,
+            } as SalesItem;
             state.sales.items.push(salesItem);
         }
 
-        state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
-            return item.subtotal;
-        });
+        state.sales.total_price = calcTotalPrice(state.sales.items);
     },
     /**
-     * 商品削減
-     * 
-     * @param {CashierState} state
-     * @param {string} itemName
+     * 売上明細削除
      */
-    reduceItem: (state: CashierState, itemName: string) => {
-        const index = _.findIndex(state.sales.items, (item: SalesItem) => {
-            return itemName === item.item_name;
-        });
-
-        if (index > -1) {
-            let item = state.sales.items[index];
-
-            if (item.quantity > 1) {
-                item.quantity -= 1;
-                const quantity = state.sales.items[index].quantity;
-                const price = state.sales.items[index].unit_price;
-                state.sales.items[index].subtotal = quantity * price;
-            } else {
-                state.sales.items.splice(index, 1);
-            }
-
-            state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
-                return item.subtotal;
-            });
-        }
-    },
-    /**
-     * 商品削除
-     * 
-     * @param {CashierState} state 
-     * @param {number} index
-     */
-    deleteItem: (state: CashierState, index: number) => {
+    deleteSalesItem: (state: CashierState, targetItem: TargetItem): void => {
+        const index = findSalesItemIndex(state.sales.items, targetItem);
         state.sales.items.splice(index, 1);
-        state.sales.total_price = _.sumBy(state.sales.items, (item: SalesItem) => {
-            return item.subtotal;
+        state.sales.total_price = calcTotalPrice(state.sales.items);
+    },
+    /**
+     * 明細の商品点数を増やす
+     */
+    increaseSalesItem: (state: CashierState, targetItem: TargetItem): void => {
+        const index = findSalesItemIndex(state.sales.items, targetItem);
+
+        if (index <= -1) {
+            return;
+        }
+
+        const salesItem = state.sales.items[index] as SalesItem;
+        salesItem.quantity += 1;
+        salesItem.subtotal = salesItem.quantity * salesItem.unit_price;
+        state.sales.total_price = calcTotalPrice(state.sales.items);
+    },
+    /**
+     * 明細の商品点数を減らす
+     */
+    decreaseSalesItem: (state: CashierState, targetItem: TargetItem): void => {
+        const index = findSalesItemIndex(state.sales.items, targetItem);
+
+        if (index <= -1) {
+            return;
+        }
+
+        const salesItem = state.sales.items[index] as SalesItem;
+
+        if (salesItem.quantity > 1) {
+            salesItem.quantity -= 1;
+            salesItem.subtotal = salesItem.quantity * salesItem.unit_price;
+        } else {
+            state.sales.items.splice(index, 1);
+        }
+
+        state.sales.total_price = calcTotalPrice(state.sales.items);
+    },
+    /**
+     * 預かり金額更新
+     */
+    setDeposit: (state: CashierState, deposit: number): void => {
+        state.sales.deposit = deposit;
+    },
+    /**
+     * 値引額更新
+     */
+    setDiscountPrice: (state: CashierState, discountPrice: number): void => {
+        state.sales.discount_price = discountPrice;
+    },
+    /**
+     * 値引率更新
+     */
+    setDiscountRate: (state: CashierState, discountRate: number): void => {
+        state.sales.discount_rate = discountRate;
+    },
+    /**
+     * 商品選択で使用するカテゴリデータセット
+     */
+    setCategories: (state: CashierState, categories: Category[]): void => {
+        state.categories = categories;
+    },
+    /**
+     * 商品選択で使用する商品データセット
+     */
+    setItems: (state: CashierState, categryId: number): void => {
+        const category = _.find(state.categories, (category: Category) => {
+            return category.id === categryId;
         });
+        state.items = _.isUndefined(category) ? [] : <Item[]>category.items;
     },
     /**
      * 値引額初期化
@@ -135,27 +172,14 @@ const mutations = {
      */
     resetDiscountRate: (state: CashierState) => {
         state.sales.discount_rate = 0;
-    }
+    },
 };
 
 const getters = {
     /**
-     * 売上データ取得
-     */
-    getSales: (state: CashierState) => {
-        return state.sales;
-    },
-    /**
-     * お釣り取得
-     */
-    getCharge: (state: CashierState) => {
-        const charge = state.sales.deposit - state.sales.total_price;
-        return  charge > 0 ? charge : 0;
-    },
-    /**
      * 売上総合計金額取得
      */
-    getGrandTotalPrice: (state: CashierState) => (mode: DISCOUNT_TYPES) => {
+    grandTotalPrice: (state: CashierState) => (mode: DISCOUNT_TYPES): number | null => {
         let grandTotalPrice = null;
 
         switch (mode) {
@@ -175,63 +199,90 @@ const getters = {
         return grandTotalPrice;
     },
     /**
-     * 売上明細があるかどうか
+     * おつり取得
      */
-    hasItems: (state: CashierState) => {
+    charge: (state: CashierState): number => {
+        const charge = state.sales.deposit - state.sales.total_price;
+        return  charge > 0 ? charge : 0;
+    },
+    /**
+     * 売上明細データがあるかどうか
+     */
+    hasSalesItems: (state: CashierState): boolean => {
         return state.sales.items.length > 0;
     },
     /**
-     * 商品選択データ取得
+     * 通常税率の売上明細取得
      */
-    getSelectionItems: (state: CashierState) => {
+    normalTaxSalesItems: (state: CashierState): SalesItem[] => {
+        return _.filter(state.sales.items, (item: SalesItem) => {
+            return item.tax_option === TAX_OPTIONS.NORMAL;
+        });
+    },
+    /**
+     * 軽減税率の売上明細取得
+     */
+    reducedTaxSalesItems: (state: CashierState): SalesItem[] => {
+        return _.filter(state.sales.items, (item: SalesItem) => {
+            return item.tax_option === TAX_OPTIONS.REDUCED;
+        });
+    },
+    /**
+     * 通常税率の売上明細があるかどうか
+     */
+    hasNormalTaxSalesItems: (state: CashierState): boolean => {
+        const items = _.filter(state.sales.items, (item: SalesItem) => {
+            return item.tax_option === TAX_OPTIONS.NORMAL;
+        });
+
+        return items.length > 0;
+    },
+    /**
+     * 軽減税率の売上明細があるかどうか
+     */
+    hasReducedTaxSalesItems: (state: CashierState): boolean => {
+        const items = _.filter(state.sales.items, (item: SalesItem) => {
+            return item.tax_option === TAX_OPTIONS.REDUCED;
+        });
+
+        return items.length > 0;
+    },
+    /**
+     * 選択可能な商品取得
+     */
+    currentItems: (state: CashierState): Item[] => {
         return state.items;
     },
     /**
-     * 商品カテゴリ選択データ取得
+     * 選択可能な商品があるかどうか
      */
-    getSelectionPanelData: (state: CashierState) => {
-        // 2 x 5の二次元配列にする
-        const row = 2;
-        const col = 5;
-        let categories = [];
-        let offset = 0;
-
-        for (let i = 0; i< row; i++) {
-            categories.push(_.slice(state.categories, offset, col+offset));
-            offset += col;
-        }
-
-        return categories;
-    }
+    hasItems: (state: CashierState): boolean => {
+        return state.items.length > 0;
+    },
 };
 
-export const actions = {
+const actions = {
     /**
      * 商品選択で使うデータ取得
      */
     fetchSelectionItems: async (context: any) => {
-        return await axios.get(ROOT_URL)
-            .then((response: AxiosResponse<any>) => {
-                const categories = response.data.categories as Category[];
-                context.commit('initCategories', categories);
+        return await axios.get(ROOT_URL).then((response: AxiosResponse<any>) => {
+            const categories = response.data.categories as Category[];
+            context.commit('setCategories', categories);
 
-                if (categories.length > 0) {
-                    context.commit('setItems', categories[0].id);
-                }
-            });
+            if (categories.length > 0) {
+                context.commit('setItems', categories[0].id);
+            }
+        });
     },
     /**
      * 売上登録
      * @param {any} context
      */
     save: async (context: any) => {
-        return await axios.post(
-            ROOT_URL,
-            context.state.sales
-        );
+        return await axios.post(ROOT_URL, context.state.sales);
     }
 };
-
 
 export default {
     namespaced: true,
