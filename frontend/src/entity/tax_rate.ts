@@ -9,6 +9,16 @@ export enum TAX_TYPES {
 };
 
 /**
+ * 税区分
+ */
+export enum TAX_OPTIONS {
+    // 通常
+    NORMAL = 1,
+    // 軽減税率
+    REDUCED = 2
+};
+
+/**
  * 税率モデル
  */
 export interface TaxRate {
