@@ -26,13 +26,22 @@
                                         <span>{{ item.quantity }}</span>
                                     </div>
                                     <div class="sales-item-operations">
-                                        <button type="button" class="button is-info" @click="handleIncreaseSalesItem(item)">
+                                        <button type="button"
+                                                class="button is-info"
+                                                v-bind:disabled="isReducedTax"
+                                                @click="handleIncreaseSalesItem(item)">
                                             <i class="fa fa-plus"></i>
                                         </button>
-                                        <button type="button" class="button is-warning" @click="handleDecreaseSalesItem(item)">
+                                        <button type="button"
+                                                class="button is-warning"
+                                                v-bind:disabled="isReducedTax"
+                                                @click="handleDecreaseSalesItem(item)">
                                             <i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="button is-danger" @click="handleDeleteItem(item)">
+                                        <button type="button"
+                                                class="button is-danger"
+                                                v-bind:disabled="isReducedTax"
+                                                @click="handleDeleteItem(item)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -54,13 +63,22 @@
                                         <span>{{ item.quantity }}</span>
                                     </div>
                                     <div class="sales-item-operations">
-                                        <button type="button" class="button is-info" @click="handleIncreaseSalesItem(item)">
+                                        <button type="button"
+                                                class="button is-info"
+                                                v-bind:disabled="isNormalTax"
+                                                @click="handleIncreaseSalesItem(item)">
                                             <i class="fa fa-plus"></i>
                                         </button>
-                                        <button type="button" class="button is-warning" @click="handleDecreaseSalesItem(item)">
+                                        <button type="button"
+                                                class="button is-warning"
+                                                v-bind:disabled="isNormalTax"
+                                                @click="handleDecreaseSalesItem(item)">
                                             <i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="button is-danger" @click="handleDeleteItem(item)">
+                                        <button type="button"
+                                                class="button is-danger"
+                                                v-bind:disabled="isNormalTax"
+                                                @click="handleDeleteItem(item)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
