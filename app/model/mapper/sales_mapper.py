@@ -9,7 +9,6 @@ from app.model.mapper.base_mapper import BaseMapper
 class SalesMapper(BaseMapper):
     SATURDAY = 5
     SUNDAY = 6
-    DAILY_SALES_URL = '/sales/daily?sales_date={0}'
 
     def __init__(self):
         super().__init__()
@@ -152,8 +151,7 @@ class SalesMapper(BaseMapper):
                     'sales_day': None,
                     'amount': None,
                     'is_saturday': (weekday == self.SATURDAY),
-                    'is_holiday': (weekday == self.SUNDAY),
-                    'daily_sales_url': ''
+                    'is_holiday': (weekday == self.SUNDAY)
                 }
                 if rows is not None:
                     # todo: スマートに書きたい
@@ -162,7 +160,6 @@ class SalesMapper(BaseMapper):
                         sales_day = data['sales_date'].strftime('%Y-%m-%d')
                         day_data['sales_day'] = sales_day
                         day_data['amount'] = int(data['total_price'])
-                        day_data['daily_sales_url'] = self.DAILY_SALES_URL.format(sales_day)
                 week_data.append(day_data)
             res.append(week_data)
         return res
