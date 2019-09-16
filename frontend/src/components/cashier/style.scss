@@ -48,7 +48,7 @@
             margin-top: 2px;
 
             .footer-label-container {
-                width: 80%;
+                width: 70%;
                 text-align: right;
 
                 .footer-label {
@@ -56,6 +56,19 @@
                     border-right: 1px solid #ddd;
                     padding-right: 5px;
                     letter-spacing: 2px;
+                }
+            }
+
+            .footer-input-container {
+                width: 28%;
+
+                .input-number {
+                    border: none;
+                    border-color: transparent;
+                    text-align: right;
+                }
+                .input-number:focus {
+                    color: red;
                 }
             }
         }
@@ -150,6 +163,7 @@
         text-align: center;
     }
     .option-button {
+        font-size: 14px;
         width: 106px;
     }
 }
