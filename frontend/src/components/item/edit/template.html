@@ -33,6 +33,7 @@
                         class="input has-text-right"
                         v-model.number="item.unit_price">
                 </div>
+                <small class="help has-text-weight-bold">*単価は税別で登録してください</small>
                 <small class="help is-danger" v-for="error in errors.unit_price">
                     {{ error }}
                 </small>
