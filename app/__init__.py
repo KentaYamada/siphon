@@ -1,3 +1,4 @@
+import logging.config
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from werkzeug.exceptions import (
@@ -70,5 +71,9 @@ def startup_app():
     jwt.user_loader_callback_loader(user_loader_handler)
     jwt.user_loader_error_loader(user_loader_error_handler)
     jwt.token_in_blacklist_loader(token_in_blacklist_handler)
+
+    # initialize logging
+    log_option = config._get_logging_options()
+    logging.config.dictConfig(log_option)
 
     return app

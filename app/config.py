@@ -10,7 +10,13 @@
     Flask-JWT-extended
         https://flask-jwt-extended.readthedocs.io/en/latest/
 """
-from os import environ
+from os import environ, path
+import logging
+
+# constants
+DEBUG_LOG_KEY = 'debug_logger'
+ERROR_LOG_KEY = 'error_logger'
+SQL_LOG_KEY = 'sql_logger'
 
 
 class BaseConfig:
@@ -31,6 +37,9 @@ class BaseConfig:
 
     # database configs
     DATABASE = {}
+
+    def _get_logging_options(self):
+        raise NotImplementedError()
 
     def __str__(self):
         return 'app.config.{0}'.format(type(self).__name__)
@@ -71,6 +80,68 @@ class DevelopmentConfig(BaseConfig):
     }
     JWT_BLACKLIST_ENABLED = True
     JWT_SECRET_KEY = 'development'
+
+    def _get_logging_options(self):
+        log_dir = '{0}/log'.format(path.dirname(path.abspath(__file__)))
+        options = {
+            'version': 1,
+            'formatters': {
+                'devFormat': {
+                    'format': '[%(levelname)s] %(asctime)s %(message)s',
+                    'datefmt': '%Y-%m-%d %H:%M:%S'
+                }
+            },
+            'handlers': {
+                'debug_log_file_handler': {
+                    'level': logging.DEBUG,
+                    'class': 'logging.FileHandler',
+                    'formatter': 'devFormat',
+                    'filename': '{0}/debug.log'.format(log_dir),
+                },
+                'debug_console_handler': {
+                    'level': logging.DEBUG,
+                    'class': 'logging.StreamHandler',
+                    'formatter': 'devFormat'
+                },
+                'sql_log_file_handler': {
+                    'level': logging.DEBUG,
+                    'class': 'logging.FileHandler',
+                    'formatter': 'devFormat',
+                    'filename': '{0}/sql.log'.format(log_dir),
+                },
+                'error_log_file_handler': {
+                    'level': logging.ERROR,
+                    'class': 'logging.FileHandler',
+                    'formatter': 'devFormat',
+                    'filename': '{0}/error.log'.format(log_dir),
+                }
+            },
+            'loggers': {
+                DEBUG_LOG_KEY: {
+                    'level': logging.DEBUG,
+                    'handlers': [
+                        'debug_log_file_handler',
+                        'debug_console_handler',
+                    ],
+                    'propagate': 0
+                },
+                SQL_LOG_KEY: {
+                    'level': logging.DEBUG,
+                    'handlers': [
+                        'sql_log_file_handler'
+                    ],
+                    'propagate': 0
+                },
+                ERROR_LOG_KEY: {
+                    'level': logging.ERROR,
+                    'handlers': [
+                        'error_log_file_handler'
+                    ],
+                    'propagate': 0
+                }
+            }
+        }
+        return options
 
 
 def get_config():
