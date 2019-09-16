@@ -133,7 +133,7 @@ export default Vue.extend({
                         tax_option: this.taxOption,
                     } as TargetItem;
 
-                    this.deleteItem(data);
+                    this.deleteSalesItem(data);
                     this.$toast.open({
                         message: '削除しました。',
                         type: 'is-success'
