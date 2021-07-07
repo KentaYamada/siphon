@@ -6,6 +6,7 @@
 import psycopg2
 import psycopg2.extras
 from app.config import get_config
+from app.libs.logger import Logger
 
 
 class PgAdapter():
@@ -38,6 +39,7 @@ class PgAdapter():
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, data)
+        Logger.print_sql(self.__cur.query)
         return self.__cur.rowcount
 
     def find(self, command, condition=None):
@@ -60,6 +62,7 @@ class PgAdapter():
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, condition)
+        Logger.print_sql(self.__cur.query)
         return self.__cur.fetchall()
 
     def find_one_proc(self, command, condition):
@@ -68,6 +71,7 @@ class PgAdapter():
             raise ValueError()
         self.__create_cursor()
         self.__cur.callproc(command, condition)
+        Logger.print_sql(self.__cur.query)
         return self.__cur.fetchone()
 
     def fetch_rowcount(self, tablename):

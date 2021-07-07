@@ -6,6 +6,7 @@ import Cashier from '@/components/cashier/Cashier.vue';
 import DailySales from '@/components/sales/daily/DailySales.vue';
 import CategoryList from '@/components/category/list/CategoryList.vue';
 import ItemList from '@/components/item/list/ItemList.vue';
+import TaxEdit from '@/components/tax_rate/TaxRate.vue';
 import UserList from '@/components/user/list/UserList.vue';
 import store from '@/store';
 
@@ -64,6 +65,14 @@ const router = new Router({
       path: '/sales/daily',
       name: 'dailySales',
       component: DailySales,
+      meta: {
+        requireAuth: true
+      }
+    },
+    {
+      path: '/tax',
+      name: 'tax',
+      component: TaxEdit,
       meta: {
         requireAuth: true
       }

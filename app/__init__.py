@@ -1,3 +1,4 @@
+import logging.config
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from werkzeug.exceptions import (
@@ -22,6 +23,7 @@ from app.controller import daily_sales
 from app.controller import dashboard
 from app.controller import item
 from app.controller import sales
+from app.controller import tax_rate
 from app.controller import user
 from app.controller import view
 
@@ -54,6 +56,7 @@ def startup_app():
         dashboard.bp,
         item.bp,
         sales.bp,
+        tax_rate.bp,
         user.bp,
         view.bp
     ]
@@ -68,5 +71,9 @@ def startup_app():
     jwt.user_loader_callback_loader(user_loader_handler)
     jwt.user_loader_error_loader(user_loader_error_handler)
     jwt.token_in_blacklist_loader(token_in_blacklist_handler)
+
+    # initialize logging
+    log_option = config._get_logging_options()
+    logging.config.dictConfig(log_option)
 
     return app

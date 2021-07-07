@@ -128,10 +128,11 @@ class SalesMapper(BaseMapper):
             # todo: logging
             # print(e)
         fields = ['sales_date', 'sales_day', 'total_price']
-        rows = self.format_rows(rows, fields)
-        if len(rows) > 0:
-            rows = self.__format_calendar(year, month, rows)
-        return rows
+        return self.__format_calendar(
+            year,
+            month,
+            self.format_rows(rows, fields)
+        )
 
     def __format_calendar(self, year, month, rows):
         """ カレンダー形式のレスポンスに整形 """
@@ -145,24 +146,20 @@ class SalesMapper(BaseMapper):
             week_data = []
             for day in week:
                 current_date, weekday = day
-                data = next(
-                    (row for row in rows if row['sales_day'] == current_date),
-                    None
-                )
-                is_saturday = True if weekday == self.SATURDAY else False
-                is_sunday = True if weekday == self.SUNDAY else False
-                sales_day = None
-                total_price = None
-                if data is not None:
-                    sales_day = data['sales_date'].strftime('%Y-%m-%d')
-                    total_price = int(data['total_price'])
-                week_data.append({
+                day_data = {
                     'sales_date': current_date,
-                    'sales_day': sales_day,
-                    'amount': total_price,
-                    'is_saturday': is_saturday,
-                    'is_holiday': is_sunday,
-                    'daily_sales_url': ''
-                })
+                    'sales_day': None,
+                    'amount': None,
+                    'is_saturday': (weekday == self.SATURDAY),
+                    'is_holiday': (weekday == self.SUNDAY)
+                }
+                if rows is not None:
+                    # todo: スマートに書きたい
+                    data = next((row for row in rows if row['sales_day'] == current_date), None)
+                    if data is not None:
+                        sales_day = data['sales_date'].strftime('%Y-%m-%d')
+                        day_data['sales_day'] = sales_day
+                        day_data['amount'] = int(data['total_price'])
+                week_data.append(day_data)
             res.append(week_data)
         return res

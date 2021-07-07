@@ -1,0 +1,28 @@
+@import "../../../node_modules//bulma/bulma.sass";
+
+.tax-edit-form {
+    .tax-type-label {
+        border: 1px solid $border;
+        border-radius: 6px;
+        margin-right: 8px;
+        padding: 8px 12px;
+        font-weight: 700;
+    }
+    .tax-type-button {
+        display: none;
+    }
+
+    .tax-type-button:checked + .tax-type-label {
+        background-color: $blue;
+        color: $white;
+    }
+
+    .form-actions {
+        text-align: right;
+        .button {
+            .fas {
+                margin-right: 6px;
+            }
+        }
+    }
+}
